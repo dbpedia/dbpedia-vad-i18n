@@ -2,39 +2,18 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML+RDFa 1.0//EN" "http://www.w3.org/MarkUp/DTD/xhtml-rdfa-1.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" 
     xmlns:dbpprop="http://dbpedia.org/property/" 
+    xmlns:dbpprop-<?= registry_get('dbp_lang')?>="http://<?= registry_get('dbp_lang')?>.dbpedia.org/property/" 
     xmlns:foaf="http://xmlns.com/foaf/0.1/" 
     version="XHTML+RDFa 1.0" xml:lang="en">
 <?vsp
---
---  $Id$
---
---  This file is part of the OpenLink Software Virtuoso Open-Source (VOS)
---  project.
---
---  Copyright (C) 1998-2012 OpenLink Software
---
---  This project is free software; you can redistribute it and/or modify it
---  under the terms of the GNU General Public License as published by the
---  Free Software Foundation; only version 2 of the License, dated June 1991.
---
---  This program is distributed in the hope that it will be useful, but
---  WITHOUT ANY WARRANTY; without even the implied warranty of
---  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
---  General Public License for more details.
---
---  You should have received a copy of the GNU General Public License along
---  with this program; if not, write to the Free Software Foundation, Inc.,
---  51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
---
---
 
    declare _G, _S, _P, _O, odd_position any;
    declare _resource_, project_name, project_home_page any;
-   declare page_resource_uri, rdf_link, rdf_link2, rdf_link3, rdf_link4, atom_link, jsod, ntriples, label, true_label, _subject, csv_link, cxml_link, gen_rdf_link any;
+   declare page_resource_uri, rdf_link, rdf_link2, rdf_link3, rdf_link4, atom_link, jsod, ntriples, label, true_label, _subject, csv_link, cxml_link any;
    declare iri_type, iri_uri, white_page, pkgs, txt, host, links, langs, dset, tmp_lines any;
 
    -- INIT VALLUES
-
+   
    set http_charset='utf-8';
    set isolation = 'uncomitted';
    _resource_ := get_keyword ('res', params, '');
@@ -70,8 +49,8 @@
    _resource_ := replace (_resource_, '/resource_vsp/', '', 1);
    if (_resource_ not like 'nodeID:%') 
      {
-       -- if rousource use custom domain, else use http://dbpedia.org
-       if (_resource_ like '/page/%')
+--------- if rousource use custom domain, else use http://dbpedia.org
+       if (_resource_ like '/page/%' OR _resource_ like '/property/%' )
          _resource_ := registry_get('dbp_domain') || _resource_;
        else
          _resource_ := 'http://dbpedia.org' || _resource_;
@@ -91,20 +70,19 @@
    page_resource_uri := replace (_resource_, '\'', '%27');
    page_resource_uri := replace (page_resource_uri, 'dbpedia.org/page', 'dbpedia.org/resource');
 
-   -- HACK properties !!!
+-- HACK properties !!!
 
-   if (strstr (page_resource_uri, registry_get('dbp_domain') || '/resource/property') = 0)
-     {	   
-       page_resource_uri := replace (page_resource_uri,
-       registry_get('dbp_domain') || '/resource/property', registry_get('dbp_domain') || '/property');
-     }
+     if (strstr (page_resource_uri, registry_get('dbp_domain') || '/resource/property') = 0)
+	{
+	   page_resource_uri := replace (page_resource_uri,
+		registry_get('dbp_domain') || '/resource/property', registry_get('dbp_domain') || '/property');
+	}
 
    -- setup rdf alternative links
 
    rdf_link := 'http://'|| http_request_header (http_request_header (), 'Host') 
-   		||'/sparql?default-graph-uri=http%3A%2F%2F'||replace(registry_get('dbp_graph'),'http://','')||'&query=DESCRIBE+<' ||
-		replace (page_resource_uri, '%', '%25') || '>';
-   gen_rdf_link := rdf_link;
+   		||'/sparql?default-graph-uri=http%3A%2F%2F'||registry_get('dbp_graph_abr')||'&query=DESCRIBE+<' ||
+   		replace (page_resource_uri, '%', '%25') || '>';
    csv_link := rdf_link||'&format=text%2Fcsv'; 
    cxml_link := rdf_link||'&format=text%2Fcxml'; 
    if (page_resource_uri like 'http://%/resource/%')
@@ -146,15 +124,10 @@
    links := links || sprintf ('<%s>; rel="alternate"; type="application/atom+xml"; title="OData (Atom+Feed format)", ', atom_link); 
    links := links || sprintf ('<%s>; rel="alternate"; type="text/csv"; title="Structured Descriptor Document (CSV format)", ', csv_link); 
    if (__proc_exists ('DB.DBA.RDF_TRIPLES_TO_CXML') is not null) 
-     {
-       links := links || sprintf ('<%s>; rel="alternate"; type="text/cxml"; title="Structured Descriptor Document (CXML format)", ', cxml_link); 
-     }
+   {
+     links := links || sprintf ('<%s>; rel="alternate"; type="text/cxml"; title="Structured Descriptor Document (CXML format)", ', cxml_link); 
+   }
    links := links || sprintf ('<%s>; rel="alternate"; type="text/plain"; title="Structured Descriptor Document (N-Triples format)", ', ntriples); 
-
-   links := links || sprintf ('<%s>; rel="alternate"; type="application/microdata+json"; title="Structured Descriptor Document (Microdata/JSON format)", ', gen_rdf_link || sprintf ('&output=%U', 'application/microdata+json') ); 
-   links := links || sprintf ('<%s>; rel="alternate"; type="text/html"; title="Structured Descriptor Document (Microdata/HTML format)", ', gen_rdf_link || sprintf ('&output=%U', 'text/html') ); 
-   links := links || sprintf ('<%s>; rel="alternate"; type="application/ld+json"; title="Structured Descriptor Document (JSON-LD format)", ', gen_rdf_link || sprintf ('&output=%U', 'application/ld+json') ); 
-
    links := links || sprintf ('<%s>; rel="http://xmlns.com/foaf/0.1/primaryTopic", ', page_resource_uri); 
    links := links || sprintf ('<%s>; rev="describedby", ', page_resource_uri); 
    links := links || sprintf ('<http://mementoarchive.lanl.gov/dbpedia/timegate/%s>; rel="timegate"\r\n', _resource_);
@@ -167,10 +140,10 @@
 
    -- check weather to decode the iri's
    if (registry_get ('dbp_decode_iri') = 'on')
-     {
-       page_resource_uri := split_and_decode (page_resource_uri)[0];
---     _resource_:= split_and_decode (_resource_)[0];
-     }
+   {
+     page_resource_uri := split_and_decode (page_resource_uri)[0];
+--    _resource_:= split_and_decode (_resource_)[0];
+   }
 
    -- create iid's
    _G := DB.DBA.RDF_MAKE_IID_OF_QNAME_SAFE (project_home_page);
@@ -193,6 +166,7 @@
    -- set up http
    -- http_header ('Cache-Control: no-cache, must-revalidate\r\nPragma: no-cache\r\n');
    http_header (sprintf ('Expires: %s\r\n', date_rfc1123 (dateadd ('day', 7, now ()))) || links);
+
 ?>
 
 <!-- header -->
@@ -204,21 +178,18 @@
     <link rel="alternate" type="application/json" href="<?=rdf_link3?>" title="Structured Descriptor Document (RDF/JSON format)" />
     <link rel="alternate" type="application/atom+xml" href="<?= atom_link ?>" title="OData (Atom+Feed format)" />
     <link rel="alternate" type="text/plain" href="<?= ntriples ?>" title="Structured Descriptor Document (N-Triples format)" />
-    <link rel="alternate" href="<?V csv_link ?>" type="text/csv" title="Structured Descriptor Document (CSV format)" />
+    <link rel="alternate" rel="alternate" href="<?V csv_link ?>" type="text/csv" title="Structured Descriptor Document (CSV format)" />
     <?vsp if (__proc_exists ('DB.DBA.RDF_TRIPLES_TO_CXML') is not null) { ?>
-    <link rel="alternate" href="<?V cxml_link ?>" type="text/cxml" title="Structured Descriptor Document (CXML format)" />
+    <link rel="alternate" rel="alternate" href="<?V cxml_link ?>" type="text/cxml" title="Structured Descriptor Document (CXML format)" />
     <?vsp } ?>
-    <link rel="alternate" href="<?V gen_rdf_link || sprintf ('&output=%U', 'application/microdata+json') ?>" type="application/microdata+json" 	title="Structured Descriptor Document (Microdata/JSON format)" />
-    <link rel="alternate" href="<?V gen_rdf_link || sprintf ('&output=%U', 'text/html') ?>" 		     type="text/html" 			title="Structured Descriptor Document (Microdata/HTML format)" />
-    <link rel="alternate" href="<?V gen_rdf_link || sprintf ('&output=%U', 'application/ld+json') ?>"      type="application/ld+json" 	title="Structured Descriptor Document (JSON-LD format)" />
     <link rel="timegate" type="text/html" href="http://mementoarchive.lanl.gov/dbpedia/timegate/<?= _resource_ ?>" title="Time Machine" />
     <link rel="stylesheet" type="text/css" href="/statics/<?=either (white_page, 'style_w.css', 'style.css')?>" />
     <link href="/statics/highlighter.css" type="text/css" rel="stylesheet" charset="utf-8" />
-    <link rel="foaf:primarytopic" href="<?= page_resource_uri ?>"/>
-    <link rev="describedby" href="<?= page_resource_uri ?>"/>
+    <link rel="foaf:primarytopic" href="<?vsp http (dbp_ldd_get_proxy (page_resource_uri)); ?>"/>
+    <link rev="describedby" href="<?vsp http (dbp_ldd_get_proxy (page_resource_uri)); ?>"/>
     <script type="text/javascript" src="/statics/script.js"></script>
 </head>
-<body onload="init();" about="<?V page_resource_uri ?>">
+<body onload="init();" about="<?vsp http (sprintf ('%'||registry_get('dbp_decode_param_V'), page_resource_uri)); ?>">
     <div id="header">
       <div id="hd_l">
 	  <h1 id="title">About: <a href="<?vsp http (dbp_ldd_get_proxy (page_resource_uri)); ?>"><?vsp http (sprintf ('%s', label)); ?></a></h1>
@@ -239,7 +210,7 @@
     </div> <!-- header -->
     <div id="content">
 
-      <p><?vsp http (sprintf ('%s', _subject)); ?></p>
+      <p><?vsp http (sprintf ('%'||registry_get('dbp_decode_param_V'), _subject)); ?></p>
 <!-- proptable -->
       <table class="description"><tr><th>Property</th><th>Value</th></tr>
 
@@ -338,11 +309,7 @@
 	<a href="<?= rdf_link3 ?>">JSON</a> 
         <a href="<?= rdf_link2 ?>">XML</a> ) | OData (
 	<a href="<?= atom_link ?>">Atom</a> 
-	<a href="<?= jsod ?>">JSON</a> )| Microdata (
-	<a href="<?= gen_rdf_link || sprintf ('&output=%U', 'application/microdata+json') ?>">JSON</a>
-        <a href="<?= gen_rdf_link || sprintf ('&output=%U', 'text/html') ?>">HTML</a>) |  
-        <a href="<?= gen_rdf_link || sprintf ('&output=%U', 'application/ld+json')?>">JSON-LD</a> 
-
+	<a href="<?= jsod ?>">JSON</a> )
         &nbsp; &nbsp;<a href="<?=registry_get('dbp_imprint') ?>">About</a>&nbsp; &nbsp;
       </div> <!-- #ft_t -->
       <div id="ft_b">
@@ -358,9 +325,6 @@
 	    alt="Valid XHTML + RDFa" height="27" /></a>
 	</span>
       </div> <!-- #ft_b -->
-      <div id="ft_ccbysa">
-	<?vsp dbp_wikipedia_cc_by_sa(_S, _G); ?>
-      </div> <!-- #ft_ccbysa -->
     </div> <!-- #footer -->
     <!--script type="text/javascript">
      Place any Javascript code e.g. Google Analytics scripts 

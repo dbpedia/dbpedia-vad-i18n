@@ -1,26 +1,3 @@
---
---  $Id$
---
---  This file is part of the OpenLink Software Virtuoso Open-Source (VOS)
---  project.
---
---  Copyright (C) 1998-2012 OpenLink Software
---
---  This project is free software; you can redistribute it and/or modify it
---  under the terms of the GNU General Public License as published by the
---  Free Software Foundation; only version 2 of the License, dated June 1991.
---
---  This program is distributed in the hope that it will be useful, but
---  WITHOUT ANY WARRANTY; without even the implied warranty of
---  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
---  General Public License for more details.
---
---  You should have received a copy of the GNU General Public License along
---  with this program; if not, write to the Free Software Foundation, Inc.,
---  51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
---
---
-
 TTLP ('@prefix foaf: <http://xmlns.com/foaf/0.1/>
 @prefix dc: <http://purl.org/dc/elements/1.1/>
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
@@ -39,10 +16,19 @@ create procedure dbp_ldd_set_ns_decl ()
 {
   declare arr any;
   declare i, l int;
+--# official dbpedia's could be included manually and one left for dynamic language namespace
+--#!!! multiple namespaces are needed in order properly show owl:sameAs links
+--#!!! if dbprop(-XX) is changed to 'p' then is should also be changed in description.vsp xml:namespace
   arr := vector (
-    registry_get('dbp_domain') || '/resource/', 'dbpedia',
-    registry_get('dbp_domain') || '/resource/' || registry_get('dbp_category') || ':', 'category',
-    'http://dbpedia.org/property/', 'p',
+    'http://dbpedia.org/resource/',           'dbpedia',
+    'http://dbpedia.org/property/',           'dbpprop',
+    'http://dbpedia.org/resource/Category',   'category',
+    'http://el.dbpedia.org/resource/',        'dbpedia-el',
+    'http://el.dbpedia.org/property/',        'dbpprop-el',
+    'http://el.dbpedia.org/resource/Κατηγορία','category-el',
+    registry_get('dbp_domain') || '/resource/', 'dbpedia-' || registry_get('dbp_lang'),
+    registry_get('dbp_domain') || '/property/', 'dbpprop-' || registry_get('dbp_lang'),
+    registry_get('dbp_domain') || '/resource/' || registry_get('dbp_category') || ':', 'category-' || registry_get('dbp_lang'),
     'http://dbpedia.openlinksw.com/wikicompany/', 'wikicompany',
     'http://dbpedia.org/class/yago/', 'yago',
     'http://www.w3.org/2003/01/geo/wgs84_pos#', 'geo',
@@ -339,12 +325,27 @@ create procedure dbp_ldd_split_url (in uri varchar, out pref varchar, out res va
 
 create procedure dbp_ldd_get_proxy (in x varchar)
 {
-  if (x like 'nodeID://%')
+ if (x like 'nodeID://%')
     return '/about/html/' || x;
-  if (x like 'http://dbpedia.org/%' and http_request_header (http_request_header (), 'Host') <> 'dbpedia.org')
+
+--#!!! these changes are needed for I18n, i cannot check them on dbpedia.org but i think they should work...
+
+--catches local / unofficial instalations
+  if (x like 'http://dbpedia.org/%' and http_request_header (http_request_header (), 'Host') not like '%dbpedia.org')
     return regexp_replace (x, 'http://dbpedia.org', 'http://'||http_request_header (http_request_header (), 'Host'));
+
+--fix to address sameas links between dbpedia's, leave url same as uri
+  if (x like '%dbpedia.org/resource/%' and substring(x,8,3) <> substring(registry_get('dbp_domain'), 1,3)  )
+    return x ;
+
+--normal
   if (x like registry_get('dbp_domain') || '/%' and http_request_header (http_request_header (), 'Host') <> replace(registry_get('dbp_domain'),'http://',''))
     return regexp_replace (x, registry_get('dbp_domain'), 'http://'||http_request_header (http_request_header (), 'Host'));
+
+--fix to catch ontology / class
+  if (x like 'http://dbpedia.org/%' and http_request_header (http_request_header (), 'Host') like '%dbpedia.org')
+    return regexp_replace (x, 'http://dbpedia.org', 'http://'||http_request_header (http_request_header (), 'Host'));
+
 
   if (connection_get ('mappers_installed') = 1 and (
       x like 'http://www.w3.org/2002/07/owl%' or
@@ -423,14 +424,14 @@ create procedure dbp_ldd_http_print_l (in p_text any, inout odd_position int, in
    if (title = href)
      title := '';
    else   
-     title := sprintf (' title="%V"', title);
+     title := sprintf (' title="%' || registry_get('dbp_decode_param_V') || '"', title);
 
    http (sprintf ('<tr class="%s"><td class="property">', either(mod (odd_position, 2), 'odd', 'even')));
    if (rev) http ('is ');
    if (short_p is not null)
-      http (sprintf ('<a class="uri" href="%V"%s><small>%s:</small>%s</a>\n', href, title, p_prefix, short_p));
+      http (sprintf ('<a class="uri" href="%' || registry_get('dbp_decode_param_U') || '"%s><small>%s:</small>%s</a>\n', href, title, p_prefix, short_p));
    else
-      http (sprintf ('<a class="uri" href="%V"%s>%s</a>\n', href, title, p_prefix));
+      http (sprintf ('<a class="uri" href="%' || registry_get('dbp_decode_param_U') || '"%s>%s</a>\n', href, title, p_prefix));
    if (rev) http (' of');
    http ('</td><td><ul>\n');
 }
@@ -602,27 +603,3 @@ create procedure dbp_virt_info ()
 }
 ;
 
-create procedure dbp_wikipedia_cc_by_sa (in _S any, in _G any)
-{
-  declare meta, data any;
-  declare wiki_link varchar;
-
-  if (__tag of IRI_ID = __tag (_S))
-    _S := id_to_iri (_S);
-  if (__tag of IRI_ID = __tag (_G))
-    _G := id_to_iri (_G);
-
-  exec (sprintf ('sparql  '||
-  'select ?o where { graph <%S> { <%S> foaf:page ?o } } LIMIT 1', _G, _S), null, null, vector (), 0, meta, data);
-
-  if (length (data))
-    wiki_link := data[0][0];
-  else
-    wiki_link := 'http://www.wikipedia.org/';
-    
-  http ('This content was extracted from ');
-  http (sprintf ('<a href="%V">Wikipedia</a>', wiki_link));
-  http (' and is licensed under the ');
-  http ('<a href="http://creativecommons.org/licenses/by-sa/3.0/">Creative Commons Attribution-ShareAlike 3.0 Unported License</a>\n');
-} 
-;
