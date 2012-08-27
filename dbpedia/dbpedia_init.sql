@@ -1,3 +1,26 @@
+--
+--  $Id$
+--
+--  This file is part of the OpenLink Software Virtuoso Open-Source (VOS)
+--  project.
+--
+--  Copyright (C) 1998-2012 OpenLink Software
+--
+--  This project is free software; you can redistribute it and/or modify it
+--  under the terms of the GNU General Public License as published by the
+--  Free Software Foundation; only version 2 of the License, dated June 1991.
+--
+--  This program is distributed in the hope that it will be useful, but
+--  WITHOUT ANY WARRANTY; without even the implied warranty of
+--  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+--  General Public License for more details.
+--
+--  You should have received a copy of the GNU General Public License along
+--  with this program; if not, write to the Free Software Foundation, Inc.,
+--  51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+--
+--
+
 DB.DBA.VHOST_REMOVE ( lhost=>registry_get ('dbp_lhost'), vhost=>registry_get ('dbp_vhost'), lpath=>'/');
 DB.DBA.VHOST_REMOVE ( lhost=>registry_get ('dbp_lhost'), vhost=>registry_get ('dbp_vhost'), lpath=>registry_get('_dbpedia_path_'));
 DB.DBA.VHOST_REMOVE ( lhost=>registry_get ('dbp_lhost'), vhost=>registry_get ('dbp_vhost'), lpath=>'/class');
@@ -126,7 +149,7 @@ DB.DBA.URLREWRITE_CREATE_REGEX_RULE ( 'dbp_data_rule3', 1, '/data/([a-z_\\-]*/)?
 vector ('gr', 'par_1'), 'DB.DBA.DBP_GRAPH_PARAM1', NULL, 2, null, '^{sql:DB.DBA.DBP_LINK_HDR}^');
 
 DB.DBA.URLREWRITE_CREATE_REGEX_RULE ( 'dbp_data_rule3-1', 1, '/data/([a-z_\\-]*/)?(.*)\\.(nt)', vector ('gr', 'par_1', 'f'), 1,
-'/sparql?%s&query=define+sql:describe-mode+"DBPEDIA"+DESCRIBE+%%3C' || registry_get('dbp_resource_decoded') || '%%3E&format=nt',
+'/sparql?%s&query=define+sql:describe-mode+"DBPEDIA"+DESCRIBE+%%3C' || registry_get('dbp_resource_decoded') || '%%3E&format=n3',
 vector ('gr', 'par_1'), 'DB.DBA.DBP_GRAPH_PARAM1', NULL, 2, null, '^{sql:DB.DBA.DBP_LINK_HDR}^');
 
 DB.DBA.URLREWRITE_CREATE_REGEX_RULE ( 'dbp_data_rule3-2', 1, '/data/([a-z_\\-]*/)?(.*)\\.(n3)', vector ('gr', 'par_1', 'f'), 1,
@@ -138,7 +161,7 @@ DB.DBA.URLREWRITE_CREATE_REGEX_RULE ( 'dbp_data_rule5', 1, '/data/([a-z_\\-]*/)?
 vector ('gr', 'par_1'), 'DB.DBA.DBP_GRAPH_PARAM1', NULL, 2, null, 'Content-Type: application/rdf+json\r\n^{sql:DB.DBA.DBP_LINK_HDR}^');
 
 DB.DBA.URLREWRITE_CREATE_REGEX_RULE ( 'dbp_data_rule6', 1, '/data/([a-z_\\-]*/)?(.*)\\.(json)', vector ('gr', 'par_1', 'f'), 1,
-'/sparql?%s&query=define+sql:describe-mode+"DBPEDIA"+DESCRIBE+%%3Cdbp_resource_decoded' || registry_get('dbp_resource_decoded') || '%%3E&output=application%%2Fjson',
+'/sparql?%s&query=define+sql:describe-mode+"DBPEDIA"+DESCRIBE+%%3C' || registry_get('dbp_resource_decoded') || '%%3E&output=application%%2Fjson',
 vector ('gr', 'par_1'), 'DB.DBA.DBP_GRAPH_PARAM1', NULL, 2, null, 'Content-Type: application/json\r\n^{sql:DB.DBA.DBP_LINK_HDR}^');
 
 DB.DBA.URLREWRITE_CREATE_REGEX_RULE ( 'dbp_data_rule4', 1, '/data/([a-z_\\-]*/)?(.*)\\.(rdf)', vector ('gr', 'par_1', 'f'), 1,
@@ -175,11 +198,19 @@ DB.DBA.VHOST_DEFINE ( lhost=>registry_get ('dbp_lhost'), vhost=>registry_get ('d
 	 opts=>vector ('url_rewrite', 'pvsp_rule_data3')
 );
 
-DB.DBA.URLREWRITE_CREATE_RULELIST ( 'pvsp_rule_data3', 1, vector ('pvsp_data3_rule'));
+DB.DBA.URLREWRITE_CREATE_RULELIST ( 'pvsp_rule_data3', 1, vector ('pvsp_data3_rule', 'pvsp_data3_rule_2', 'pvsp_data3_rule_3'));
 
-DB.DBA.URLREWRITE_CREATE_REGEX_RULE ( 'pvsp_data3_rule', 1, '/data3/(.*)\\.(n3|rdf)', vector ('par_1', 'f'), 1,
+DB.DBA.URLREWRITE_CREATE_REGEX_RULE ( 'pvsp_data3_rule', 1, '/data3/(.*)\\.(n3|rdf|ttl)', vector ('par_1', 'f'), 1,
 '/sparql?default-graph-uri='||registry_get('dbp_graph_decoded')||'&query=DESCRIBE+%%3Chttp%%3A%%2F%%2Fdbpedia.org%%2Fontology%%2F%U%%3E&format=%U',
 vector ('par_1', 'f'), NULL, NULL, 2, NULL, '');
+
+DB.DBA.URLREWRITE_CREATE_REGEX_RULE ( 'pvsp_data3_rule_2', 1, '/data3/(.*)\\.(atom)', vector ('par_1', 'f'), 1,
+'/sparql?default-graph-uri='||registry_get('dbp_graph_decoded')||'&query=DESCRIBE+%%3Chttp%%3A%%2F%%2Fdbpedia.org%%2Fontology%%2F%U%%3E&format=application%%2Fatom%%2Bxml',
+vector ('par_1'), NULL, NULL, 2, NULL, '');
+
+DB.DBA.URLREWRITE_CREATE_REGEX_RULE ( 'pvsp_data3_rule', 1, '/data3/(.*)\\.(ntriples)', vector ('par_1', 'f'), 1,
+'/sparql?default-graph-uri='||registry_get('dbp_graph_decoded')||'&query=DESCRIBE+%%3Chttp%%3A%%2F%%2Fdbpedia.org%%2Fontology%%2F%U%%3E&format=text%%2Fplain',
+vector ('par_1'), NULL, NULL, 2, NULL, '');
 
 --# page
 DB.DBA.VHOST_DEFINE ( lhost=>registry_get ('dbp_lhost'), vhost=>registry_get ('dbp_vhost'), lpath=>'/page',
@@ -286,7 +317,7 @@ create procedure DB.DBA.DBP_DATA_IRI1 (in par varchar, in fmt varchar, in val va
 }
 ;
 DB.DBA.URLREWRITE_CREATE_REGEX_RULE ( 'dbp_rule_12', 1, '/resource/([^\\?]*)(\\?lang=.*)?\x24', vector ('par_1', 'par_2'), 1,
-    '/data/%s@__@%s', vector ('par_2', 'par_1'), 'DB.DBA.DBP_DATA_IRI1', 
+    '/data/@__@%s', vector ('par_1'), 'DB.DBA.DBP_DATA_IRI1', 
     '(application/rdf.xml)|(text/rdf.n3)|(text/n3)|(application/x-turtle)|(application/rdf.json)|(application/json)|(application/atom.xml)|(application/odata.json)', 2, 303, '^{sql:DB.DBA.DBP_LINK_HDR}^');
 
 create procedure DB.DBA.DBP_TCN_LOC (in id any, in var any)
@@ -297,14 +328,14 @@ create procedure DB.DBA.DBP_TCN_LOC (in id any, in var any)
 
 
 delete from DB.DBA.HTTP_VARIANT_MAP where VM_RULELIST = 'dbp_rule_list_2';
-DB.DBA.HTTP_VARIANT_ADD ('dbp_rule_list_2', '@__@(.*)', '/data/\x241.xml',  'application/rdf+xml', 0.95, location_hook=>null);
-DB.DBA.HTTP_VARIANT_ADD ('dbp_rule_list_2', '@__@(.*)', '/data/\x241.n3',   'text/n3', 0.80, location_hook=>null);
-DB.DBA.HTTP_VARIANT_ADD ('dbp_rule_list_2', '@__@(.*)', '/data/\x241.nt',   'text/rdf+n3', 0.80, location_hook=>null);
-DB.DBA.HTTP_VARIANT_ADD ('dbp_rule_list_2', '@__@(.*)', '/data/\x241.ttl',  'application/x-turtle', 0.70, location_hook=>null);
-DB.DBA.HTTP_VARIANT_ADD ('dbp_rule_list_2', '@__@(.*)', '/data/\x241.json', 'application/json', 0.60, location_hook=>null);
-DB.DBA.HTTP_VARIANT_ADD ('dbp_rule_list_2', '@__@(.*)', '/data/\x241.jrdf', 'application/rdf+json', 0.60, location_hook=>null);
-DB.DBA.HTTP_VARIANT_ADD ('dbp_rule_list_2', '@__@(.*)', '/data/\x241.atom', 'application/atom+xml', 0.50, location_hook=>null);
-DB.DBA.HTTP_VARIANT_ADD ('dbp_rule_list_2', '@__@(.*)', '/data/\x241.jsod', 'application/odata+json', 0.50, location_hook=>null);
+DB.DBA.HTTP_VARIANT_ADD ('dbp_rule_list_2', '/data/@__@(.*)', '/data/\x241.xml',  'application/rdf+xml', 0.95, location_hook=>null);
+DB.DBA.HTTP_VARIANT_ADD ('dbp_rule_list_2', '/data/@__@(.*)', '/data/\x241.n3',   'text/n3', 0.80, location_hook=>null);
+DB.DBA.HTTP_VARIANT_ADD ('dbp_rule_list_2', '/data/@__@(.*)', '/data/\x241.nt',   'text/rdf+n3', 0.80, location_hook=>null);
+DB.DBA.HTTP_VARIANT_ADD ('dbp_rule_list_2', '/data/@__@(.*)', '/data/\x241.ttl',  'application/x-turtle', 0.70, location_hook=>null);
+DB.DBA.HTTP_VARIANT_ADD ('dbp_rule_list_2', '/data/@__@(.*)', '/data/\x241.json', 'application/json', 0.60, location_hook=>null);
+DB.DBA.HTTP_VARIANT_ADD ('dbp_rule_list_2', '/data/@__@(.*)', '/data/\x241.jrdf', 'application/rdf+json', 0.60, location_hook=>null);
+DB.DBA.HTTP_VARIANT_ADD ('dbp_rule_list_2', '/data/@__@(.*)', '/data/\x241.atom', 'application/atom+xml', 0.50, location_hook=>null);
+DB.DBA.HTTP_VARIANT_ADD ('dbp_rule_list_2', '/data/@__@(.*)', '/data/\x241.jsod', 'application/odata+json', 0.50, location_hook=>null);
 
 --# category
 DB.DBA.VHOST_DEFINE ( lhost=>registry_get ('dbp_lhost'), vhost=>registry_get ('dbp_vhost'), lpath=>'/category',

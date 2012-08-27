@@ -1,3 +1,26 @@
+--
+--  $Id$
+--
+--  This file is part of the OpenLink Software Virtuoso Open-Source (VOS)
+--  project.
+--
+--  Copyright (C) 1998-2012 OpenLink Software
+--
+--  This project is free software; you can redistribute it and/or modify it
+--  under the terms of the GNU General Public License as published by the
+--  Free Software Foundation; only version 2 of the License, dated June 1991.
+--
+--  This program is distributed in the hope that it will be useful, but
+--  WITHOUT ANY WARRANTY; without even the implied warranty of
+--  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+--  General Public License for more details.
+--
+--  You should have received a copy of the GNU General Public License along
+--  with this program; if not, write to the Free Software Foundation, Inc.,
+--  51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+--
+--
+
 TTLP ('@prefix foaf: <http://xmlns.com/foaf/0.1/>
 @prefix dc: <http://purl.org/dc/elements/1.1/>
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
@@ -12,25 +35,33 @@ foaf:nick rdfs:subPropertyOf virtrdf:label .', '', 'dbprdf-label');
 
 rdfs_rule_set ('dbprdf-label', 'dbprdf-label');
 
+-- For I18n we create all resources for use in interlanguage links 
+-- and property/category namespage for English and current language
 create procedure dbp_ldd_set_ns_decl ()
 {
   declare arr any;
   declare i, l int;
---# official dbpedia's could be included manually and one left for dynamic language namespace
---#!!! multiple namespaces are needed in order properly show owl:sameAs links
---#!!! if dbprop(-XX) is changed to 'p' then is should also be changed in description.vsp xml:namespace
   arr := vector (
-    'http://dbpedia.org/resource/',           'dbpedia',
-    'http://dbpedia.org/property/',           'dbpprop',
-    'http://dbpedia.org/resource/Category',   'category',
-    'http://el.dbpedia.org/resource/',        'dbpedia-el',
-    'http://el.dbpedia.org/property/',        'dbpprop-el',
-    'http://el.dbpedia.org/resource/Κατηγορία','category-el',
     registry_get('dbp_domain') || '/resource/', 'dbpedia-' || registry_get('dbp_lang'),
-    registry_get('dbp_domain') || '/property/', 'dbpprop-' || registry_get('dbp_lang'),
-    registry_get('dbp_domain') || '/resource/' || registry_get('dbp_category') || ':', 'category-' || registry_get('dbp_lang'),
-    'http://dbpedia.openlinksw.com/wikicompany/', 'wikicompany',
+    registry_get('dbp_domain') || '/property/', 'prop-' || registry_get('dbp_lang'),
+    registry_get('dbp_domain') || '/resource/' || registry_get('dbp_category') || ':', 'category',
+    'http://dbpedia.org/resource/',    'dbpedia',
+    'http://cs.dbpedia.org/resource/', 'dbpedia-cs',
+    'http://de.dbpedia.org/resource/', 'dbpedia-de',
+    'http://el.dbpedia.org/resource/', 'dbpedia-el',
+    'http://fr.dbpedia.org/resource/', 'dbpedia-fr',
+    'http://it.dbpedia.org/resource/', 'dbpedia-it',
+    'http://ja.dbpedia.org/resource/', 'dbpedia-ja',
+    'http://ko.dbpedia.org/resource/', 'dbpedia-ko',
+    'http://pl.dbpedia.org/resource/', 'dbpedia-pl',
+    'http://pt.dbpedia.org/resource/', 'dbpedia-pt',
+    'http://ru.dbpedia.org/resource/', 'dbpedia-ru',
+    'http://es.dbpedia.org/resource/', 'dbpedia-es',
+    'http://dbpedia.org/property/', 'prop',
+    'http://dbpedia.org/resource/category:', 'category',
     'http://dbpedia.org/class/yago/', 'yago',
+    'http://dbpedia.org/ontology/', 'dbpedia-owl',
+    'http://dbpedia.openlinksw.com/wikicompany/', 'wikicompany',
     'http://www.w3.org/2003/01/geo/wgs84_pos#', 'geo',
     'http://www.geonames.org/ontology#', 'geonames',
     'http://xmlns.com/foaf/0.1/', 'foaf',
@@ -48,14 +79,13 @@ create procedure dbp_ldd_set_ns_decl ()
     'http://sw.opencyc.org/2008/06/10/concept/en/', 'opencyc',
     'http://sw.opencyc.org/2008/06/10/concept/', 'opencyc',
     'http://mpii.de/yago/resource/', 'yago-res',
-    'http://rdf.freebase.com/ns/', 'freebase',
-    'http://dbpedia.org/ontology/', 'dbpedia-owl');
+    'http://rdf.freebase.com/ns/', 'freebase');
    l := length (arr);
    for (i := 0; i < l; i := i + 2)
-      {
-	XML_REMOVE_NS_BY_PREFIX (arr[i+1], 2);
-	XML_SET_NS_DECL (arr[i+1], arr[i], 2);
-      }
+   {
+      XML_REMOVE_NS_BY_PREFIX (arr[i+1], 2);
+      XML_SET_NS_DECL (arr[i+1], arr[i], 2);
+   }
 }
 ;
 
@@ -72,25 +102,25 @@ create procedure dbp_ldd_get_lang_by_q (in accept varchar, in lang varchar)
   l := length (arr);
   format := null;
   for (i := 0; i < l; i := i + 2)
+  {
+    declare tmp any;
+    itm := trim(arr[i]);
+    if (itm = lang)
     {
-      declare tmp any;
-      itm := trim(arr[i]);
-      if (itm = lang)
-	{
-	  q := arr[i+1];
-	  if (q is null)
-	    q := 1.0;
-	  else
-	    {
-	      tmp := split_and_decode (q, 0, '\0\0=');
-	      if (length (tmp) = 2)
-		q := atof (tmp[1]);
-	      else
-		q := 1.0;
-	    }
-	  goto ret;
-	}
+      q := arr[i+1];
+      if (q is null)
+        q := 1.0;
+      else
+      {
+        tmp := split_and_decode (q, 0, '\0\0=');
+        if (length (tmp) = 2)
+          q := atof (tmp[1]);
+        else
+          q := 1.0;
+      }
+      goto ret;
     }
+  }
   ret:
   if (q = 0 and lang = 'en')
     q := 0.002;
@@ -110,17 +140,18 @@ create procedure dbp_ldd_label (in _S any, in _G varchar, in lines any := null)
   retr := 1;
 
   declare exit handler for sqlstate '42000'
+  {
+    if (retr and __SQL_MESSAGE like '%Inference context %')
     {
-      if (retr and __SQL_MESSAGE like '%Inference context %')
-	{
-	  rdfs_load_schema ('dbprdf-label', 'dbprdf-label');
-	  retr := 0;
-	  goto again;
-	}
-      return _S;
-    };
+      rdfs_load_schema ('dbprdf-label', 'dbprdf-label');
+      retr := 0;
+      goto again;
+    }
+    return _S;
+  };
 
 again:
+
   if (__tag of IRI_ID = __tag (_S))
     _S := id_to_iri (_S);
   if (__tag of IRI_ID = __tag (_G))
@@ -128,43 +159,55 @@ again:
 
   langs := 'en';
   if (lines is not null)
-    {
-      langs := http_request_header_full (lines, 'Accept-Language', 'en');
-    }
+  {
+    langs := http_request_header_full (lines, 'Accept-Language', 'en');
+  }
   exec (sprintf ('sparql  '||
   'select ?o (lang(?o)) where { graph <%S> { <%S> rdfs:label ?o } }', _G, _S), null, null, vector (), 0, meta, data);
   best_str := '';
   best_q := 0;
   if (length (data))
+  {
+    for (declare i, l int, i := 0, l := length (data); i < l; i := i + 1)
     {
-      for (declare i, l int, i := 0, l := length (data); i < l; i := i + 1)
-	{
-	  q := dbp_ldd_get_lang_by_q (langs, data[i][1]);
-          if (q > best_q)
-	    {
-	      best_str := data[i][0];
-	      best_q := q;
-	    }
-	}
+      q := dbp_ldd_get_lang_by_q (langs, data[i][1]);
+        if (q > best_q)
+        {
+          best_str := data[i][0];
+          best_q := q;
+        }
     }
+  }
+  if (__tag of rdf_box = __tag (best_str))
+  {
+    __rdf_box_make_complete (best_str);
+    best_str := rdf_box_data (best_str);
+  }
   if (best_str <> '')
+  {
     return best_str;
+  }
   exec (sprintf ('sparql define input:inference "dbprdf-label" '||
-  'select ?o (lang(?o)) where { graph <%S> { <%S> virtrdf:label ?o } }', _G, _S), null, null, vector (), 0, meta, data);
+        'select ?o (lang(?o)) where { graph <%S> { <%S> virtrdf:label ?o } }', _G, _S), null, null, vector (), 0, meta, data);
   best_str := '';
   best_q := 0;
   if (length (data))
+  {
+    for (declare i, l int, i := 0, l := length (data); i < l; i := i + 1)
     {
-      for (declare i, l int, i := 0, l := length (data); i < l; i := i + 1)
-	{
-	  q := dbp_ldd_get_lang_by_q (langs, data[i][1]);
-          if (q > best_q)
-	    {
-	      best_str := data[i][0];
-	      best_q := q;
-	    }
-	}
+      q := dbp_ldd_get_lang_by_q (langs, data[i][1]);
+      if (q > best_q)
+      {
+        best_str := data[i][0];
+        best_q := q;
+      }
     }
+  }
+  if (__tag of rdf_box = __tag (best_str))
+  {
+    __rdf_box_make_complete (best_str);
+    best_str := rdf_box_data (best_str);
+  }
   return best_str;
 }
 ;
@@ -181,28 +224,33 @@ create procedure dbp_ldd_type (in gr varchar, in subj varchar, out url varchar, 
     gr := id_to_iri (gr);
 
   if (length (gr))
+  {
+    declare langs any;
+    --if (isvector (lines))
+    --  langs := http_request_header_full (lines, 'Accept-Language', 'en');
+    --else
+    langs := 'en';	
+    exec (sprintf ('sparql select (sql:BEST_LANGMATCH (?l, \'%S\', \'\')) ?tp from <%S> from virtrdf:schemas { <%S> <http://dbpedia.org/ontology/type>  ?tp . optional { ?tp rdfs:label ?l } }', langs, gr, subj), null, null, vector (), 0, meta, data);
+    if (not length (data))
+      exec (sprintf ('sparql select (sql:BEST_LANGMATCH (?l, \'%S\', \'\')) ?tp from <%S> from virtrdf:schemas { <%S> a ?tp . optional { ?tp rdfs:label ?l } filter (?tp like <http://dbpedia.org/ontology/%%>) }', langs, gr, subj), 
+            null, null, vector (), 0, meta, data);
+    if (not length (data))
+      exec (sprintf ('sparql select (sql:BEST_LANGMATCH (?l, \'%S\', \'\')) ?tp from <%S> from virtrdf:schemas { <%S> a ?tp . optional { ?tp rdfs:label ?l } }', langs, gr, subj), 
+            null, null, vector (), 0, meta, data);
+    if (length (data))
     {
-      declare langs any;
-      --if (isvector (lines))
-      --  langs := http_request_header_full (lines, 'Accept-Language', 'en');
-      --else
-        langs := 'en';	
-      exec (sprintf ('sparql select (sql:BEST_LANGMATCH (?l, \'%S\', \'\')) ?tp from <%S> from virtrdf:schemas { <%S> <http://dbpedia.org/ontology/type>  ?tp . optional { ?tp rdfs:label ?l } }', langs, gr, subj), null, null, vector (), 0, meta, data);
-      if (not length (data))
-        exec (sprintf ('sparql select (sql:BEST_LANGMATCH (?l, \'%S\', \'\')) ?tp from <%S> from virtrdf:schemas { <%S> a ?tp . optional { ?tp rdfs:label ?l } filter (?tp like <http://dbpedia.org/ontology/%%>) }', langs, gr, subj), 
-	  null, null, vector (), 0, meta, data);
-      if (not length (data))
-        exec (sprintf ('sparql select (sql:BEST_LANGMATCH (?l, \'%S\', \'\')) ?tp from <%S> from virtrdf:schemas { <%S> a ?tp . optional { ?tp rdfs:label ?l } }', langs, gr, subj), 
-	  null, null, vector (), 0, meta, data);
-      if (length (data))
-	{
-	  if (data[0][0] is not null and data[0][0] <> 0)
-  	    ll := data[0][0];
-	  else  
-	    ll := dbp_ldd_uri_local_part (data[0][1]);
-	  url := dbp_ldd_get_proxy (data[0][1]);
-	}
+      if (data[0][0] is not null and data[0][0] <> 0)
+        ll := data[0][0];
+      else  
+        ll := dbp_ldd_uri_local_part (data[0][1]);
+      url := dbp_ldd_get_proxy (data[0][1]);
     }
+  }
+  if (__tag of rdf_box = __tag (ll))
+  {
+    __rdf_box_make_complete (ll);
+    ll := rdf_box_data (ll);
+  }
   return ll;
 }
 ;
@@ -245,16 +293,16 @@ create procedure dbp_ldd_subject (in _S any, in _G varchar, in lines any := null
     }
   best_str := '';
   exec (sprintf ('sparql select (sql:BEST_LANGMATCH (?l, \'%S\', \'en\')) ?tp where { graph <%S> { <%S> dbpprop:comment_live ?l } }', 
-	langs, _G, _S), null, null, vector (), 0, meta, data);
+                 langs, _G, _S), null, null, vector (), 0, meta, data);
   if (length (data) and data[0][0] is not null and data[0][0] <> 0)
     best_str := data[0][0];
   else
-    {
-      exec (sprintf ('sparql select (sql:BEST_LANGMATCH (?l, \'%S\', \'en\')) ?tp where { graph <%S> { <%S> rdfs:comment ?l } }', 
-	    langs, _G, _S), null, null, vector (), 0, meta, data);
-      if (length (data) and data[0][0] is not null and data[0][0] <> 0)
-	best_str := data[0][0];
-    }
+  {
+    exec (sprintf ('sparql select (sql:BEST_LANGMATCH (?l, \'%S\', \'en\')) ?tp where { graph <%S> { <%S> rdfs:comment ?l } }', 
+    langs, _G, _S), null, null, vector (), 0, meta, data);
+    if (length (data) and data[0][0] is not null and data[0][0] <> 0)
+      best_str := data[0][0];
+  }
   return best_str;
 }
 ;
@@ -287,65 +335,53 @@ create procedure dbp_ldd_split_url (in uri varchar, out pref varchar, out res va
   if (not length (label))
     label := null;
   while (nsPrefix is null and delim <> 0)
-    {
-      delim := coalesce (strrchr (uriSearch, '/'), 0);
-      delim := __max (delim, coalesce (strrchr (uriSearch, '#'), 0));
-      delim := __max (delim, coalesce (strrchr (uriSearch, ':'), 0));
-      nsPrefix := coalesce (__xml_get_ns_prefix (subseq (uriSearch, 0, delim + 1), 2),
-      			    __xml_get_ns_prefix (subseq (uriSearch, 0, delim),     2));
-      uriSearch := subseq (uriSearch, 0, delim);
-    }
+  {
+    delim := coalesce (strrchr (uriSearch, '/'), 0);
+    delim := __max (delim, coalesce (strrchr (uriSearch, '#'), 0));
+    delim := __max (delim, coalesce (strrchr (uriSearch, ':'), 0));
+    nsPrefix := coalesce (__xml_get_ns_prefix (subseq (uriSearch, 0, delim + 1), 2),
+                          __xml_get_ns_prefix (subseq (uriSearch, 0, delim),     2));
+    uriSearch := subseq (uriSearch, 0, delim);
+  }
   if (nsPrefix is not null)
+  {
+    declare rhs varchar;
+    rhs := subseq(uri, length (uriSearch) + 1, null);
+    if (length (rhs))
     {
-      declare rhs varchar;
-      rhs := subseq(uri, length (uriSearch) + 1, null);
-      if (length (rhs))
-	{
-	  pref := nsPrefix;
-	  if (regexp_match ('(_percent_[0-9A-F][0-9A-F])', rhs))
-	    {
-	      rhs := regexp_replace (rhs, '(_percent_)', '%', 1, null);
-	    }
-	  if (regexp_match ('%[0-9A-F][0-9A-F]', rhs))
-	    {
-	      declare tmp any;
-	      tmp := split_and_decode (rhs)[0];
-	      if (charset_recode (tmp, 'UTF-8', null))
-		rhs := tmp;
-	    }
-	  rhs := dbp_ldd_trunc_uri (rhs);
-	  res := coalesce (label, rhs);
-	  return;
-	}
+      pref := nsPrefix;
+      if (regexp_match ('(_percent_[0-9A-F][0-9A-F])', rhs))
+      {
+        rhs := regexp_replace (rhs, '(_percent_)', '%', 1, null);
+      }
+      if (regexp_match ('%[0-9A-F][0-9A-F]', rhs))
+      {
+        declare tmp any;
+        tmp := split_and_decode (rhs)[0];
+        if (charset_recode (tmp, 'UTF-8', null))
+        rhs := tmp;
+      }
+      rhs := dbp_ldd_trunc_uri (rhs);
+      res := coalesce (label, rhs);
+      return;
     }
+  }
   pref := uri;
   res := null;
 }
 ;
 
+-- TODO check for interdbpedia links 
+-- both when in http://(lang.)dbpedia.org
+-- and in other domain i.e. localhost
 create procedure dbp_ldd_get_proxy (in x varchar)
 {
- if (x like 'nodeID://%')
+  if (x like 'nodeID://%')
     return '/about/html/' || x;
-
---#!!! these changes are needed for I18n, i cannot check them on dbpedia.org but i think they should work...
-
---catches local / unofficial instalations
-  if (x like 'http://dbpedia.org/%' and http_request_header (http_request_header (), 'Host') not like '%dbpedia.org')
+  if (x like 'http://dbpedia.org/%' and http_request_header (http_request_header (), 'Host') <> 'dbpedia.org')
     return regexp_replace (x, 'http://dbpedia.org', 'http://'||http_request_header (http_request_header (), 'Host'));
-
---fix to address sameas links between dbpedia's, leave url same as uri
-  if (x like '%dbpedia.org/resource/%' and substring(x,8,3) <> substring(registry_get('dbp_domain'), 1,3)  )
-    return x ;
-
---normal
   if (x like registry_get('dbp_domain') || '/%' and http_request_header (http_request_header (), 'Host') <> replace(registry_get('dbp_domain'),'http://',''))
     return regexp_replace (x, registry_get('dbp_domain'), 'http://'||http_request_header (http_request_header (), 'Host'));
-
---fix to catch ontology / class
-  if (x like 'http://dbpedia.org/%' and http_request_header (http_request_header (), 'Host') like '%dbpedia.org')
-    return regexp_replace (x, 'http://dbpedia.org', 'http://'||http_request_header (http_request_header (), 'Host'));
-
 
   if (connection_get ('mappers_installed') = 1 and (
       x like 'http://www.w3.org/2002/07/owl%' or
@@ -376,25 +412,25 @@ create procedure dbp_ldd_get_lang_acc (in lines any)
   l := length (arr);
   ret := make_array (l, 'any');
   for (i := 0; i < l; i := i + 2)
+  {
+    declare tmp any;
+    itm := trim(arr[i]);
+    if (itm like '%-%')
+      itm := subseq (itm, 0, strchr (itm, '-'));
+    q := arr[i+1];
+    if (q is null)
+      q := 1.0;
+    else
     {
-      declare tmp any;
-      itm := trim(arr[i]);
-      if (itm like '%-%')
-	itm := subseq (itm, 0, strchr (itm, '-'));
-      q := arr[i+1];
-      if (q is null)
-	q := 1.0;
+      tmp := split_and_decode (q, 0, '\0\0=');
+      if (length (tmp) = 2)
+        q := atof (tmp[1]);
       else
-	{
-	  tmp := split_and_decode (q, 0, '\0\0=');
-	  if (length (tmp) = 2)
-	    q := atof (tmp[1]);
-	  else
-	    q := 1.0;
-	}
-      ret[i] := itm;
-      ret[i+1] := q;
+        q := 1.0;
     }
+    ret[i] := itm;
+    ret[i+1] := q;
+  }
   return ret;
 }
 ;
@@ -422,22 +458,29 @@ create procedure dbp_ldd_http_print_l (in p_text any, inout odd_position int, in
    href := dbp_ldd_get_proxy (p_text);
    title := p_text;
    if (title = href)
-     title := '';
+      title := '';
    else   
-     title := sprintf (' title="%' || registry_get('dbp_decode_param_V') || '"', title);
+      title := sprintf (' title="%' || registry_get('dbp_decode_param_U') || '"', title);
 
    http (sprintf ('<tr class="%s"><td class="property">', either(mod (odd_position, 2), 'odd', 'even')));
    if (rev) http ('is ');
    if (short_p is not null)
-      http (sprintf ('<a class="uri" href="%' || registry_get('dbp_decode_param_U') || '"%s><small>%s:</small>%s</a>\n', href, title, p_prefix, short_p));
+      http (sprintf ('<a class="uri" href="%' || registry_get('dbp_decode_param_U') || '"%s><small>%' || registry_get('dbp_decode_param_U') || ':</small>%' || registry_get('dbp_decode_param_U') || '</a>\n', 
+         href,
+         charset_recode (title, 'UTF-8', '_WIDE_'),
+         charset_recode (p_prefix, 'UTF-8', '_WIDE_'),
+         charset_recode (short_p, 'UTF-8', '_WIDE_')));
    else
-      http (sprintf ('<a class="uri" href="%' || registry_get('dbp_decode_param_U') || '"%s>%s</a>\n', href, title, p_prefix));
+      http (sprintf ('<a class="uri" href="%' || registry_get('dbp_decode_param_U') || '"%s>%' || registry_get('dbp_decode_param_U') || '</a>\n', 
+         href,
+         charset_recode (title, 'UTF-8', '_WIDE_'), 
+         charset_recode (p_prefix, 'UTF-8', '_WIDE_')));
    if (rev) http (' of');
    http ('</td><td><ul>\n');
 }
 ;
 
-create procedure dbp_ldd_rel_print (in val any, in rel any, in obj any, in flag int := 0, in lang varchar := null)
+create procedure dbp_ldd_rel_print (in val any, in rel any, in obj any, in flag int := 0, in lang varchar := null, in nofollow int := 0)
 {
   declare delim, delim1, delim2, delim3 integer;
   declare inx int;
@@ -470,11 +513,11 @@ create procedure dbp_ldd_rel_print (in val any, in rel any, in obj any, in flag 
   if (flag)
     loc := sprintf ('property="%s:%s"', nspref, loc);
   else if (rel)
-    loc := sprintf ('rel="%s:%s"', nspref, loc);
+    loc := sprintf ('rel="%s:%s%s"', nspref, loc, case when nofollow = 1 and loc <> 'sameAs' then ' nofollow' else '' end);
   else
     loc := sprintf ('rev="%s:%s"', nspref, loc);
   --if (obj is not null)
-  --  res := sprintf (' resource="%V"', obj);  
+  --  res := sprintf (' resource="%"', obj);  
   lang_def := '';
   if (isstring (lang) and lang <> '')
     lang_def := sprintf (' xml:lang="%s"', lang);
@@ -489,88 +532,101 @@ create procedure dbp_ldd_http_print_r (in _object any, in org int := 0, in label
    lang := DB.DBA.RDF_LANGUAGE_OF_OBJ (_object);
    visible := dbp_ldd_str_lang_check (lang, acc);
    rdfs_type := DB.DBA.RDF_DATATYPE_OF_OBJ (_object);
-   rdfa := dbp_ldd_rel_print (id_to_iri (pred), rel, null, 1, lang);
+   rdfa := dbp_ldd_rel_print (id_to_iri (pred), rel, null, 1, lang, 0);
 
    http (sprintf ('\t<li%s><span class="literal">', case visible when 0 then ' style="display:none;"' else '' end));
 
 again:
    if (__tag (_object) = 246)
-     {
-       declare dat any;
-       dat := __rdf_sqlval_of_obj (_object, 1);
-       _object := dat;
-       goto again;
-     }
+   {
+      declare dat any;
+      dat := __rdf_sqlval_of_obj (_object, 1);
+      _object := dat;
+      goto again;
+   }
    else if (__tag (_object) = 189)
-     {
-       http (sprintf ('<span %s>%d</span>', rdfa, _object));
-       lang := 'xsd:integer';
-     }
+   {
+      http (sprintf ('<span %s>%d</span>', rdfa, _object));
+      lang := 'xsd:integer';
+   }
    else if (__tag (_object) = 190)
-     {
-       http (sprintf ('<span %s>%f</span>', rdfa, _object));
-       lang := 'xsd:float';
-     }
+   {
+      http (sprintf ('<span %s>%f</span>', rdfa, _object));
+      lang := 'xsd:float';
+   }
    else if (__tag (_object) = 191)
-     {
-       http (sprintf ('<span %s>%f</span>', rdfa, _object));
-       lang := 'xsd:double';
-     }
+   {
+      http (sprintf ('<span %s>%f</span>', rdfa, _object));
+      lang := 'xsd:double';
+   }
    else if (__tag (_object) = 219)
-     {
-       http (sprintf ('<span %s>%s</span>', rdfa, cast (_object as varchar)));
-       lang := 'xsd:double';
-     }
+   {
+      http (sprintf ('<span %s>%s</span>', rdfa, cast (_object as varchar)));
+      lang := 'xsd:double';
+   }
    else if (__tag (_object) = 182)
-     {
-       string_type:
-       http (sprintf ('<span %s>%s</span>', rdfa, _object));
-       lang := '';
-     }
+   {
+      string_type:
+      http (sprintf ('<span %s>', rdfa));
+      http_value (charset_recode (_object, 'UTF-8', '_WIDE_'));
+      http ('</span>');
+      lang := '';
+   }
    else if (__tag (_object) = 211)
-     {
-       http (sprintf ('<span %s>%s</span>', rdfa, datestring (_object)));
-       lang := 'xsd:date';
-     }
+   {
+      http (sprintf ('<span %s>%s</span>', rdfa, datestring (_object)));
+      lang := 'xsd:date';
+   }
    else if (__tag (_object) = 243)
-     {
-       declare _url, p_t, s_t, _label any;
+   {
+      declare _url, p_t, s_t, _label any;
 
-       _label := null;
-       if (pred = rdf_sas_iri ())
-	 _label := label;
-       _url := id_to_iri (_object);
-       if (_url is null)
-	 {
-	   _object := 'unknown IRI_ID';
-	   goto string_type;
-	 }
-       if (_url like 'http://sw.opencyc.org/2008/06/10/concept/%')
-	 {
-	   declare h_url varchar;
-	   declare stat, msg, data, meta any;
-	   stat := '00000';
-	   exec (sprintf ('sparql select * from <http://dbpedia.org/resource/classes/opencyc-readable#> where { ?x owl:sameAs <%s> } limit 1', _url),
-	       stat, msg, vector (), 0, meta, data);
-	   if (length (data))
-	     h_url := data[0][0];
-	   else
-	     h_url := _url;
+      _label := null;
+      if (pred = rdf_sas_iri ())
+         _label := label;
+      _url := id_to_iri (_object);
+      if (_url is null)
+      {
+         _object := 'unknown IRI_ID';
+         goto string_type;
+      }
+      if (_url like 'http://sw.opencyc.org/2008/06/10/concept/%')
+      {
+         declare h_url varchar;
+         declare stat, msg, data, meta any;
+         stat := '00000';
+         exec (sprintf ('sparql select * from <http://dbpedia.org/resource/classes/opencyc-readable#> where { ?x owl:sameAs <%s> } limit 1', _url),
+         stat, msg, vector (), 0, meta, data);
+         if (length (data))
+            h_url := data[0][0];
+         else
+            h_url := _url;
 	   dbp_ldd_split_url (h_url, p_t, s_t);
 	 }
        else
 	 dbp_ldd_split_url (_url, p_t, s_t, _label);
 
-       rdfa := dbp_ldd_rel_print (id_to_iri (pred), rel, _url, 0, lang);
+       declare nofollow int;
+       nofollow := 0;
+       if (s_t is null and _url not like registry_get('dbp_domain') || '/%')
+	 nofollow := 1;
+
+       rdfa := dbp_ldd_rel_print (id_to_iri (pred), rel, _url, 0, lang, nofollow);
+
        if (s_t is null)
 	 {
-	   http (sprintf ('<a class="uri" %s href="%s">%s</a>', 
-		 rdfa, case when org then _url else dbp_ldd_get_proxy(_url) end, _url));
+	   http (sprintf ('<a class="uri" %s href="%' || registry_get('dbp_decode_param_U') || '">%' || registry_get('dbp_decode_param_U') || '</a>', 
+		 rdfa, 
+		charset_recode (case when org then _url else dbp_ldd_get_proxy(_url) end, 'UTF-8', '_WIDE_'), 
+		charset_recode (_url, 'UTF-8', '_WIDE_')));
 	 }
        else
 	 {
-	   http (sprintf ('<a class="uri" %s href="%s"><small>%s</small>:%s</a>',
-		 rdfa, case when org then _url else dbp_ldd_get_proxy (_url) end, p_t, s_t));
+	   http (sprintf ('<a class="uri" %s href="%' || registry_get('dbp_decode_param_U') || '"><small>%' || registry_get('dbp_decode_param_U') || '</small>:%' || registry_get('dbp_decode_param_U') || '</a>',
+		 rdfa, 
+		charset_recode (case when org then _url else dbp_ldd_get_proxy(_url) end, 'UTF-8', '_WIDE_'), 
+		charset_recode (p_t, 'UTF-8', '_WIDE_'),
+		charset_recode (s_t, 'UTF-8', '_WIDE_')));
 	 }
      }
    else if (__tag (_object) = 238)
@@ -603,3 +659,53 @@ create procedure dbp_virt_info ()
 }
 ;
 
+create procedure dbp_wikipedia_cc_by_sa (in _S any, in _G any)
+{
+  declare meta, data any;
+  declare wiki_link varchar;
+
+  if (__tag of IRI_ID = __tag (_S))
+    _S := id_to_iri (_S);
+  if (__tag of IRI_ID = __tag (_G))
+    _G := id_to_iri (_G);
+
+  exec (sprintf ('sparql  '||
+  'select ?o where { graph <%S> { <%S> foaf:isPrimaryTopicOf ?o } } LIMIT 1', _G, _S), null, null, vector (), 0, meta, data);
+
+  if (length (data))
+    wiki_link := charset_recode (data[0][0], 'UTF-8', '_WIDE_');
+  else
+    wiki_link := 'http://www.wikipedia.org/';
+    
+  http ('This content was extracted from ');
+  http (sprintf ('<a href="%V">Wikipedia</a>', wiki_link));
+  http (' and is licensed under the ');
+  http ('<a href="http://creativecommons.org/licenses/by-sa/3.0/">Creative Commons Attribution-ShareAlike 3.0 Unported License</a>\n');
+} 
+;
+
+create procedure 
+dbp_check_if_modified (in lines any, in graph any)
+{
+  declare since, modified, pname any;
+  declare exit handler for sqlstate '*' 
+    {
+      return 0;
+    };
+  since := http_request_header (lines, 'If-Modified-Since', null, null);
+  if (since is null) return 0;
+  since := http_string_date (since);
+  pname := registry_get ('dbp_last_modification');
+  if (isstring (pname) and __proc_exists (pname) is not null)
+    modified := call (pname) (lines, graph);
+  else  
+    modified := (select max (LL_DONE) from LOAD_LIST where LL_GRAPH = graph);
+  modified := dt_set_tz (modified, 0);  
+  --dbg_obj_print_vars (since, modified, gt (since, modified), graph);
+  if (modified is null) return 0;
+  if (modified > since) return 0;
+  http_rewrite ();
+  http_status_set (304);
+  return 1;
+}
+;
