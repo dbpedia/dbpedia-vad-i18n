@@ -46,6 +46,10 @@ create procedure dbp_setup ()
 --# to create the prefix category:
   if (not isstring(registry_get ('dbp_category')))
     registry_set('dbp_category', 'Category');
+    
+--# to create the prefix template:
+  if (not isstring(registry_get ('dbp_template')))
+    registry_set('dbp_template', 'Template');
 
   if (not isstring(registry_get ('dbp_imprint')))
     registry_set ('dbp_imprint', 'http://wiki.dbpedia.org/Imprint');
@@ -504,3 +508,5 @@ dbpl_robots ()
 ;
 
 
+
+           

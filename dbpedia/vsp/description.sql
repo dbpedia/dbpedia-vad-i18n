@@ -42,10 +42,11 @@ create procedure dbp_ldd_set_ns_decl ()
   declare arr any;
   declare i, l int;
   arr := vector (
+    registry_get('dbp_domain') || '/resource/' || registry_get('dbp_category') || ':', 'category-' || registry_get('dbp_lang'),
+    registry_get('dbp_domain') || '/resource/' || registry_get('dbp_template') || ':', 'template-' || registry_get('dbp_lang'),
     registry_get('dbp_domain') || '/resource/', 'dbpedia-' || registry_get('dbp_lang'),
     registry_get('dbp_domain') || '/property/', 'prop-' || registry_get('dbp_lang'),
-    registry_get('dbp_domain') || '/resource/' || registry_get('dbp_category') || ':', 'category',
-    'http://dbpedia.org/resource/',    'dbpedia',
+    'http://' || registry_get('dbp_lang') || '.wikipedia.org/wiki/', 'wiki-' || registry_get('dbp_lang'),
     'http://cs.dbpedia.org/resource/', 'dbpedia-cs',
     'http://de.dbpedia.org/resource/', 'dbpedia-de',
     'http://el.dbpedia.org/resource/', 'dbpedia-el',
@@ -53,12 +54,15 @@ create procedure dbp_ldd_set_ns_decl ()
     'http://it.dbpedia.org/resource/', 'dbpedia-it',
     'http://ja.dbpedia.org/resource/', 'dbpedia-ja',
     'http://ko.dbpedia.org/resource/', 'dbpedia-ko',
+    'http://nl.dbpedia.org/resource/', 'dbpedia-nl',
     'http://pl.dbpedia.org/resource/', 'dbpedia-pl',
     'http://pt.dbpedia.org/resource/', 'dbpedia-pt',
     'http://ru.dbpedia.org/resource/', 'dbpedia-ru',
     'http://es.dbpedia.org/resource/', 'dbpedia-es',
+    'http://dbpedia.org/resource/Category:', 'category',
+    'http://dbpedia.org/resource/Template:', 'template',
+    'http://dbpedia.org/resource/',    'dbpedia',
     'http://dbpedia.org/property/', 'prop',
-    'http://dbpedia.org/resource/category:', 'category',
     'http://dbpedia.org/class/yago/', 'yago',
     'http://dbpedia.org/ontology/', 'dbpedia-owl',
     'http://dbpedia.openlinksw.com/wikicompany/', 'wikicompany',
@@ -191,7 +195,7 @@ again:
         'select ?o (lang(?o)) where { graph <%S> { <%S> virtrdf:label ?o } }', _G, _S), null, null, vector (), 0, meta, data);
   best_str := '';
   best_q := 0;
-  if (length (data))
+  if (length (data)) 
   {
     for (declare i, l int, i := 0, l := length (data); i < l; i := i + 1)
     {
@@ -212,6 +216,7 @@ again:
 }
 ;
 
+
 create procedure dbp_ldd_type (in gr varchar, in subj varchar, out url varchar, in lines any := null)
 {
   declare meta, data, ll any;
@@ -223,13 +228,13 @@ create procedure dbp_ldd_type (in gr varchar, in subj varchar, out url varchar, 
   if (__tag of IRI_ID = __tag (gr))
     gr := id_to_iri (gr);
 
-  if (length (gr))
-  {
+  if ( length (gr) )  {
     declare langs any;
     --if (isvector (lines))
     --  langs := http_request_header_full (lines, 'Accept-Language', 'en');
     --else
-    langs := 'en';	
+    langs := '' || registry_get('dbp_lang') || ', en;q=0.8' ;  -- works for english ~'en, en;q=0.8'
+    
     exec (sprintf ('sparql select (sql:BEST_LANGMATCH (?l, \'%S\', \'\')) ?tp from <%S> from virtrdf:schemas { <%S> <http://dbpedia.org/ontology/type>  ?tp . optional { ?tp rdfs:label ?l } }', langs, gr, subj), null, null, vector (), 0, meta, data);
     if (not length (data))
       exec (sprintf ('sparql select (sql:BEST_LANGMATCH (?l, \'%S\', \'\')) ?tp from <%S> from virtrdf:schemas { <%S> a ?tp . optional { ?tp rdfs:label ?l } filter (?tp like <http://dbpedia.org/ontology/%%>) }', langs, gr, subj), 
@@ -281,16 +286,15 @@ create procedure dbp_ldd_subject (in _S any, in _G varchar, in lines any := null
   if (__tag of IRI_ID = __tag (_G))
     _G := id_to_iri (_G);
 
-  langs := 'en';
-  if (lines is not null)
-    {
-      langs := http_request_header_full (lines, 'Accept-Language', 'en');
-    }
-  if (langs is not null)
-    {
-      langs := replace (langs, 'en-us', 'en');
-      langs := replace (langs, 'en-uk', 'en');
-    }
+  langs := '' || registry_get('dbp_lang') || ', en;q=0.8';  -- works for english eitherway
+  if (lines is not null) {
+    langs := http_request_header_full (lines, 'Accept-Language', langs);
+  }
+  if (langs is not null) {
+    langs := replace (langs, 'en-us', 'en');
+    langs := replace (langs, 'en-uk', 'en');
+    langs := replace (langs, 'en-gb', 'en');
+  }
   best_str := '';
   exec (sprintf ('sparql select (sql:BEST_LANGMATCH (?l, \'%S\', \'en\')) ?tp where { graph <%S> { <%S> dbpprop:comment_live ?l } }', 
                  langs, _G, _S), null, null, vector (), 0, meta, data);
@@ -467,14 +471,14 @@ create procedure dbp_ldd_http_print_l (in p_text any, inout odd_position int, in
    if (short_p is not null)
       http (sprintf ('<a class="uri" href="%' || registry_get('dbp_decode_param_U') || '"%s><small>%' || registry_get('dbp_decode_param_U') || ':</small>%' || registry_get('dbp_decode_param_U') || '</a>\n', 
          href,
-         charset_recode (title, 'UTF-8', '_WIDE_'),
-         charset_recode (p_prefix, 'UTF-8', '_WIDE_'),
-         charset_recode (short_p, 'UTF-8', '_WIDE_')));
+         title,
+         p_prefix,
+         short_p));
    else
       http (sprintf ('<a class="uri" href="%' || registry_get('dbp_decode_param_U') || '"%s>%' || registry_get('dbp_decode_param_U') || '</a>\n', 
          href,
-         charset_recode (title, 'UTF-8', '_WIDE_'), 
-         charset_recode (p_prefix, 'UTF-8', '_WIDE_')));
+         title, 
+         p_prefix));
    if (rev) http (' of');
    http ('</td><td><ul>\n');
 }
@@ -617,16 +621,16 @@ again:
 	 {
 	   http (sprintf ('<a class="uri" %s href="%' || registry_get('dbp_decode_param_U') || '">%' || registry_get('dbp_decode_param_U') || '</a>', 
 		 rdfa, 
-		charset_recode (case when org then _url else dbp_ldd_get_proxy(_url) end, 'UTF-8', '_WIDE_'), 
-		charset_recode (_url, 'UTF-8', '_WIDE_')));
+		case when org then _url else dbp_ldd_get_proxy(_url) end, 
+		_url));
 	 }
        else
 	 {
 	   http (sprintf ('<a class="uri" %s href="%' || registry_get('dbp_decode_param_U') || '"><small>%' || registry_get('dbp_decode_param_U') || '</small>:%' || registry_get('dbp_decode_param_U') || '</a>',
 		 rdfa, 
-		charset_recode (case when org then _url else dbp_ldd_get_proxy(_url) end, 'UTF-8', '_WIDE_'), 
-		charset_recode (p_t, 'UTF-8', '_WIDE_'),
-		charset_recode (s_t, 'UTF-8', '_WIDE_')));
+		case when org then _url else dbp_ldd_get_proxy(_url) end, 
+		p_t,
+		s_t));
 	 }
      }
    else if (__tag (_object) = 238)
@@ -709,3 +713,6 @@ dbp_check_if_modified (in lines any, in graph any)
   return 1;
 }
 ;
+
+           
+           

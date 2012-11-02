@@ -724,3 +724,5 @@ TTLP (
 <http://dbpedia.org/ontology/wikiPageDisambiguates> owl:equivalentProperty <http://dbpedia.org/property/disambiguates> .
 ', '', 'http://dbpedia.org/schema/property_rules#');
 
+
+           
