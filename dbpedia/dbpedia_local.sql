@@ -23,6 +23,9 @@
 
 create procedure dbp_setup ()
 {
+-- TODO HACK !!!
+  registry_set('dbp_decode_iri', 'on');
+
 --# if utf-8 iri's are used
   if (not isstring(registry_get ('dbp_decode_iri')))
     registry_set ('dbp_decode_iri','off');
@@ -164,6 +167,16 @@ DB.DBA.VHOST_DEFINE (lpath=>rtrim (registry_get('_dbpedia_path_'), '/'), ppath=>
 DB.DBA.VHOST_REMOVE (lpath=>'/statics');
 DB.DBA.VHOST_DEFINE (lpath=>'/statics', ppath=>registry_get('_dbpedia_path_')||'statics/',
     is_dav=>atoi (registry_get('_dbpedia_dav_')));
+
+-- Angular
+DB.DBA.VHOST_REMOVE (lpath=>'/js');
+DB.DBA.VHOST_DEFINE (lpath=>'/js', ppath=>registry_get('_dbpedia_path_')||'js/',
+    is_dav=>atoi (registry_get('_dbpedia_dav_')));
+DB.DBA.VHOST_REMOVE (lpath=>'/tpl');
+DB.DBA.VHOST_DEFINE (lpath=>'/tpl', ppath=>registry_get('_dbpedia_path_')||'tpl/',
+    is_dav=>atoi (registry_get('_dbpedia_dav_')));
+
+
 
 -- Classes
 DB.DBA.VHOST_REMOVE (lpath=>'/class');

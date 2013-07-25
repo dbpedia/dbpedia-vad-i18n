@@ -3,7 +3,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml" 
     xmlns:prop="http://dbpedia.org/property/" 
     xmlns:foaf="http://xmlns.com/foaf/0.1/" 
-    version="XHTML+RDFa 1.0" xml:lang="<?= registry_get('dbp_lang')?>">
+    version="XHTML+RDFa 1.0" xml:lang="<?= registry_get('dbp_lang')?>"
+    ng-app='dbpv'>
 <?vsp
 --
 --  $Id$
@@ -232,6 +233,13 @@
   <link rel="foaf:primarytopic" href="<?= charset_recode(page_resource_uri, 'UTF-8', '_WIDE_') ?>"/>
   <link rev="describedby" href="<?= charset_recode(page_resource_uri, 'UTF-8', '_WIDE_') ?>"/>
   <script type="text/javascript" src="/statics/script.js"></script>
+  <script type="text/javascript" src="/js/jquery.js"></script>
+  <script type="text/javascript" src="/js/angular.min.js"></script>
+  <script type="text/javascript" src="/js/app.js"></script>
+  <script type="text/javascript" src="/js/services.js"></script>
+  <script type="text/javascript" src="/js/controllers.js"></script>
+  <script type="text/javascript" src="/js/jquery.rdfquery.core.js"></script>
+  <script type="text/javascript" src="/js/jquery.rdfquery.rdfa.js"></script>
 </head>
 <body onload="init();" about="<?=charset_recode(page_resource_uri, 'UTF-8', '_WIDE_') ?>">
   <div id="header">
@@ -245,6 +253,7 @@
           from Named Graph : <a href="<?= project_home_page ?>"><?= project_home_page ?></a>, 
           within Data Space : <a href="http://<?= host ?>"><?V host ?></a>
        </div>
+		<div id="test"><?= concat('test', 'this') ?></div>
      </div> <!-- hd_l -->
      <div id="hd_r">
        <a href="<?=registry_get('dbp_imprint') ?>" title="About DBpedia">
@@ -252,7 +261,7 @@
        </a>
      </div> <!-- hd_r -->
   </div> <!-- header -->
-  <div id="content">
+  <div ng-view id="content">
       <p><?vsp http (sprintf ('%'||registry_get('dbp_decode_param_V'), _subject)); ?></p>
 <!-- proptable -->
       <table class="description"><tr><th>Property</th><th>Value</th></tr>

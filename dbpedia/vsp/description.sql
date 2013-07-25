@@ -455,27 +455,39 @@ create procedure dbp_ldd_str_lang_check (in lang any, in acc any)
 
 create procedure dbp_ldd_http_print_l (in p_text any, inout odd_position int, in rev int := 0)
 {
+   --http(p_text);
    declare short_p, p_prefix, int_redirect, href, title any;
 
    odd_position :=  odd_position + 1;
    dbp_ldd_split_url (p_text, p_prefix, short_p);
+
+   --http(p_prefix);
+
+   --http(short_p);
    href := dbp_ldd_get_proxy (p_text);
+
+   --http(href);
+   --http(sprintf(' vs "%'||registry_get('dbp_decode_param_U')||'"', href));
+
    title := p_text;
    if (title = href)
       title := '';
    else   
       title := sprintf (' title="%' || registry_get('dbp_decode_param_U') || '"', title);
 
+   --http(title);
+   --http('!!!!!!!\n');
+
    http (sprintf ('<tr class="%s"><td class="property">', either(mod (odd_position, 2), 'odd', 'even')));
    if (rev) http ('is ');
    if (short_p is not null)
-      http (sprintf ('<a class="uri" href="%' || registry_get('dbp_decode_param_U') || '"%s><small>%' || registry_get('dbp_decode_param_U') || ':</small>%' || registry_get('dbp_decode_param_U') || '</a>\n', 
+      http (sprintf ('<a class="uri" id="short_p_is_not" href="%' || registry_get('dbp_decode_param_U') || '"%s><small>%' || registry_get('dbp_decode_param_U') || ':</small>%' || registry_get('dbp_decode_param_U') || '</a>\n', 
          href,
          title,
          p_prefix,
          short_p));
    else
-      http (sprintf ('<a class="uri" href="%' || registry_get('dbp_decode_param_U') || '"%s>%' || registry_get('dbp_decode_param_U') || '</a>\n', 
+      http (sprintf ('<a class="uri" id="short_p_is_null" href="%' || registry_get('dbp_decode_param_U') || '"%s>%' || registry_get('dbp_decode_param_U') || '</a>\n', 
          href,
          title, 
          p_prefix));
