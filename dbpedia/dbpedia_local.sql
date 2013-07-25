@@ -136,8 +136,9 @@ create procedure dbp_gen_describe (in path varchar)
   declare qr varchar;
   qr :=
 	'prefix owl: <http://www.w3.org/2002/07/owl#> CONSTRUCT { <local:/IRI/PH> `sql:dbp_replace (?p1)` `sql:dbp_replace (?o1)` . '||
-  	'`sql:dbp_replace (?s2)` `sql:dbp_replace (?p2)` <local:/IRI/PH> . <local:/IRI/PH> owl:sameAs <http://dbpedia.org/IRI/PH> . } '||
-  	'WHERE { { <http://dbpedia.org/IRI/PH> ?p1 ?o1 } UNION { ?s2 ?p2 <http://dbpedia.org/IRI/PH> } }';
+      '`sql:dbp_replace (?s2)` `sql:dbp_replace (?p2)` <local:/IRI/PH> . <local:/IRI/PH> owl:sameAs <' || registry_get('dbp_domain') || '/IRI/PH> . } '||
+
+      'WHERE { { <' || registry_get('dbp_domain') || '/IRI/PH> ?p1 ?o1 } UNION { ?s2 ?p2 <' || registry_get('dbp_domain') || '/IRI/PH> } }';
   if (registry_get('dbp_DynamicLocal') = 'off')
     {
       qr := replace (qr, 'local:', registry_get('dbp_domain'));
@@ -145,7 +146,7 @@ create procedure dbp_gen_describe (in path varchar)
   qr := replace (qr, 'IRI', path);
   qr := sprintf ('%U', qr);
   qr := replace (qr, '%', '%%');
-  qr := replace (qr, 'PH', '%U');
+  qr := replace (qr, 'PH', '%' || registry_get('dbp_decode_param_U'));
   return qr;
 }
 ;
