@@ -13,20 +13,21 @@ dbpv.config(function($routeProvider, $locationProvider) {
 	$locationProvider.html5Mode(true);
 	$routeProvider
 		.when('/page/:id', {templateUrl: '/tpl/entity.html', controller: EntityCtrl})
-		.when('/entity/:id', {templateUrl: '/tpl/entity.html', controller: EntityCtrl})
+		.when('/resource/:id', {redirectTo: function(params, path, seach) {return '/page/'+params.id;} })
 		.otherwise({redirectTo: '/page/404'});
 });
-
-
 
 function dbpv_preprocess_triples(triples) {
 	var prefixes = {
 		"http://dbpedia.org/resource/": "dbpedia",
 		"http://http://www.w3.org/1999/02/22-rdf-syntax-ns#": "rdf",
 		"http://xmlns.com/foaf/0.1/": "foaf",
-		"http://dbpedia.org/ontology/": "dbpedia-owl"
+		"http://dbpedia.org/ontology/": "dbpedia-owl",
+		"http://dbpedia.org/property/": "dbpprop",
+		"http://www.w3.org/2000/01/rdf-schema#": "rdfs"
 	};
-	var localns = "http://dbpedia.org/resource/";
+	var graph = "http://dbpedia.org";
+	var space = "http://localhost:8890";
 
 	for (var i = 0; i<triples.length; i++) {
 		var triple = triples[i];
@@ -39,9 +40,9 @@ function dbpv_preprocess_triples(triples) {
 						sing.short = sing.url.slice(start.length, sing.url.length);
 					}
 				}
-				if (sing.url.slice(0, localns.length) == localns) {
+				if (sing.url.slice(0, graph.length) == graph) {
 					sing.uri = sing.url;
-					sing.url = "/entity/"+sing.url.slice(localns.length, sing.url.length);
+					sing.url = sing.url.slice(graph.length, sing.url.length);
 				}
 				if (sing.prefix!==undefined && sing.short !== undefined) {
 					sing.label = sing.prefix + ":" + sing.short;

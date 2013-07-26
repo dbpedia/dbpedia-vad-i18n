@@ -1,25 +1,19 @@
 angular.module('dbpvServices', [])
 	.factory('Entity', ['$http', function($http) {
 		return {
-			triples: function(eid) {
-				var localns = "http://dbpedia.org/resource/";
-				var entityUrl = localns+eid;
+			triples: function(id, dir) {
+				if (typeof(dir) === 'undefined') dir = 'resource';
+				var graph = "http://dbpedia.org"; //XXX
+				var space = "http://localhost:8890"; //XXX
+				var entityUrl = graph+"/"+dir+"/"+id;
 				var trips = [];
-				var preloaded = [];
-				try{
-					preloaded = $("#content");
-				}catch(err){
-//alert(err.message);
-				}
+				var preloaded = $("#content");
 				var about = $("[about]").attr("about");
-				if (preloaded.length === 1 && about !== undefined) {
-//alert("found something!!!");
+				if (dir == "resource" && preloaded.length === 1 && about !== undefined) {
 					try{
 						var rdf = preloaded.rdf();
 						var baseURI = rdf.databank.baseURI;
-						var nslocal = "http://localhost:8890/resource/"; //XXX
 						var tripledump = rdf.databank.dump();
-						//alert(JSON.stringify(tripledump));
 						for (var subj in tripledump) {
 							var properties = tripledump[subj];
 							if (subj == baseURI) {
@@ -31,6 +25,9 @@ angular.module('dbpvServices', [])
 									var trip = new Object();
 									var propval = propertyvalues[i];
 									var subject = {'type':'uri', 'url':subj};
+									if (subject.url.slice(0, space.length) == space) {
+											subject.url = graph+subject.url.slice(space.length, subject.url.length);
+										}
 									var property = {'type':'uri', 'url':prop};
 									var object = {};
 									for (var objkey in propval) {
@@ -41,8 +38,8 @@ angular.module('dbpvServices', [])
 										
 										if (object.url == baseURI) {
 											object.url = about;
-										} else if (object.url.slice(0, nslocal.length) == nslocal) {
-											object.url = localns+object.url.slice(nslocal.length, object.url.length);
+										} else if (object.url.slice(0, space.length) == space) {
+											object.url = graph+object.url.slice(space.length, object.url.length);
 										}
 									}
 									trip.subject = subject;
@@ -52,8 +49,6 @@ angular.module('dbpvServices', [])
 								}
 							}
 						}
-						//TODO parse RDFQuery results
-						//trips = jQuery.parseJSON(preloaded.text());
 						preloaded.remove();
 
 						dbpv_preprocess_triples(trips);

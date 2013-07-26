@@ -38,7 +38,7 @@ alert(data["results"].length);
 }
 
 function newPostEntityCtrl($scope, $routeParams, Entity) {
-	$scope.triples = Entity.triples($routeParams.id);
+	$scope.triples = Entity.triples($routeParams.id, "resource");
 }
 
 function postEntityCtrl ($scope, $routeParams, $http) {
@@ -109,6 +109,10 @@ function EntityCtrl ($scope, $routeParams, $http, Entity) {
 //	getEntityCtrl($scope, $routeParams, $http);
 //	postEntityCtrl($scope,$routeParams, $http);
 	newPostEntityCtrl($scope, $routeParams, Entity);
+}
+
+function OntologyCtrl ($scope, $routeParams, Entity) {
+	//TODO
 }
 
 
