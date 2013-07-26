@@ -1,6 +1,6 @@
 <ul>
 	<li ng-repeat="triple in triples">
-		<a href="{{triple.subject}}">{{triple.subjectTitle}}</a>. <a href="{{triple.property}}">{{triple.property}}</a> = <a href="{{triple.object}}" >{{triple.objectTitle}}</a>
+		<a href="{{triple.subject.url}}">{{triple.subject.label}}</a>. <a href="{{triple.property.url}}">{{triple.property.label}}</a> = <a href="{{triple.object.url}}">{{triple.object.label}}</a>
 	</li>
 </ul>
 

@@ -2,7 +2,8 @@ angular.module('dbpvServices', [])
 	.factory('Entity', ['$http', function($http) {
 		return {
 			triples: function(eid) {
-				var entityUrl = "http://dbpedia.org/resource/"+eid;
+				var localns = "http://dbpedia.org/resource/";
+				var entityUrl = localns+eid;
 				var trips = [];
 				var preloaded = [];
 				try{
@@ -10,14 +11,53 @@ angular.module('dbpvServices', [])
 				}catch(err){
 //alert(err.message);
 				}
-				if (false) { //preloaded.length === 1) {
+				var about = $("[about]").attr("about");
+				if (preloaded.length === 1 && about !== undefined) {
 //alert("found something!!!");
 					try{
-						var tripledump = preloaded.rdf().databank.dump();
-						alert(JSON.stringify(tripledump));
+						var rdf = preloaded.rdf();
+						var baseURI = rdf.databank.baseURI;
+						var nslocal = "http://localhost:8890/resource/"; //XXX
+						var tripledump = rdf.databank.dump();
+						//alert(JSON.stringify(tripledump));
+						for (var subj in tripledump) {
+							var properties = tripledump[subj];
+							if (subj == baseURI) {
+								subj = about;
+							}
+							for (var prop in properties) {
+								var propertyvalues = properties[prop];
+								for (var i = 0; i<propertyvalues.length; i++) {
+									var trip = new Object();
+									var propval = propertyvalues[i];
+									var subject = {'type':'uri', 'url':subj};
+									var property = {'type':'uri', 'url':prop};
+									var object = {};
+									for (var objkey in propval) {
+										object[objkey] = propval[objkey];
+									}
+									if (object.hasOwnProperty("type") && object.type=="uri") {
+										object.url = object.value;
+										
+										if (object.url == baseURI) {
+											object.url = about;
+										} else if (object.url.slice(0, nslocal.length) == nslocal) {
+											object.url = localns+object.url.slice(nslocal.length, object.url.length);
+										}
+									}
+									trip.subject = subject;
+									trip.property = property;
+									trip.object = object;
+									trips.push(trip);
+								}
+							}
+						}
 						//TODO parse RDFQuery results
-						trips = jQuery.parseJSON(preloaded.text());
+						//trips = jQuery.parseJSON(preloaded.text());
 						preloaded.remove();
+
+						dbpv_preprocess_triples(trips);
+						//return trips;
 					}catch(err){
 alert("malformed JSON");
 					}
@@ -33,33 +73,29 @@ alert("malformed JSON");
 					$http.post(endpoint, "query="+query).success(function(data, status, headers, config) {
 						var bindings = data['results']['bindings'];
 						for (var i = 0; i<bindings.length; i++) {
-							var propline = bindings[i];
-							var val = propline['v']['value'];
-							var trip = undefined;
-							if ('hasprop' in propline) {
-								var prop = propline["hasprop"]["value"];
-								trip = {'subject':entityUrl, 'property':prop, 'object': val, 'subjectType': 'url', 'objectType': propline["hasprop"]["type"], 'subjectTitle':entityUrl, 'objectTitle':val};
-							}else if ('isprop' in propline) {
-								var prop = propline["isprop"]["value"];
-								trip = {'subject':val, 'property':prop, 'object': entityUrl, 'objectType': 'url', 'subjectType': propline["hasprop"]["type"], 'objectTitle':entityUrl, 'subjectTitle':val};
+							var trip = new Object();
+							var oneject = {'type':'uri', 'url':entityUrl};
+							var twoject = new Object();
+							var tripleline = bindings[i];
+							var val = tripleline['v'];
+							for (var key in val) {
+								twoject[key] = val[key];
+							}
+							if (twoject.hasOwnProperty("type") && twoject.type=="uri") {
+								twoject.url = twoject.value;
+							}
+							var property = {"type":"uri"};
+							if ('hasprop' in tripleline) {
+								property.url = tripleline["hasprop"]["value"];
+								trips.push({'subject':oneject, 'property':property, 'object': twoject});
+							}else if ('isprop' in tripleline) {
+								property.url = tripleline["isprop"]["value"];
+								trips.push({'subject':twoject, 'property':property, 'object': oneject});
 							}else{
 								alert("Error!");
 							}
-							if (trip!==undefined) {
-								// generate labels for subjects, props and objects
-								var prefix_dbpedia = "http://dbpedia.org/resource/";
-								if (trip["subject"].slice(0, prefix_dbpedia.length) == prefix_dbpedia){
-									trip["subjectTitle"] = "dbpedia:"+trip["subject"].slice(prefix_dbpedia.length, trip["subject"].length);
-									trip["subject"] = "/page/"+trip["subject"].slice(prefix_dbpedia.length, trip["subject"].length);
-								}
-								if (trip["object"].slice(0, prefix_dbpedia.length) == prefix_dbpedia){
-									trip["objectTitle"] = "dbpedia:"+trip["object"].slice(prefix_dbpedia.length, trip["object"].length);
-									trip["object"] = "/page/"+trip["object"].slice(prefix_dbpedia.length, trip["object"].length);
-								}
-
-								trips.push(trip);
-							}
 						}
+						dbpv_preprocess_triples(trips);
 					}).
 					error(function (data, status, headers, config) {
 						alert("Error");

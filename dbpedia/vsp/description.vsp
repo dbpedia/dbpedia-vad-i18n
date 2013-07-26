@@ -261,7 +261,8 @@
        </a>
      </div> <!-- hd_r -->
   </div> <!-- header -->
-  <div ng-view id="content">
+  <div ng-view></div>
+  <div id="content">
       <p><?vsp http (sprintf ('%'||registry_get('dbp_decode_param_V'), _subject)); ?></p>
 <!-- proptable -->
       <table class="description"><tr><th>Property</th><th>Value</th></tr>
