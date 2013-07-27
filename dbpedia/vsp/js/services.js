@@ -4,7 +4,7 @@ angular.module('dbpvServices', [])
 			triples: function(id, dir) {
 				if (typeof(dir) === 'undefined') dir = 'resource';
 				var graph = "http://dbpedia.org"; //XXX
-				var space = "http://localhost:8890"; //XXX
+				var space = location.protocol+"//"+location.host; //XXX
 				var entityUrl = graph+"/"+dir+"/"+id;
 				var trips = [];
 				var preloaded = $("#content");
@@ -28,7 +28,7 @@ angular.module('dbpvServices', [])
 									if (subject.url.slice(0, space.length) == space) {
 											subject.url = graph+subject.url.slice(space.length, subject.url.length);
 										}
-									var property = {'type':'uri', 'url':prop};
+									var property = {'type':'uri', 'url':prop, 'value':prop};
 									var object = {};
 									for (var objkey in propval) {
 										object[objkey] = propval[objkey];
@@ -82,9 +82,11 @@ alert("malformed JSON");
 							var property = {"type":"uri"};
 							if ('hasprop' in tripleline) {
 								property.url = tripleline["hasprop"]["value"];
+								property.value = property.url;
 								trips.push({'subject':oneject, 'property':property, 'object': twoject});
 							}else if ('isprop' in tripleline) {
 								property.url = tripleline["isprop"]["value"];
+								property.value = property.url;
 								trips.push({'subject':twoject, 'property':property, 'object': oneject});
 							}else{
 								alert("Error!");

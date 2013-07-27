@@ -235,6 +235,7 @@
   <script type="text/javascript" src="/statics/script.js"></script>
   <script type="text/javascript" src="/js/jquery.js"></script>
   <script type="text/javascript" src="/js/angular.min.js"></script>
+  <script type="text/javascript" src="/js/commons.js"></script>
   <script type="text/javascript" src="/js/app.js"></script>
   <script type="text/javascript" src="/js/services.js"></script>
   <script type="text/javascript" src="/js/controllers.js"></script>
@@ -242,6 +243,7 @@
   <script type="text/javascript" src="/js/jquery.rdfquery.rdfa.js"></script>
 </head>
 <body onload="init();" about="<?=charset_recode(page_resource_uri, 'UTF-8', '_WIDE_') ?>">
+  <div ng-view>
   <div id="header">
     <div id="hd_l">
       <h1 id="title">About: <a href="<?= dbp_ldd_get_proxy (page_resource_uri) ?>"><?=charset_recode(label, 'UTF-8', '_WIDE_') ?></a></h1>
@@ -261,7 +263,7 @@
        </a>
      </div> <!-- hd_r -->
   </div> <!-- header -->
-  <div ng-view></div>
+</div>
   <div id="content">
       <p><?vsp http (sprintf ('%'||registry_get('dbp_decode_param_V'), _subject)); ?></p>
 <!-- proptable -->

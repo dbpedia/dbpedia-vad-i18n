@@ -20,7 +20,7 @@ dbpv.config(function($routeProvider, $locationProvider) {
 function dbpv_preprocess_triples(triples) {
 	var prefixes = {
 		"http://dbpedia.org/resource/": "dbpedia",
-		"http://http://www.w3.org/1999/02/22-rdf-syntax-ns#": "rdf",
+		"http://www.w3.org/1999/02/22-rdf-syntax-ns#": "rdf",
 		"http://xmlns.com/foaf/0.1/": "foaf",
 		"http://dbpedia.org/ontology/": "dbpedia-owl",
 		"http://dbpedia.org/property/": "dbpprop",

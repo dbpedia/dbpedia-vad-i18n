@@ -1,6 +1,9 @@
 <ul>
 	<li ng-repeat="triple in triples">
-		<a href="{{triple.subject}}">{{triple.subjectTitle}}</a>. <a href="{{triple.property}}">{{triple.property}}</a> = <a href="{{triple.object}}" >{{triple.objectTitle}}</a>
+		<a href="{{triple.subject.url}}">{{triple.subject.label}}</a>. <a href="{{triple.property.url}}">{{triple.property.label}}</a> = <span ng-switch on="triple.object.type">
+			<span ng-switch-when="uri"><a href="{{triple.object.url}}">{{triple.object.label}}</a></span>
+			<span ng-switch-default>{{triple.object.label}}</span>
+		</span>
 	</li>
 </ul>
 
