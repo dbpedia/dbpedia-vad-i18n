@@ -45,6 +45,11 @@ angular.module('dbpvServices', [])
 									trip.subject = subject;
 									trip.property = property;
 									trip.object = object;
+									if (trip.subject.url == about) {
+										trip.query = "a";
+									}else{
+										trip.query = "b";
+									}
 									trips.push(trip);
 								}
 							}
@@ -59,44 +64,71 @@ alert("malformed JSON");
 				}else{
 					$http.defaults.useXDomain = true;
 					delete $http.defaults.headers.common['X-Requested-With'];
-					var prevdef = $http.defaults.headers.post['Content-Type'];	
+					var prevdef = $http.defaults.headers.post['Content-Type'];
 					$http.defaults.headers.post['Content-Type'] = "application/x-www-form-urlencoded";
-					var query = "SELECT ?hasprop ?v ?isprop where {{<"+entityUrl+"> ?hasprop ?v}UNION{?v ?isprop <"+entityUrl+">}} LIMIT 10000";
-					query = encodeURIComponent(query);
-				//alert(query);
+					var inquery = encodeURIComponent("SELECT ?hasprop ?v where {<" + entityUrl + "> ?hasprop ?v}");
+					var outquery = encodeURIComponent("SELECT ?v ?isprop where { ?v ?isprop <" + entityUrl + ">} LIMIT 2000");
 					var endpoint = "http://live.dbpedia.org/sparql";
-					$http.post(endpoint, "query="+query).success(function(data, status, headers, config) {
-						var bindings = data['results']['bindings'];
-						for (var i = 0; i<bindings.length; i++) {
+					// START XXX NEW
+					var tripls = [];
+					$http.post(endpoint, "query="+inquery).success(function(data, status, headers, config) {
+						var bindings = data["results"]["bindings"];
+						for (var i = 0; i<bindings.length; i++) {	
 							var trip = new Object();
-							var oneject = {'type':'uri', 'url':entityUrl};
-							var twoject = new Object();
+							var subject = {'type':'uri', 'url':entityUrl};
+							var object = new Object();
 							var tripleline = bindings[i];
 							var val = tripleline['v'];
 							for (var key in val) {
-								twoject[key] = val[key];
+								object[key] = val[key];
 							}
-							if (twoject.hasOwnProperty("type") && twoject.type=="uri") {
-								twoject.url = twoject.value;
+							if (object.hasOwnProperty("type") && object.type=="uri") {
+								object.url = object.value;
 							}
-							var property = {"type":"uri"};
-							if ('hasprop' in tripleline) {
-								property.url = tripleline["hasprop"]["value"];
-								property.value = property.url;
-								trips.push({'subject':oneject, 'property':property, 'object': twoject});
-							}else if ('isprop' in tripleline) {
-								property.url = tripleline["isprop"]["value"];
-								property.value = property.url;
-								trips.push({'subject':twoject, 'property':property, 'object': oneject});
-							}else{
-								alert("Error!");
-							}
+							var property = {"type":"uri", "url": tripleline["hasprop"]["value"]};
+							property.value = property.url;
+							tripls.push({'subject':subject, 'property':property, 'object': object, 'query':'a'});
+							
 						}
-						dbpv_preprocess_triples(trips);
+						dbpv_preprocess_triples(tripls);
+						for (var k = 0; k<tripls.length; k++) {
+							trips.push(tripls[k]);
+						}
 					}).
 					error(function (data, status, headers, config) {
-						alert("Error");
+						alert("Inquery loading error");
 					});
+					// MEDIAS RES XXX NEW
+					tripls = [];
+					$http.post(endpoint, "query="+outquery).success(function(data, status, headers, config) {
+						var bindings = data["results"]["bindings"];
+						for (var i = 0; i<bindings.length; i++) {	
+							var trip = new Object();
+							var object = {'type':'uri', 'url':entityUrl};
+							var subject = new Object();
+							var tripleline = bindings[i];
+							var val = tripleline['v'];
+							for (var key in val) {
+								subject[key] = val[key];
+							}
+							if (subject.hasOwnProperty("type") && subject.type=="uri") {
+								subject.url = subject.value;
+							}
+							var property = {"type":"uri", "url": tripleline["isprop"]["value"]};
+							property.value = property.url;
+							tripls.push({'subject':subject, 'property':property, 'object': object, 'query':'b'});
+							
+						}
+						dbpv_preprocess_triples(tripls);
+						//trips.concat(tripls);
+						for (var k = 0; k<tripls.length; k++) {
+							trips.push(tripls[k]);
+						}
+					}).
+					error(function (data, status, headers, config) {
+						alert("Outquery loading error");
+					});
+					// END XXX NEW
 					$http.defaults.headers.post['Content-Type'] = prevdef;
 				}
 				return trips;

@@ -1,4 +1,33 @@
-function ListCtrl($scope) {
+
+function EntityCtrl ($scope, $routeParams, $http, Entity) {
+//	getEntityCtrl($scope, $routeParams, $http);
+//	postEntityCtrl($scope,$routeParams, $http);
+	newPostEntityCtrl($scope, $routeParams, Entity);
+}
+
+function newPostEntityCtrl($scope, $routeParams, Entity) {
+	$scope.triples = Entity.triples($routeParams.id, "resource");
+	$scope.pretties = [];
+	// extract meaningful triples for pretty box
+	$scope.$watch('triples', function(trips) {
+		if (trips !== undefined && trips.length>0) {
+			var about = trips[0].subject.url;
+			for (var i = 0; i<trips.length; i++) {
+				var triple = trips[i];
+				if (triple.subject.url == about) {
+					var pretty = dbpv_pretty_triple(triple);
+					if (pretty !== undefined) {
+						$scope.pretties.push(pretty);
+					}
+				}else{
+					break;
+				}
+			}
+		}
+	},true);
+}
+
+/*function ListCtrl($scope) {
 	var content = [];
 	var def = false;
 //alert("right");
@@ -35,28 +64,6 @@ alert(data["results"].length);
 		}
 		$scope.results = res;
 	});
-}
-
-function newPostEntityCtrl($scope, $routeParams, Entity) {
-	$scope.triples = Entity.triples($routeParams.id, "resource");
-	$scope.pretties = [];
-	// extract meaningful triples for pretty box
-	$scope.$watch('triples', function(trips) {
-		if (trips !== undefined && trips.length>0) {
-			var about = trips[0].subject.url;
-			for (var i = 0; i<trips.length; i++) {
-				var triple = trips[i];
-				if (triple.subject.url == about) {
-					var pretty = dbpv_pretty_triple(triple);
-					if (pretty !== undefined) {
-						$scope.pretties.push(pretty);
-					}
-				}else{
-					break;
-				}
-			}
-		}
-	},true);
 }
 
 function postEntityCtrl ($scope, $routeParams, $http) {
@@ -123,11 +130,7 @@ alert($routeParams.id);
 //		$http.defaults.headers.common['Content-Type'] = prevdef;
 }*/
 
-function EntityCtrl ($scope, $routeParams, $http, Entity) {
-//	getEntityCtrl($scope, $routeParams, $http);
-//	postEntityCtrl($scope,$routeParams, $http);
-	newPostEntityCtrl($scope, $routeParams, Entity);
-}
+
 /*
 function OntologyCtrl ($scope, $routeParams, Entity) {
 	//TODO
