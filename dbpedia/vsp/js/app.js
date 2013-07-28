@@ -17,3 +17,16 @@ dbpv.config(function($routeProvider, $locationProvider) {
 		.otherwise({redirectTo: '/page/404'});
 });
 
+dbpv.directive("whenScrolled", function() {
+	return function(scope, elm, attr) {
+		var raw = elm[0];
+		var margin = 1000;
+		
+		elm.bind("scroll", function() {
+			if (raw.scrollTop + raw.offsetHeight + margin >= raw.scrollHeight) {
+				scope.$apply(attr.whenScrolled);
+			}
+		});
+	};
+});
+

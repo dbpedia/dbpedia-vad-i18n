@@ -1,7 +1,7 @@
 angular.module('dbpvServices', [])
 	.factory('Entity', ['$http', function($http) {
 		return {
-			triples: function(id, dir) {
+			triples: function(id, scope, dir) {
 				if (typeof(dir) === 'undefined') dir = 'resource';
 				var graph = "http://dbpedia.org"; //XXX
 				var space = location.protocol+"//"+location.host; //XXX
@@ -57,7 +57,7 @@ angular.module('dbpvServices', [])
 						preloaded.remove();
 
 						dbpv_preprocess_triples(trips);
-						//return trips;
+						scope.triples = trips;
 					}catch(err){
 alert("malformed JSON");
 					}
@@ -91,9 +91,7 @@ alert("malformed JSON");
 							
 						}
 						dbpv_preprocess_triples(tripls);
-						for (var k = 0; k<tripls.length; k++) {
-							trips.push(tripls[k]);
-						}
+						scope.triples = scope.triples.concat(tripls);
 					}).
 					error(function (data, status, headers, config) {
 						alert("Inquery loading error");
@@ -120,10 +118,8 @@ alert("malformed JSON");
 							
 						}
 						dbpv_preprocess_triples(tripls);
-						//trips.concat(tripls);
-						for (var k = 0; k<tripls.length; k++) {
-							trips.push(tripls[k]);
-						}
+						scope.triplesB = scope.triples.concat(tripls);
+						scope.loadMore(100);
 					}).
 					error(function (data, status, headers, config) {
 						alert("Outquery loading error");

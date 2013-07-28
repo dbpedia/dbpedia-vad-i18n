@@ -6,7 +6,18 @@ function EntityCtrl ($scope, $routeParams, $http, Entity) {
 }
 
 function newPostEntityCtrl($scope, $routeParams, Entity) {
-	$scope.triples = Entity.triples($routeParams.id, "resource");
+	$scope.loadMore = function(amount) {
+		if ($scope.triplesB !== undefined && 0 < $scope.triplesB.length) {
+			if (typeof(amount) == "undefined") amount = 10;
+			var totransfer = $scope.triplesB.slice(0, Math.min(amount, $scope.triplesB.length));
+			$scope.triplesB = $scope.triplesB.slice(Math.min(amount, $scope.triplesB.length), $scope.triplesB.length);
+			for (var i = 0; i < totransfer.length; i++) {
+				$scope.triples.push(totransfer[i]);
+			}
+		}
+	};
+	$scope.triples = [];
+	Entity.triples($routeParams.id, $scope, "resource");
 	$scope.pretties = [];
 	// extract meaningful triples for pretty box
 	$scope.$watch('triples', function(trips) {

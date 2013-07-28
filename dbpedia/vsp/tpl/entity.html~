@@ -1,3 +1,16 @@
+<div style="height:80%; overflow:auto" when-scrolled="loadMore()">
+<ul>
+        <li ng-repeat="pretty in pretties">
+		<span ng-show="pretty.show_prop">{{pretty.property}}: </span>
+		<span ng-switch on="pretty.type">
+			<span ng-switch-when="img"> <img src="{{pretty.value}}"/> </span>
+			<span ng-switch-when="uri"> <a href="{{pretty.value}}">{{pretty.value}}</a></span>
+			<span ng-switch-when="text"> {{pretty.value}} </span>
+			<span ng-switch-default> {{pretty.value}} </span>
+		</span>
+	</li>
+</ul>
+
 <ul>
 	<li ng-repeat="triple in triples">
 		<a href="{{triple.subject.url}}">{{triple.subject.label}}</a>. <a href="{{triple.property.url}}">{{triple.property.label}}</a> = <span ng-switch on="triple.object.type">
@@ -6,4 +19,4 @@
 		</span>
 	</li>
 </ul>
-
+</div>
