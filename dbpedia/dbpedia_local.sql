@@ -24,7 +24,7 @@
 create procedure dbp_setup ()
 {
 -- TODO HACK !!!
-  registry_set('dbp_decode_iri', 'on');
+  --registry_set('dbp_decode_iri', 'on');
 
 --# if utf-8 iri's are used
   if (not isstring(registry_get ('dbp_decode_iri')))

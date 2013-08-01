@@ -6,39 +6,51 @@ function EntityCtrl ($scope, $routeParams, $http, Entity) {
 }
 
 function newPostEntityCtrl($scope, $routeParams, Entity) {
-	$scope.loadMore = function(amount) {
-		if ($scope.triplesB !== undefined && 0 < $scope.triplesB.length) {
-			if (typeof(amount) == "undefined") amount = 10;
-			var totransfer = $scope.triplesB.slice(0, Math.min(amount, $scope.triplesB.length));
-			$scope.triplesB = $scope.triplesB.slice(Math.min(amount, $scope.triplesB.length), $scope.triplesB.length);
-			for (var i = 0; i < totransfer.length; i++) {
-				$scope.triples.push(totransfer[i]);
+	$scope.showMore = function(id) {
+		var predicate = $scope.revpredicates[id];
+		var destination = $scope.predicates[id];
+		var transfer = [];
+		if (destination !== undefined && destination.complete == false && predicate!== undefined && predicate.values.length > 0) { // then show more
+			var amount = 2000;
+			amount = Math.min(amount, predicate.values.length);
+			for (var i = 0; i<amount ; i++) {
+				transfer.push(predicate.values[0]);
+				predicate.values.splice(0, 1);
+			}
+			destination.values = destination.values.concat(transfer);
+			if (predicate.values.length == 0) {
+				destination.complete = true;
 			}
 		}
 	};
-	$scope.triples = [];
-	Entity.triples($routeParams.id, $scope, "resource");
+
+	$scope.predicates = {};
+	$scope.revpredicates = {};
+
+	Entity.triples($routeParams.id, $scope);
 	$scope.pretties = [];
 	// extract meaningful triples for pretty box
-	$scope.$watch('triples', function(trips) {
-		if (trips !== undefined && trips.length>0) {
-			for (var i = 0; i<trips.length; i++) {
-				var triple = trips[i];
-				if (triple.query == "a") {
-					var pretty = dbpv_pretty_triple(triple);
-					if (pretty !== undefined) {
-						var toaddornot = true;
-						for (var j = 0; j<$scope.pretties.length; j++){
-							a = $scope.pretties[j];
-							if (a.property == pretty.property && a.value == pretty.value && a.type == pretty.type) { // check if already there XXX
-								toaddornot = false;
+	$scope.$watch('predicates', function(predicates) {
+		//predicates.sort();
+		if (predicates !== undefined) {
+			for (var id in predicates) {
+				var predicate = predicates[id];
+				if (predicate.reverse == false) {
+					for (var i = 0; i<predicate.values.length; i++) {
+						var pretty = dbpv_pretty_predicate(predicate.url, predicate.values[i].value);
+						if (pretty !== undefined) {
+							var toaddornot = true;
+							for (var j = 0; j<$scope.pretties.length; j++){
+								var a = $scope.pretties[j];
+								if (a.property == pretty.property && a.value == pretty.value && a.type == pretty.type) { // check if already there XXX
+									toaddornot = false;
+								}
 							}
+							if (toaddornot)	$scope.pretties.push(pretty);
 						}
-						if (toaddornot)	$scope.pretties.push(pretty);
 					}
 				}
 			}
-//			$scope.pretty= true;
 		}
 	},true);
 }

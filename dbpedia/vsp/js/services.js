@@ -9,7 +9,7 @@ angular.module('dbpvServices', [])
 				var trips = [];
 				var preloaded = $("#content");
 				var about = $("[about]").attr("about");
-				if (dir == "resource" && preloaded.length === 1 && about !== undefined) {
+				if (false && dir == "resource" && preloaded.length === 1 && about !== undefined) {
 					try{
 						var rdf = preloaded.rdf();
 						var baseURI = rdf.databank.baseURI;
@@ -55,27 +55,34 @@ angular.module('dbpvServices', [])
 							}
 						}
 						preloaded.remove();
-
+	// TODO XXX FIXME transform scraped triples into predicate-value format for normal display
 						dbpv_preprocess_triples(trips);
 						scope.triples = trips;
 					}catch(err){
 alert("malformed JSON");
 					}
 				}else{
+					var preloaded = $("#content");
+					if (preloaded.length === 1) {
+						preloaded.remove();
+					}
 					$http.defaults.useXDomain = true;
 					delete $http.defaults.headers.common['X-Requested-With'];
 					var prevdef = $http.defaults.headers.post['Content-Type'];
 					$http.defaults.headers.post['Content-Type'] = "application/x-www-form-urlencoded";
 					var inquery = encodeURIComponent("SELECT ?hasprop ?v where {<" + entityUrl + "> ?hasprop ?v}");
-					var outquery = encodeURIComponent("SELECT ?v ?isprop where { ?v ?isprop <" + entityUrl + ">} LIMIT 2000");
-					var endpoint = "http://live.dbpedia.org/sparql";
+					var outquery = encodeURIComponent("SELECT ?v ?isprop where { ?v ?isprop <" + entityUrl + ">}");
+					var endpoint = "http://dbpedia.org/sparql";
+					//endpoint = "/sparql";
+
 					// START XXX NEW
-					var tripls = [];
 					$http.post(endpoint, "query="+inquery).success(function(data, status, headers, config) {
+						var predicates = {};
 						var bindings = data["results"]["bindings"];
+						try{
 						for (var i = 0; i<bindings.length; i++) {	
 							var trip = new Object();
-							var subject = {'type':'uri', 'url':entityUrl};
+
 							var object = new Object();
 							var tripleline = bindings[i];
 							var val = tripleline['v'];
@@ -85,24 +92,31 @@ alert("malformed JSON");
 							if (object.hasOwnProperty("type") && object.type=="uri") {
 								object.url = object.value;
 							}
-							var property = {"type":"uri", "url": tripleline["hasprop"]["value"]};
-							property.value = property.url;
-							tripls.push({'subject':subject, 'property':property, 'object': object, 'query':'a'});
-							
+							var property = {"type":"uri", "url": tripleline["hasprop"]["value"], "reverse":false, "complete":true};
+							dbpv_preprocess_triple_value(property);
+							dbpv_preprocess_triple_value(object);
+
+							predicate = predicates["i-"+property.url];
+							if (predicate === undefined) { // add it
+								predicates["i-"+property.url] = property;
+								predicate = property;
+								predicate.values = [];
+							}
+							predicate.values.push(object);
 						}
-						dbpv_preprocess_triples(tripls);
-						scope.triples = scope.triples.concat(tripls);
+						}catch(err){alert("error in loop");}
+						scope.predicates = jQuery.extend({}, scope.predicates, predicates);
 					}).
 					error(function (data, status, headers, config) {
 						alert("Inquery loading error");
 					});
 					// MEDIAS RES XXX NEW
-					tripls = [];
 					$http.post(endpoint, "query="+outquery).success(function(data, status, headers, config) {
+						predicates = {};
 						var bindings = data["results"]["bindings"];
+						try{
 						for (var i = 0; i<bindings.length; i++) {	
 							var trip = new Object();
-							var object = {'type':'uri', 'url':entityUrl};
 							var subject = new Object();
 							var tripleline = bindings[i];
 							var val = tripleline['v'];
@@ -112,14 +126,42 @@ alert("malformed JSON");
 							if (subject.hasOwnProperty("type") && subject.type=="uri") {
 								subject.url = subject.value;
 							}
-							var property = {"type":"uri", "url": tripleline["isprop"]["value"]};
-							property.value = property.url;
-							tripls.push({'subject':subject, 'property':property, 'object': object, 'query':'b'});
-							
+							var property = {"type":"uri", "url": tripleline["isprop"]["value"], "reverse":true};
+							dbpv_preprocess_triple_value(property);
+							dbpv_preprocess_triple_value(subject);
+
+							predicate = predicates["o-"+property.url];
+							if (predicate === undefined) { // add it
+								predicates["o-"+property.url] = property;
+								predicate = property;
+								predicate.values = [];
+							}
+							predicate.values.push(subject);
 						}
-						dbpv_preprocess_triples(tripls);
-						scope.triplesB = scope.triples.concat(tripls);
-						scope.loadMore(100);
+						}catch(err){alert("error in loop");}
+						scope.revpredicates = jQuery.extend({}, scope.revpredicates, predicates);
+						for (var revpred in scope.revpredicates) {
+							var totransfer = scope.revpredicates[revpred];
+							var transfer = {};
+							for (var predkey in totransfer) {
+								if (predkey != "values" && predkey != "$$hashKey") {
+									transfer[predkey] = totransfer[predkey];
+								}
+							}
+							var init_amount = 5;
+							init_amount = Math.min(init_amount, totransfer["values"].length);
+							transfer.values = [];
+							for (var i = 0; i< init_amount; i++) {
+								transfer["values"].push(totransfer["values"][0]);
+								totransfer["values"].splice(0, 1);
+							}
+							if (totransfer["values"].length == 0) {
+								transfer["complete"] = true;
+							}else{
+								transfer["complete"] = false;
+							}
+							scope.predicates[revpred] = transfer;
+						}
 					}).
 					error(function (data, status, headers, config) {
 						alert("Outquery loading error");
@@ -127,7 +169,6 @@ alert("malformed JSON");
 					// END XXX NEW
 					$http.defaults.headers.post['Content-Type'] = prevdef;
 				}
-				return trips;
 			}
 		};
 	}]);

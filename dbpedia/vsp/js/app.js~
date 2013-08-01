@@ -27,4 +27,6 @@ dbpv.directive("whenScrolled", function() {
 				scope.$apply(attr.whenScrolled);
 			}
 		});
+	};
+});
 

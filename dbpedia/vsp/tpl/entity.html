@@ -1,4 +1,3 @@
-<div style="height:85%; overflow:auto" when-scrolled="loadMore()">
 <ul>
         <li ng-repeat="pretty in pretties">
 		<span ng-show="pretty.show_prop">{{pretty.property}}: </span>
@@ -12,11 +11,23 @@
 </ul>
 
 <ul>
-	<li ng-repeat="triple in triples">
-		<a href="{{triple.subject.url}}">{{triple.subject.label}}</a>. <a href="{{triple.property.url}}">{{triple.property.label}}</a> = <span ng-switch on="triple.object.type">
-			<span ng-switch-when="uri"><a href="{{triple.object.url}}">{{triple.object.label}}</a></span>
-			<span ng-switch-default>{{triple.object.label}}</span>
-		</span>
+	<li ng-repeat="(id, predicate) in predicates">
+		<span ng-show="predicate.reverse">is </span>
+		<a href="{{predicate.url}}">
+			{{predicate.label}}
+		</a>
+		<span ng-show="predicate.reverse"> of</span>:
+		<ul>
+			<li ng-repeat="val in predicate.values">
+				<span ng-switch on="val.type">
+					<span ng-switch-when="uri"> <a href="{{val.url}}">{{val.label}}</a> </span>
+					<span ng-switch-default>{{val.label}}</span>
+				</span>
+
+			</li>
+			<li ng-hide="predicate.complete">
+				<button ng-click="showMore(id)">Show More</button>
+			</li>
+		</ul>
 	</li>
 </ul>
-</div>
