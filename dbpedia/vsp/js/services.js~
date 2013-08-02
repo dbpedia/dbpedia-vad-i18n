@@ -62,16 +62,16 @@ angular.module('dbpvServices', [])
 alert("malformed JSON");
 					}
 				}else{
-					var preloaded = $("#content");
+					var preloaded = $("#static");
 					if (preloaded.length === 1) {
 						preloaded.remove();
 					}
-					$http.defaults.useXDomain = true;
+					//$http.defaults.useXDomain = true;
 					delete $http.defaults.headers.common['X-Requested-With'];
 					var prevdef = $http.defaults.headers.post['Content-Type'];
 					$http.defaults.headers.post['Content-Type'] = "application/x-www-form-urlencoded";
 					var inquery = encodeURIComponent("SELECT ?hasprop ?v where {<" + entityUrl + "> ?hasprop ?v}");
-					var outquery = encodeURIComponent("SELECT ?v ?isprop where { ?v ?isprop <" + entityUrl + ">}");
+					var outquery = encodeURIComponent("SELECT ?v ?isprop where { ?v ?isprop <" + entityUrl + ">} LIMIT 1000");
 					var endpoint = "http://dbpedia.org/sparql";
 					endpoint = "/sparql";
 
@@ -96,10 +96,12 @@ alert("malformed JSON");
 							dbpv_preprocess_triple_value(property);
 							dbpv_preprocess_triple_value(object);
 
-							predicate = predicates["i-"+property.url];
+							predid  = "i-"+property.url;
+							predicate = predicates[predid];
 							if (predicate === undefined) { // add it
-								predicates["i-"+property.url] = property;
+								predicates[predid] = property;
 								predicate = property;
+								predicate.predid = predid;
 								predicate.values = [];
 							}
 							predicate.values.push(object);

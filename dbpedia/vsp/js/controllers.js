@@ -1,11 +1,9 @@
 
-function EntityCtrl ($scope, $routeParams, $http, Entity) {
-//	getEntityCtrl($scope, $routeParams, $http);
-//	postEntityCtrl($scope,$routeParams, $http);
-	newPostEntityCtrl($scope, $routeParams, Entity);
-}
+function EntityCtrl($scope, $routeParams, Entity) {
+	$scope.$parent.$watch("primary_lang", function(lang){
+		$scope.primary_lang = lang;
+	});
 
-function newPostEntityCtrl($scope, $routeParams, Entity) {
 	$scope.showMore = function(id) {
 		var predicate = $scope.revpredicates[id];
 		var destination = $scope.predicates[id];
@@ -24,36 +22,118 @@ function newPostEntityCtrl($scope, $routeParams, Entity) {
 		}
 	};
 
+	$scope.sortPredicates = function(item) {
+		return item.predid;
+	};
+
 	$scope.predicates = {};
 	$scope.revpredicates = {};
 
 	Entity.triples($routeParams.id, $scope);
-	$scope.pretties = [];
-	// extract meaningful triples for pretty box
+	$scope.dbpvp = {};
+
+	// object-oriented extraction for pretty box (XXX)
 	$scope.$watch('predicates', function(predicates) {
-		//predicates.sort();
 		if (predicates !== undefined) {
 			for (var id in predicates) {
-				var predicate = predicates[id];
-				if (predicate.reverse == false) {
-					for (var i = 0; i<predicate.values.length; i++) {
-						var pretty = dbpv_pretty_predicate(predicate.url, predicate.values[i].value);
-						if (pretty !== undefined) {
-							var toaddornot = true;
-							for (var j = 0; j<$scope.pretties.length; j++){
-								var a = $scope.pretties[j];
-								if (a.property == pretty.property && a.value == pretty.value && a.type == pretty.type) { // check if already there XXX
-									toaddornot = false;
-								}
-							}
-							if (toaddornot)	$scope.pretties.push(pretty);
-						}
-					}
+				if (id!==undefined) {
+					dbpvp_process_predicate($scope.dbpvp, predicates[id]);
 				}
 			}
 		}
 	},true);
 }
+
+function LookupCtrl($scope, $http, $timeout) {
+	$scope.languages = dbpv_languages;
+	var timer = false;
+	var delay = 500;
+	
+	$scope.$watch('primary_language', function(lang) {
+		$scope.$parent.$root.primary_lang = lang;
+	});
+
+	$scope.primary_language = "en";
+
+	$scope.$watch('term', function(term) {
+		if ($scope.term === undefined || $scope.term == "") {
+			$scope.results = [];
+		}else{
+			if (timer) {
+				$timeout.cancel(timer);
+			}
+			timer = $timeout(function() {
+				// DO LOOK UP
+				$scope.dolookup();
+			}, delay);
+		}
+	});
+
+	$scope.dolookup = function () {
+		if ($scope.term === undefined || $scope.term == "") {
+			$scope.results = [];
+		}else{
+			delete $http.defaults.headers.common['X-Requested-With'];
+			$http.get("http://lookup.dbpedia.org/api/search/PrefixSearch?MaxHits=5&QueryString="+$scope.term).success(function(data) {
+				var results = data["results"];
+				var res = [];
+				for (var i = 0; i<results.length ; i++) {
+					var result = results[i];
+					var r = {"type": "uri", "l_label": result['label'], "url": result['uri']};
+					dbpv_preprocess_triple_value(r);
+					res.push(r);
+				}
+				$scope.results = res;
+			});
+		}
+	}
+
+	$scope.clearResults = function() {
+		$scope.results = [];
+	};
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX 
+
+
+
+/*function oldEntityCtrl ($scope, $routeParams, $http, Entity) {
+//	getEntityCtrl($scope, $routeParams, $http);
+//	postEntityCtrl($scope,$routeParams, $http);
+	newPostEntityCtrl($scope, $routeParams, Entity);
+}*/
 
 /*function ListCtrl($scope) {
 	var content = [];

@@ -179,6 +179,8 @@ directory_init() {
   mkdir vad/vsp/dbpedia/js
   mkdir vad/vsp/dbpedia/tpl
   mkdir vad/vsp/dbpedia/style
+  mkdir vad/vsp/dbpedia/css
+  mkdir vad/vsp/dbpedia/fonts
 
   cd vsp > /dev/null 2>&1
   for f in `find . -type f | grep -v "/CVS/" | grep -v "\.sql" `

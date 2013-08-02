@@ -1,33 +1,61 @@
-<ul>
-        <li ng-repeat="pretty in pretties">
-		<span ng-show="pretty.show_prop">{{pretty.property}}: </span>
-		<span ng-switch on="pretty.type">
-			<span ng-switch-when="img"> <img src="{{pretty.value}}"/> </span>
-			<span ng-switch-when="uri"> <a href="{{pretty.value}}">{{pretty.value}}</a></span>
-			<span ng-switch-when="text"> {{pretty.value}} </span>
-			<span ng-switch-default> {{pretty.value}} </span>
+<div id="triples">
+<div id="pretty-box">
+	<div id="dbpvpthumbnail">
+		<img src="{{dbpvp.thumbnail[0].value}}"></img>
+	</div>
+	<div id="dbpvptext">
+	<div id="dbpvplabel">
+		<span ng-repeat="value in dbpvp.label |languageFilter:primary_lang">
+			{{value.value}}
 		</span>
-	</li>
-</ul>
+	</div>
+	<div id="dbpvpdescription">
+		<span ng-repeat="value in dbpvp.description |languageFilter:primary_lang">
+			{{value.value}}
+		</span>
+	</div>
+	</div>
+</div>
 
-<ul>
-	<li ng-repeat="(id, predicate) in predicates">
+<div id="triple-list">
+<div id="triples-top">
+	<div class="predicate"> <div class="pred-name form-inline"> <label class="dbpv-tabletop"> Property:</label> <input class="form-control dbpv-input dbpv-filter dbpv-filter-pred" ng-model="predfilter" /></div>
+	<div class="pred-values">
+		<div class="pred-value form-inline"> <label class="dbpv-tabletop"> Value: </label> <input class="form-control dbpv-input dbpv-filter dbpv-filter-val" ng-model="valfilter.label" /></div>
+	</div>
+	</div>
+</div>
+<div id="triples">
+	<div class="predicate" ng-repeat="(id, predicate) in predicates | predicateFilter:predfilter | predicateValueFilter:valfilter  | orderBy:sortPredicates">
+		<div class="pred-name">
 		<span ng-show="predicate.reverse">is </span>
 		<a href="{{predicate.url}}">
-			{{predicate.label}}
+			<span ng-switch on="predicate.prefix">
+				<span ng-switch-when="undefined">{{predicate.label}}</span>
+				<span ng-switch-default>  <span class="rdf-prefix">{{predicate.prefix}}:</span>{{predicate.short}}</span>
+			</span>
 		</a>
 		<span ng-show="predicate.reverse"> of</span>:
-		<ul>
-			<li ng-repeat="val in predicate.values">
+		</div>
+		<div class="pred-values">
+			<div class="pred-value" ng-repeat="val in predicate.values | filter:valfilter | languageFilter:primary_lang">
 				<span ng-switch on="val.type">
-					<span ng-switch-when="uri"> <a href="{{val.url}}">{{val.label}}</a> </span>
+					<span ng-switch-when="uri"> <a href="{{val.url}}">
+						<span ng-switch on="val.prefix">
+							<span ng-switch-when="undefined">{{val.label}}</span>
+							<span ng-switch-default>  <span class="rdf-prefix">{{val.prefix}}:</span>{{val.short}}</span>
+						</span>
+					</a> </span>
 					<span ng-switch-default>{{val.label}}</span>
 				</span>
 
-			</li>
-			<li ng-hide="predicate.complete">
-				<button ng-click="showMore(id)">Show More</button>
-			</li>
-		</ul>
-	</li>
-</ul>
+			</div>
+			<div ng-hide="predicate.complete">
+				<button class="btn btn-block btn-primary btn-small btn-show-more" ng-click="showMore(predicate.predid)">Show More</button>
+			</div>
+		</div>
+	</div>
+
+</div>
+</div>
+</div>

@@ -1,47 +1,107 @@
 
-function EntityCtrl ($scope, $routeParams, $http, Entity) {
-//	getEntityCtrl($scope, $routeParams, $http);
-//	postEntityCtrl($scope,$routeParams, $http);
-	newPostEntityCtrl($scope, $routeParams, Entity);
-}
+function EntityCtrl($scope, $routeParams, Entity) {
+	$scope.$parent.$watch("primary_lang", function(lang){
+		$scope.primary_lang = lang;
+	});
 
-function newPostEntityCtrl($scope, $routeParams, Entity) {
-	$scope.loadMore = function(amount) {
-		if ($scope.triplesB !== undefined && 0 < $scope.triplesB.length) {
-			if (typeof(amount) == "undefined") amount = 10;
-			var totransfer = $scope.triplesB.slice(0, Math.min(amount, $scope.triplesB.length));
-			$scope.triplesB = $scope.triplesB.slice(Math.min(amount, $scope.triplesB.length), $scope.triplesB.length);
-			for (var i = 0; i < totransfer.length; i++) {
-				$scope.triples.push(totransfer[i]);
+	$scope.showMore = function(id) {
+		var predicate = $scope.revpredicates[id];
+		var destination = $scope.predicates[id];
+		var transfer = [];
+		if (destination !== undefined && destination.complete == false && predicate!== undefined && predicate.values.length > 0) { // then show more
+			var amount = 2000;
+			amount = Math.min(amount, predicate.values.length);
+			for (var i = 0; i<amount ; i++) {
+				transfer.push(predicate.values[0]);
+				predicate.values.splice(0, 1);
+			}
+			destination.values = destination.values.concat(transfer);
+			if (predicate.values.length == 0) {
+				destination.complete = true;
 			}
 		}
 	};
-	$scope.triples = [];
-	Entity.triples($routeParams.id, $scope, "resource");
-	$scope.pretties = [];
-	// extract meaningful triples for pretty box
-	$scope.$watch('triples', function(trips) {
-		if (trips !== undefined && trips.length>0) {
-			for (var i = 0; i<trips.length; i++) {
-				var triple = trips[i];
-				if (triple.query == "a") {
-					var pretty = dbpv_pretty_triple(triple);
-					if (pretty !== undefined) {
-						var toaddornot = true;
-						for (var j = 0; j<$scope.pretties.length; j++){
-							a = $scope.pretties[j];
-							if (a.property == pretty.property && a.value == pretty.value && a.type == pretty.type) { // check if already there XXX
-								toaddornot = false;
-							}
-						}
-						if (toaddornot)	$scope.pretties.push(pretty);
-					}
+
+	$scope.sortPredicates = function(item) {
+		return item.predid;
+	};
+
+	$scope.predicates = {};
+	$scope.revpredicates = {};
+
+	Entity.triples($routeParams.id, $scope);
+	$scope.dbpvp = {};
+
+	// object-oriented extraction for pretty box (XXX)
+	$scope.$watch('predicates', function(predicates) {
+		if (predicates !== undefined) {
+			for (var id in predicates) {
+				if (id!==undefined) {
+					dbpvp_process_predicate($scope.dbpvp, predicates[id]);
 				}
 			}
-//			$scope.pretty= true;
 		}
 	},true);
 }
+
+function LookupCtrl($scope, $http, $timeout) {
+	$scope.languages = dbpv_languages;
+	var timer = false;
+	var delay = 500;
+	
+	$scope.$watch('primary_language', function(lang) {
+		$scope.$parent.$root.primary_lang = lang;
+	});
+
+	$scope.primary_language = "en";
+
+	$scope.$watch('term', function(term) {
+		if ($scope.term === undefined || $scope.term == "") {
+			$scope.results = [];
+		}else{
+			if (timer) {
+				$timeout.cancel(timer);
+			}
+			timer = $timeout(function() {
+				// DO LOOK UP
+				$scope.dolookup();
+			}, delay);
+		}
+	});
+
+	$scope.dolookup = function () {
+		if ($scope.term === undefined || $scope.term == "") {
+			$scope.results = [];
+		}else{
+			delete $http.defaults.headers.common['X-Requested-With'];
+			$http.get("http://lookup.dbpedia.org/api/search/PrefixSearch?MaxHits=5&QueryString="+$scope.term).success(function(data) {
+				var results = data["results"];
+				var res = [];
+				for (var i = 0; i<results.length ; i++) {
+					var result = results[i];
+					var r = {"type": "uri", "l_label": result['label'], "url": result['uri']};
+					dbpv_preprocess_triple_value(r);
+					res.push(r);
+				}
+				$scope.results = res;
+			});
+		}
+	}
+
+	$scope.clearResults = function() {
+		$scope.results = [];
+	};
+}
+
+// XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX 
+
+
+
+/*function oldEntityCtrl ($scope, $routeParams, $http, Entity) {
+//	getEntityCtrl($scope, $routeParams, $http);
+//	postEntityCtrl($scope,$routeParams, $http);
+	newPostEntityCtrl($scope, $routeParams, Entity);
+}*/
 
 /*function ListCtrl($scope) {
 	var content = [];

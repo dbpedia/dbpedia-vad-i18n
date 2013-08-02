@@ -176,6 +176,16 @@ DB.DBA.VHOST_REMOVE (lpath=>'/tpl');
 DB.DBA.VHOST_DEFINE (lpath=>'/tpl', ppath=>registry_get('_dbpedia_path_')||'tpl/',
     is_dav=>atoi (registry_get('_dbpedia_dav_')));
 
+-- Bootstrap
+DB.DBA.VHOST_REMOVE (lpath=>'/css');
+DB.DBA.VHOST_DEFINE (lpath=>'/css', ppath=>registry_get('_dbpedia_path_')||'css/',
+    is_dav=>atoi (registry_get('_dbpedia_dav_')));
+DB.DBA.VHOST_REMOVE (lpath=>'/fonts');
+DB.DBA.VHOST_DEFINE (lpath=>'/fonts', ppath=>registry_get('_dbpedia_path_')||'fonts/',
+    is_dav=>atoi (registry_get('_dbpedia_dav_')));
+
+
+
 
 
 -- Classes

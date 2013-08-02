@@ -211,7 +211,7 @@
   --http(links);
 ?>
 
-<!-- header -->
+<!-- head -->
 <head profile="http://www.w3.org/1999/xhtml/vocab">
   <title>About: <?=charset_recode (label, 'UTF-8', '_WIDE_')?></title>
   <link rel="alternate" type="application/rdf+xml"  href="<?=charset_recode (rdf_link2, 'UTF-8', '_WIDE_')?>" title="Structured Descriptor Document (RDF/XML format)" />
@@ -233,6 +233,14 @@
   <link rel="foaf:primarytopic" href="<?= charset_recode(page_resource_uri, 'UTF-8', '_WIDE_') ?>"/>
   <link rev="describedby" href="<?= charset_recode(page_resource_uri, 'UTF-8', '_WIDE_') ?>"/>
   <script type="text/javascript" src="/statics/script.js"></script>
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/css/bootstrap.css"></link>
+  <link rel="stylesheet" href="/css/bootstrap-glyphicons.css"></link>
+  <link rel="stylesheet" href="/css/dbpv.css"></link>
+
   <script type="text/javascript" src="/js/jquery.js"></script>
   <script type="text/javascript" src="/js/angular.min.js"></script>
   <script type="text/javascript" src="/js/commons.js"></script>
@@ -241,8 +249,63 @@
   <script type="text/javascript" src="/js/controllers.js"></script>
   <script type="text/javascript" src="/js/jquery.rdfquery.core.js"></script>
   <script type="text/javascript" src="/js/jquery.rdfquery.rdfa.js"></script>
+
+
+
 </head>
 <body onload="init();" about="<?=charset_recode(page_resource_uri, 'UTF-8', '_WIDE_') ?>">
+
+<div id="dynamic" style="display:none;" >
+	<script type="text/javascript">
+		try{
+			document.getElementById("dynamic").style.display = "block";
+		}catch(err) {
+			alert("shwoing error: "+err.message);
+		}
+		//alert("hidden");
+		
+	</script>
+	<div class="navbar navbar-fixed-top">
+		<div class="dbp-logo">
+			<img src="/css/200px-dbpedia.png"></img>
+			<p> Named Graph: dbpedia.org </p>
+			<p> Data Space: localhost </p>
+		</div>
+		<div id="searchbar" ng-controller="LookupCtrl">
+			<form novalidate class="simple-form form-inline">
+				<div class="form-group">
+					<input type="text" class="form-control entity-search dbpv-input" ng-model="term" onblur="clearResults()"/>
+					<button type="button" class="btn-entity-search btn btn-primary" id="search" ng-click="dolookup()">
+						<span class="glyphicon glyphicon-search"></span>
+					</button>
+					<select class="form-control select-lang" ng-model="primary_language" ng-options="lang.code as lang.label for lang in languages">
+					</select>
+				</div>
+				<ul id="lookup-results">
+					<li ng-repeat="result in results">
+						<a href="{{result.url}}" ng-click="clearResults()">{{result.short}}</a>
+					</li>
+				</ul>
+			</form>
+	
+		</div>
+	</div>
+
+	<div id="page-contents" ng-view></div>
+
+</div>
+<div id="static">
+
+	<script type="text/javascript">
+		try{
+			document.getElementById("static").style.display = "none";
+		}catch(err) {
+			alert("hiding error: "+err.message);
+		}
+		//alert("hidden");
+		
+	</script>
+
   <div id="header">
     <div id="hd_l">
       <h1 id="title">About: <a href="<?= dbp_ldd_get_proxy (page_resource_uri) ?>"><?=charset_recode(label, 'UTF-8', '_WIDE_') ?></a></h1>
@@ -262,7 +325,6 @@
        </a>
      </div> <!-- hd_r -->
   </div> <!-- header -->
-  <div ng-view></div>
   <div id="content">
       <p><?vsp http (sprintf ('%'||registry_get('dbp_decode_param_V'), _subject)); ?></p>
 <!-- proptable -->
@@ -388,5 +450,6 @@
     })();
   </script>
   <?vsp } ?>
+</div>
 </body>
 </html>

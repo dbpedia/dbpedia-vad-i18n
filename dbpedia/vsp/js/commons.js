@@ -7,26 +7,77 @@ var dbpv_prefixes = {
 
 var dbpv_localns = "http://dbpedia.org/resource/";
 
-function dbpv_pretty_predicate(url, value) {
-	var dbpv_pretty_map = {	//TODO make global var out of this
-"http://www.w3.org/2000/01/rdf-schema#label":
-{"property": "label", "show_prop": false, "type": "text"},
-"http://www.w3.org/2000/01/rdf-schema#comment":
-{"property": "Description", "show_prop": true, "type": "text"},
-"http://dbpedia.org/ontology/birthPlace":
-{"property":"Place of Birth", "show_prop":true, "type": "text"},
-"http://dbpedia.org/ontology/birthDate":
-{"property":"Date of Birth", "show_prop":true, "type": "text"},
-"http://xmlns.com/foaf/0.1/primaryTopic":
-{"property": "wikipage", "show_prop":false, "type": "uri"},
-"http://dbpedia.org/ontology/thumbnail":
-{"property":"image", "show_prop":false, "type": "img"},
-"http://xmlns.com/foaf/0.1/name":
-{"property": "Name", "show_prop":true, "type": "text"}
-};
+var dbpv_primary_lang = "en";
+var dbpv_fallback_lang = "en";
+
+var dbpv_languages = [	{"label":"English", "code": "en"}, 
+			{"label":"German", "code": "de"},
+			{"label":"French", "code": "fr"},
+			{"label":"Dutch", "code": "nl"},
+			];
+
+function dbpvp_process_predicate(pretty, predicate) {
+	mapping = { 	"http://www.w3.org/2000/01/rdf-schema#label": "label",
+			"http://www.w3.org/2000/01/rdf-schema#comment": "description",
+			"http://dbpedia.org/ontology/thumbnail": "thumbnail"
+		  };
+	var property = mapping[predicate.url];
+	var value = undefined;
+	if (property !== undefined) {
+		pretty[property] = predicate.values;
+	}
+}
+
+function dbpv_pretty_predicate(predicate) {
+	var dbpv_pretty_map = {
+		"http://www.w3.org/2000/01/rdf-schema#label":
+			{"property": "label", "show_prop": false, "type": "text"},
+		"http://www.w3.org/2000/01/rdf-schema#comment": 
+			{"property": "Description", "show_prop": true, "type": "text"},
+		"http://dbpedia.org/ontology/birthPlace": 
+			{"property":"Place of Birth", "show_prop":true, "type": "text"},
+		"http://dbpedia.org/ontology/birthDate": 
+			{"property":"Date of Birth", "show_prop":true, "type": "text"},
+		"http://xmlns.com/foaf/0.1/primaryTopic": 
+			{"property": "wikipage", "show_prop":false, "type": "uri"},
+		"http://dbpedia.org/ontology/depiction": 
+			{"property":"image", "show_prop":false, "type": "img"},
+		"http://xmlns.com/foaf/0.1/name": 
+			{"property": "name", "show_prop":true, "type": "text"}
+	};
+	for (var i = 0; i<predicate.values; i++) {
+		var addit = dbpv_pretty_map[predicate.url];
+		if (addit !== undefined) {
+			var value = predicate.values[i];
+		}
+		
+	}
+}
+
+function dbpv_pretty_predicate_old(url, value) {
+	var dbpv_pretty_map = {
+		"http://www.w3.org/2000/01/rdf-schema#label":
+			{"property": "label", "show_prop": false, "type": "text"},
+		"http://www.w3.org/2000/01/rdf-schema#comment": 
+			{"property": "Description", "show_prop": true, "type": "text"},
+		"http://dbpedia.org/ontology/birthPlace": 
+			{"property":"Place of Birth", "show_prop":true, "type": "text"},
+		"http://dbpedia.org/ontology/birthDate": 
+			{"property":"Date of Birth", "show_prop":true, "type": "text"},
+		"http://xmlns.com/foaf/0.1/primaryTopic": 
+			{"property": "wikipage", "show_prop":false, "type": "uri"},
+		"http://xmlns.com/foaf/0.1/depiction": 
+			{"property":"image", "show_prop":false, "type": "img"},
+		"http://xmlns.com/foaf/0.1/name": 
+			{"property": "name", "show_prop":true, "type": "text"}
+	};
 	var pretty = dbpv_pretty_map[url];
 	if (pretty !== undefined) {
-		pretty.value = value;
+		pretty.value = value.value;
+		pretty.source = value;
+		if (value['xml:lang'] !== undefined && value['xml:lang'] != "undefined") {
+			pretty['xml:lang'] = value['xml:lang'];
+		}
 	}
 	return pretty;
 }

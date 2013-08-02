@@ -1,0 +1,186 @@
+body {
+	padding-top: 80px;
+	background-color: #EEEEEE;
+}
+
+.dbpv-input {
+	box-shadow: none;
+}
+
+.dbpv-input:focus {
+	box-shadow:none;
+	border-color: #32CD32;
+}
+
+.navbar {
+	background-color: #FFFFFF;
+	border-bottom: 1px solid #CCC;
+}
+
+.navbar .btn {
+	background-color: #3CB371;
+}
+
+.navbar #searchbar{
+	margin-top: 15px;
+	margin-left:250px;
+	max-width: 1000px;
+}
+
+.navbar #searchbar .btn-entity-search {
+	width: 17%;
+	font-size: 20px;
+}
+
+.navbar #searchbar .entity-search {
+	max-width: 50%;
+}
+
+.navbar #searchbar .select-lang {
+	max-width: 17%;
+	float: right;
+}
+
+
+.navbar #searchbar .select-lang:focus {
+	box-shadow: none;
+	border-color: #32CD32;
+}
+
+.navbar .dbp-logo {
+	position:fixed;
+	top: 17px;
+	left: 25px;
+}	
+
+#page-contents {
+	width: 70%;
+	max-width: 1030px;
+	margin-left:250px;
+	margin-right:auto;
+}
+
+.rdf-prefix {
+	color: #555;
+}
+
+.predicate {
+	background-color: #F7F7F7;
+	border: 1pt solid #DDDDDD;
+	margin-bottom: 5px;
+	padding: 10px;
+	padding-right:0px;
+	padding-bottom:5px;
+	overflow: auto;
+}
+
+.pred-value {
+	background-color: #ffffff;
+	border: 1pt solid #DDDDDD;
+	border-right: 0pt solid white;
+	margin-bottom: 5px;
+	padding: 5px;
+	padding-left: 10px;
+	padding-right: 15px;
+}
+
+.pred-name {
+	float:left;
+	display:block;
+	width: 250px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+
+.pred-values {
+	margin-left: 251px;
+}
+
+.btn-show-more {
+	background-color: #DDDDDD;
+	border-radius: 0px 0px 0px 0px;
+	border: 0px solid white;
+}
+
+.btn-show-more:hover, .btn-show-more:focus , .btn-show-more:active, .btn-show-more.active {
+	background-color: #3CB371;
+}
+
+.dbpv-filter {
+	width: 150px;
+	border: 0pt solid white;
+	border-bottom: 1pt solid #CCC;
+	border-radius: 0px 0px 0px 0px;
+	padding-bottom:0px;
+}
+
+label.dbpv-tabletop {
+	float: left;
+	margin-top: 10px;
+	margin-right: 5px;
+	font-size: 18px;
+}
+
+#triples-top .pred-value {
+	padding-top:0px;
+	border: 0px solid white;
+	margin-bottom: 0px;
+}
+
+#triples-top .pred-name {
+	padding-top:0px;
+	margin-bottom: 0px;
+	border-right: 1px solid #DDDDDD;
+}
+
+#triples-top .predicate {
+	background-color: white;
+	padding-top: 0px;
+	padding-bottom: 0px;
+	border: 1px solid #CCCCCC;
+}
+
+#lookup-results {
+	list-style-type: none;
+	position: fixed;
+	top: 69px;
+	left: 225px;
+	min-width: 50%;
+}
+
+#lookup-results li {
+	background-color: white;
+	border: 1px solid #CCC;
+	margin-top: 2px;
+	padding: 10px;
+	padding-left: 15px;
+}
+
+#pretty-box {
+	background-color: white;
+	border: 1px solid #CCC;
+	padding-right: 15px;
+	margin-bottom: 15px;
+	overflow: hidden;
+}
+
+#pretty-box #dbpvptext {
+}
+
+#pretty-box #dbpvpthumbnail {
+	float:left;
+	margin-right: 15px;
+}
+
+
+#pretty-box #dbpvplabel {
+	padding-left: 15px;
+	padding-top: 5px;
+	font-size: 2.5em;
+}
+
+#pretty-box #dbpvpdescription {
+	margin-bottom: 10px;
+	padding-left: 15px;
+}
+
