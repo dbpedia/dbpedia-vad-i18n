@@ -6,7 +6,6 @@ dbpv.config(function($routeProvider, $locationProvider) {
 		.when('/page/:id', {templateUrl: '/tpl/entity.html', controller: EntityCtrl})
 		.when('/resource/:id', {redirectTo: function(params, a, search) {return '/page/'+params.id;} })
 		.when('/entity/:id', {redirectTo: function(params, a, search) {return '/page/'+params.id;} })
-		.when('/search/:id', {templateUrl: '/tpl/search.html', controller: SearchCtrl})
 		.otherwise({redirectTo: '/page/404'});
 });
 

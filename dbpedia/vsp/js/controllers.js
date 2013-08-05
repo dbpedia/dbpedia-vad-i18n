@@ -44,16 +44,23 @@ function EntityCtrl($scope, $routeParams, Entity) {
 	},true);
 }
 
-function LookupCtrl($scope, $http, $timeout) {
+function LookupCtrl($scope, $http, $timeout, $cookies) {
+	$cookies.dbpv_has_js = '1';
+	if ($cookies.dbpv_primary_lang === undefined) {
+		$cookies.dbpv_primary_lang = "en";
+	}
+	$scope.primary_language = $cookies.dbpv_primary_lang;
+
 	$scope.languages = dbpv_languages;
 	var timer = false;
 	var delay = 500;
 	
 	$scope.$watch('primary_language', function(lang) {
 		$scope.$parent.$root.primary_lang = lang;
+		$cookies.dbpv_primary_lang = lang;
 	});
 
-	$scope.primary_language = "en";
+//	$scope.primary_language = "en";
 
 	$scope.$watch('term', function(term) {
 		if ($scope.term === undefined || $scope.term == "") {

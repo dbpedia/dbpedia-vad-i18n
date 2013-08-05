@@ -1,4 +1,4 @@
-var dbpv = angular.module('dbpv', ['dbpvServices']);
+var dbpv = angular.module('dbpv', ['dbpvServices', 'ngCookies']);
 
 dbpv.config(function($routeProvider, $locationProvider) {
 	$locationProvider.html5Mode(true);

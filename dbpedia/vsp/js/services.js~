@@ -132,10 +132,12 @@ alert("malformed JSON");
 							dbpv_preprocess_triple_value(property);
 							dbpv_preprocess_triple_value(subject);
 
-							predicate = predicates["o-"+property.url];
+							predid = "o-"+property.url;
+							predicate = predicates[predid];
 							if (predicate === undefined) { // add it
-								predicates["o-"+property.url] = property;
+								predicates[predid] = property;
 								predicate = property;
+								predicate.predid = predid;
 								predicate.values = [];
 							}
 							predicate.values.push(subject);

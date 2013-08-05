@@ -6,6 +6,15 @@
     version="XHTML+RDFa 1.0" xml:lang="<?= registry_get('dbp_lang')?>"
     ng-app='dbpv'>
 <?vsp
+-- COOKIES !!!!!!!!!!!
+ declare cookie, has_js varchar;
+ cookie := http_request_header (http_request_header (), 'Cookie', null, '');
+ has_js := '0';
+
+ if (cookie <> '') {
+	has_js := get_keyword ('dbpv_has_js', split_and_decode (cookie, 0, '\0\0;='), '');
+ }
+
 --
 --  $Id$
 --
@@ -207,8 +216,9 @@
 
   -- set up http
   -- http_header ('Cache-Control: no-cache, must-revalidate\r\nPragma: no-cache\r\n');
-  http_header (sprintf ('Expires: %s \r\n', date_rfc1123 (dateadd ('day', 7, now ()))));
-  http_header (sprintf ('%s', links));
+  http_header ( concat (http_header_get (), sprintf ('Expires: %s \r\n', date_rfc1123 (dateadd ('day', 7, now ())))));
+  http_header ( concat (http_header_get (), sprintf ('%s \r\n', links)));
+  http_header ( concat (http_header_get (), 'Set-Cookie: dbpv_has_js=0\r\n'));
   --http(links);
 ?>
 
@@ -342,6 +352,9 @@
   else
     sas := 0;
 
+
+if (has_js = '0') {
+
   --select predicates for resource
   for (select distinct P as PRED from DB.DBA.RDF_QUAD where S = _S and G in ( select RGGM_MEMBER_IID FROM DB.DBA.RDF_GRAPH_GROUP_MEMBER where RGGM_GROUP_IID = _G UNION select RGGM_GROUP_IID FROM DB.DBA.RDF_GRAPH_GROUP_MEMBER where RGGM_GROUP_IID = _G ) order by id_to_iri (P)) do  {
     dbp_ldd_http_print_l (id_to_iri (PRED), odd_position);
@@ -394,6 +407,9 @@
     http_request_status ('HTTP/1.1 404 Not found');
     http ('<tr><td colspan="2"><p>No further information is available. (The requested entity is unknown)</p></td></tr>');
   }
+
+
+}
 ?>
       </table>
     </div> <!--  #content -->
