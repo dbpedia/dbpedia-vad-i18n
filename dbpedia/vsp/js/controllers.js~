@@ -57,6 +57,7 @@ function LookupCtrl($scope, $http, $timeout, $cookies) {
 	
 	$scope.$watch('primary_language', function(lang) {
 		$scope.$parent.$root.primary_lang = lang;
+		$cookies.dbpv_primary_lang = lang;
 	});
 
 //	$scope.primary_language = "en";

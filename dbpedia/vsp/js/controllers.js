@@ -1,6 +1,5 @@
-
-function EntityCtrl($scope, $routeParams, Entity) {
-	$scope.$parent.$watch("primary_lang", function(lang){
+function MetaCtrl($scope, $routeParams, $filter, Entity, dir, fwd) {
+	$scope.$parent.$root.$watch("primary_lang", function(lang){
 		$scope.primary_lang = lang;
 	});
 
@@ -29,7 +28,7 @@ function EntityCtrl($scope, $routeParams, Entity) {
 	$scope.predicates = {};
 	$scope.revpredicates = {};
 
-	Entity.triples($routeParams.id, $scope);
+	Entity.triples($routeParams.id, $scope, dir, fwd);
 	$scope.dbpvp = {};
 
 	// object-oriented extraction for pretty box (XXX)
@@ -44,23 +43,32 @@ function EntityCtrl($scope, $routeParams, Entity) {
 	},true);
 }
 
-function LookupCtrl($scope, $http, $timeout, $cookies) {
-	$cookies.dbpv_has_js = '1';
-	if ($cookies.dbpv_primary_lang === undefined) {
-		$cookies.dbpv_primary_lang = "en";
-	}
-	$scope.primary_language = $cookies.dbpv_primary_lang;
+function EntityCtrl($scope, $routeParams, $filter, Entity) {
+	MetaCtrl($scope, $routeParams, $filter, Entity, "resource", false);	
+}
 
+function OwlCtrl($scope, $routeParams, $filter, Entity) {
+	MetaCtrl($scope, $routeParams, $filter, Entity, "ontology", true);
+}
+
+function PropCtrl($scope, $routeParams, $filter, Entity) {
+	MetaCtrl($scope, $routeParams, $filter, Entity, "ontology", true);
+}
+
+function ClassCtrl($scope, $routeParams, $filter, Entity) {
+	MetaCtrl($scope, $routeParams, $filter, Entity, "ontology", true);
+}
+
+function LookupCtrl($scope, $http, $timeout) {
 	$scope.languages = dbpv_languages;
 	var timer = false;
 	var delay = 500;
 	
 	$scope.$watch('primary_language', function(lang) {
 		$scope.$parent.$root.primary_lang = lang;
-		$cookies.dbpv_primary_lang = lang;
 	});
 
-//	$scope.primary_language = "en";
+	$scope.primary_language = "fr";
 
 	$scope.$watch('term', function(term) {
 		if ($scope.term === undefined || $scope.term == "") {
@@ -102,6 +110,8 @@ function LookupCtrl($scope, $http, $timeout, $cookies) {
 
 
 
+
+// XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX 
 
 
 

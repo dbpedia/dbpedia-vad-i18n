@@ -72,8 +72,8 @@ alert("malformed JSON");
 					$http.defaults.headers.post['Content-Type'] = "application/x-www-form-urlencoded";
 					var inquery = encodeURIComponent("SELECT ?hasprop ?v where {<" + entityUrl + "> ?hasprop ?v}");
 					var outquery = encodeURIComponent("SELECT ?v ?isprop where { ?v ?isprop <" + entityUrl + ">} LIMIT 1000");
-					var endpoint = "http://dbpedia.org/sparql";
-					endpoint = "/sparql";
+					var endpoint = "http://live.dbpedia.org/sparql";
+					//endpoint = "/sparql";
 
 					// START XXX NEW
 					$http.post(endpoint, "query="+inquery).success(function(data, status, headers, config) {
@@ -96,7 +96,7 @@ alert("malformed JSON");
 							dbpv_preprocess_triple_value(property);
 							dbpv_preprocess_triple_value(object);
 
-							predid  = "i-"+property.url;
+							predid  = "i-"+property.uri;
 							predicate = predicates[predid];
 							if (predicate === undefined) { // add it
 								predicates[predid] = property;
@@ -132,7 +132,7 @@ alert("malformed JSON");
 							dbpv_preprocess_triple_value(property);
 							dbpv_preprocess_triple_value(subject);
 
-							predid = "o-"+property.url;
+							predid = "o-"+property.uri;
 							predicate = predicates[predid];
 							if (predicate === undefined) { // add it
 								predicates[predid] = property;
