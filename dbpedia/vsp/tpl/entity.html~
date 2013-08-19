@@ -1,4 +1,3 @@
-<!--<div style="height:100%; overflow:auto;" when-scrolled="loadMore()">-->
 <div id="triples">
 <div id="pretty-box">
 	<div id="dbpvpthumbnail">

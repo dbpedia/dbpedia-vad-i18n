@@ -1,6 +1,6 @@
 body {
-	padding-top: 80px;
 	background-color: #EEEEEE;
+	padding: 0px;
 }
 
 .dbpv-input {
@@ -29,7 +29,6 @@ body {
 
 .navbar #searchbar .btn-entity-search {
 	width: 17%;
-	font-size: 20px;
 }
 
 .navbar #searchbar .entity-search {
@@ -48,7 +47,7 @@ body {
 }
 
 .navbar .dbp-logo {
-	position:fixed;
+	position:absolute;
 	top: 17px;
 	left: 25px;
 }	
@@ -71,8 +70,16 @@ body {
 	padding: 10px;
 	padding-right:0px;
 	padding-bottom:5px;
-	overflow: auto;
+	overflow: hidden;
 }
+
+.predicate .dbpv-taf {
+	position:relative;
+	float:right;
+	padding-left: 10px;
+	padding-bottom: 10px;
+}
+
 
 .pred-value {
 	background-color: #ffffff;
@@ -142,7 +149,7 @@ label.dbpv-tabletop {
 
 #lookup-results {
 	list-style-type: none;
-	position: fixed;
+	position: absolute;
 	top: 69px;
 	left: 225px;
 	min-width: 50%;
@@ -179,8 +186,66 @@ label.dbpv-tabletop {
 	font-size: 2.5em;
 }
 
+#pretty-box #dbpvptypes {
+	padding-bottom:5px;
+	font-size: 1.5em;
+	color: #999;
+	padding-left:15px;
+}
+
+#pretty-box #dbpvptypes .dbpvptype:last-child .comma{
+	display:none;
+}
+
 #pretty-box #dbpvpdescription {
 	margin-bottom: 10px;
 	padding-left: 15px;
 }
 
+#pretty-box #dbpvplinks {
+	padding-left: 15px;
+	margin-bottom: 10px;
+	font-size: 1.2em;
+}
+
+#dbpvpmapcontainer {
+	position:relative;
+	margin-bottom:10px;
+}
+
+#dbpvpmapcontainer .dbpvpmap-active {
+	height: 200px;
+	border: 1pt solid #CCC;
+}
+
+#dbpvpreview {
+	z-index: 1999;
+	background-color: white;
+	border: 1px solid #CCC;
+	max-width: 500px;
+	padding-right: 15px;
+	margin-bottom: 15px;
+	margin-right: 15px;
+	overflow: hidden;
+	box-shadow: 1px 1px 4px #AAA;
+}
+
+#dbpvpreview #dbpvptext {
+}
+
+#dbpvpreview #dbpvpthumbnail {
+	float:left;
+	margin-right: 15px;
+}
+
+
+#dbpvpreview #dbpvplabel {
+	padding-left: 15px;
+	padding-top: 5px;
+	font-size: 2.5em;
+}
+
+#dbpvpreview #dbpvpdescription {
+	margin-bottom: 10px;
+	padding-left: 15px;
+}

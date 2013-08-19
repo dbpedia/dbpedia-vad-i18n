@@ -7,12 +7,31 @@
     ng-app='dbpv'>
 <?vsp
 -- COOKIES !!!!!!!!!!!
- declare cookie, has_js varchar;
+ declare cookie, has_js, old_site, new_site varchar;
+ declare cookie_vec any;
  cookie := http_request_header (http_request_header (), 'Cookie', null, '');
  has_js := '0';
+ old_site := '0';
 
- if (cookie <> '') {
-	has_js := get_keyword ('dbpv_has_js', split_and_decode (cookie, 0, '\0\0;='), '');
+ cookie_vec := split_and_decode (cookie, 0, '\0\0;=');
+
+ declare i, l int;
+ i := 0; l := length (cookie_vec);
+ while (i < l)
+  {
+   declare kw, val varchar;
+   kw := trim (cookie_vec[i]);
+   val := trim (cookie_vec[i+1]);
+   if (kw = 'dbpv_has_js') {
+    has_js := val;
+   }
+   if (kw = 'dbpv_old_site'){
+    old_site := val;
+   }
+   i := i + 2;
+  }
+ if (has_js = '1' AND old_site = '0') {
+  new_site := '1';
  }
 
 --
@@ -224,7 +243,7 @@
 
 <!-- head -->
 <head profile="http://www.w3.org/1999/xhtml/vocab">
-  <title>About: <?=charset_recode (label, 'UTF-8', '_WIDE_')?></title>
+  <title ng:bind-template="{{about.title}} | DBpedia"><?=charset_recode (label, 'UTF-8', '_WIDE_')?></title>
   <link rel="alternate" type="application/rdf+xml"  href="<?=charset_recode (rdf_link2, 'UTF-8', '_WIDE_')?>" title="Structured Descriptor Document (RDF/XML format)" />
   <link rel="alternate" type="text/rdf+n3"          href="<?=charset_recode (rdf_link , 'UTF-8', '_WIDE_')?>" title="Structured Descriptor Document (N3/Turtle format)" />
   <link rel="alternate" type="application/json+rdf" href="<?=charset_recode (rdf_link4, 'UTF-8', '_WIDE_')?>" title="Structured Descriptor Document (RDF/JSON format)" />
@@ -246,41 +265,77 @@
   <script type="text/javascript" src="/statics/script.js"></script>
 
 
+  <script type="text/javascript" src="/js/jquery.js"></script>
+  <script type="text/javascript" src="/js/jquery.cookies.js"></script>
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="/css/bootstrap.css"/>
-  <link rel="stylesheet" href="/css/bootstrap-glyphicons.css"/>
-  <link rel="stylesheet" href="/css/dbpv.css"/>
+<?vsp
+if (new_site = '1') {
+  http('<link rel="stylesheet" href="/css/bootstrap.css"/>');
+  http('<link rel="stylesheet" href="/css/bootstrap-glyphicons.css"/>');
+http('<link rel="stylesheet" href="/css/dbpv.css"/>');
 
-  <script type="text/javascript" src="/js/jquery.js"></script>
-  <script type="text/javascript" src="/js/angular.min.js"></script>
-  <script type="text/javascript" src="/js/commons.js"></script>
-  <script type="text/javascript" src="/js/app.js"></script>
-  <script type="text/javascript" src="/js/services.js"></script>
-  <script type="text/javascript" src="/js/controllers.js"></script>
-  <script type="text/javascript" src="/js/jquery.rdfquery.core.js"></script>
-  <script type="text/javascript" src="/js/jquery.rdfquery.rdfa.js"></script>
-
-
-
+  http('<script type="text/javascript" src="/js/angular.min.js"></script>');
+  http('<script type="text/javascript" src="/js/angular-cookies.js"></script>');
+  http('<script type="text/javascript" src="/js/commons.js"></script>');
+  http('<script type="text/javascript" src="/js/conf.js"></script>');
+  http('<script type="text/javascript" src="/js/app.js"></script>');
+  http('<script type="text/javascript" src="/js/services.js"></script>');
+  http('<script type="text/javascript" src="/js/controllers.js"></script>');
+  http('<script type="text/javascript" src="/js/taf.js"></script>');
+  http('<link rel="stylesheet" href="/css/leaflet.css" />');
+  http('<!--[if lte IE 8]><link rel="stylesheet" href="/css/leaflet.ie.css" /><![endif]-->');
+  http('<script src="/js/leaflet.js"></script>');
+}
+?>
 </head>
 <body onload="init();" about="<?=charset_recode(page_resource_uri, 'UTF-8', '_WIDE_') ?>">
+
+<?vsp
+http(new_site);
+if (new_site = '0') {
+	http ('<div id="useoldsite"></div>');
+}?>
+<script type="text/javascript">
+
+	var newsite = false;
+	alert(document.getElementById("useoldsite");
+	if (document.getElementById("useoldsite") === undefined) {
+		newsite = true;
+	}
+	alert(newsite);
+
+	function useOldSite() {
+		$.cookie("dbpv_old_site", "1");
+		location.reload(true);
+	}
+
+	function useNewSite() {
+		$.cookie("dbpv_old_site", "0");
+		location.reload(true);
+	}
+</script>
 
 <div id="dynamic" style="display:none;" >
 	<script type="text/javascript">
 		try{
-			document.getElementById("dynamic").style.display = "block";
+			if(newsite){
+				document.getElementById("dynamic").style.display = "block";
+			}
 		}catch(err) {
 			alert("shwoing error: "+err.message);
 		}
 		//alert("hidden");
 		
 	</script>
-	<div class="navbar navbar-fixed-top">
+	<div>
+		<a href="javascript:void(0);" onclick="useOldSite();">BACK TO OLD DBPEDIA</a>
+	</div>
+	<div class="navbar">
 		<div class="dbp-logo">
 			<img src="/css/200px-dbpedia.png"></img>
-			<p> Named Graph: dbpedia.org </p>
-			<p> Data Space: localhost </p>
+			<p> Named Graph: {{localgraph}} </p>
+			<p> Data Space: {{dataspace}} </p>
 		</div>
 		<div id="searchbar" ng-controller="LookupCtrl">
 			<form novalidate class="simple-form form-inline">
@@ -298,7 +353,6 @@
 					</li>
 				</ul>
 			</form>
-	
 		</div>
 	</div>
 
@@ -309,14 +363,18 @@
 
 	<script type="text/javascript">
 		try{
-			document.getElementById("static").style.display = "none";
+			if (!newsite){
+				document.getElementById("static").style.display = "none";
+			}
 		}catch(err) {
 			alert("hiding error: "+err.message);
 		}
 		//alert("hidden");
 		
 	</script>
-
+	<div>
+		<a href="javascript:void(0);" onclick="useNewSite();">TRY NEW DBPEDIA</a>
+	</div>
   <div id="header">
     <div id="hd_l">
       <h1 id="title">About: <a href="<?= dbp_ldd_get_proxy (page_resource_uri) ?>"><?=charset_recode(label, 'UTF-8', '_WIDE_') ?></a></h1>
@@ -353,7 +411,7 @@
     sas := 0;
 
 
-if (has_js = '0') {
+if (new_site = '0') {
 
   --select predicates for resource
   for (select distinct P as PRED from DB.DBA.RDF_QUAD where S = _S and G in ( select RGGM_MEMBER_IID FROM DB.DBA.RDF_GRAPH_GROUP_MEMBER where RGGM_GROUP_IID = _G UNION select RGGM_GROUP_IID FROM DB.DBA.RDF_GRAPH_GROUP_MEMBER where RGGM_GROUP_IID = _G ) order by id_to_iri (P)) do  {

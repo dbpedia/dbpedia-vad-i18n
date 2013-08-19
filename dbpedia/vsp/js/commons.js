@@ -9,17 +9,6 @@ var dbpv_prefixes = {
 		"http://dbpedia.org/class/yago/": "yago"
 	};
 
-var dbpv_localgraph = "http://dbpedia.org";
-
-var dbpv_primary_lang = "en";
-var dbpv_fallback_lang = "en";
-
-var dbpv_languages = [	{"label":"English", "code": "en"}, 
-			{"label":"German", "code": "de"},
-			{"label":"French", "code": "fr"},
-			{"label":"Dutch", "code": "nl"},
-			];
-
 function dbpvp_process_predicate(pretty, predicate) {
 	mapping = { 	"http://www.w3.org/2000/01/rdf-schema#label": "label",
 			"http://www.w3.org/2000/01/rdf-schema#comment": "description",
@@ -32,22 +21,26 @@ function dbpvp_process_predicate(pretty, predicate) {
 	}
 }
 
-function dbpv_preprocess_triples(triples) {
+function dbpv_preprocess_triples(triples, localgraph) {
 	for (var i = 0; i<triples.length; i++) {
 		var triple = triples[i];
-		dbpv_preprocess_triple(triple);
+		dbpv_preprocess_triple(triple, localgraph);
 	}
 }
 
-function dbpv_preprocess_triple(triple) {
+function dbpv_preprocess_triple(triple, localgraph) {
 	for (var key in triple) {
 		var sing = triple[key];
-		dbpv_preprocess_triple_value(sing);
+		dbpv_preprocess_triple_value(sing, localgraph);
 	}
 }
 
-function dbpv_preprocess_triple_value(sing) {
+function dbpv_preprocess_triple_value(sing, localgraph) {
+	if (typeof(localgraph) == "undefined") localgraph = get_localgraph();
 	if (sing.type=="uri") {
+		if (sing.url === undefined) {
+			sing.url = sing.value;
+		}
 		sing.uri = sing.url
 		for (var start in dbpv_prefixes) {
 			if (sing.url.slice(0, start.length) == start) {
@@ -55,8 +48,9 @@ function dbpv_preprocess_triple_value(sing) {
 				sing.short = sing.url.slice(start.length, sing.url.length);
 			}
 		}
-		if (sing.url.slice(0, dbpv_localgraph.length) == dbpv_localgraph) {
-			sing.url = sing.url.slice(dbpv_localgraph.length, sing.url.length);
+		if (sing.url.slice(0, localgraph.length) == localgraph) {
+			sing.url = sing.url.slice(localgraph.length, sing.url.length);
+			sing.url.local = true;
 		}
 		if (sing.prefix!==undefined && sing.short !== undefined) {
 			sing.label = sing.prefix + ":" + sing.short;
@@ -67,4 +61,18 @@ function dbpv_preprocess_triple_value(sing) {
 	}else{
 		sing.label = sing.value;
 	}
+}
+
+function dbpv_preprocess_triple_url(url, localgraph) {
+	if (typeof(localgraph) == "undefined") localgraph = get_localgraph();
+	if (url.slice(0, localgraph.length) == localgraph) {
+		url = url.slice(localgraph.length, url.length);
+		url.local = true;
+	}
+	return url;
+}
+
+function get_localgraph(){
+	var ret = angular.element($('body')).scope().localgraph;
+	return ret;
 }

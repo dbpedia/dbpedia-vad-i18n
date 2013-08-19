@@ -224,7 +224,7 @@
 
 <!-- head -->
 <head profile="http://www.w3.org/1999/xhtml/vocab">
-  <title>About: <?=charset_recode (label, 'UTF-8', '_WIDE_')?></title>
+  <title ng:bind-template="{{about.title}} | DBpedia"><?=charset_recode (label, 'UTF-8', '_WIDE_')?></title>
   <link rel="alternate" type="application/rdf+xml"  href="<?=charset_recode (rdf_link2, 'UTF-8', '_WIDE_')?>" title="Structured Descriptor Document (RDF/XML format)" />
   <link rel="alternate" type="text/rdf+n3"          href="<?=charset_recode (rdf_link , 'UTF-8', '_WIDE_')?>" title="Structured Descriptor Document (N3/Turtle format)" />
   <link rel="alternate" type="application/json+rdf" href="<?=charset_recode (rdf_link4, 'UTF-8', '_WIDE_')?>" title="Structured Descriptor Document (RDF/JSON format)" />
@@ -256,12 +256,18 @@
   <script type="text/javascript" src="/js/angular.min.js"></script>
   <script type="text/javascript" src="/js/angular-cookies.js"></script>
   <script type="text/javascript" src="/js/commons.js"></script>
+  <script type="text/javascript" src="/js/conf.js"></script>
   <script type="text/javascript" src="/js/app.js"></script>
   <script type="text/javascript" src="/js/services.js"></script>
   <script type="text/javascript" src="/js/controllers.js"></script>
-  <script type="text/javascript" src="/js/jquery.rdfquery.core.js"></script>
-  <script type="text/javascript" src="/js/jquery.rdfquery.rdfa.js"></script>
+  <script type="text/javascript" src="/js/taf.js"></script>
 
+  <!--LEAFLET -->
+  <link rel="stylesheet" href="/css/leaflet.css" />
+  <!--[if lte IE 8]>
+    <link rel="stylesheet" href="/css/leaflet.ie.css" />
+  <![endif]-->
+  <script src="/js/leaflet.js"></script>
 
 
 </head>
@@ -277,11 +283,11 @@
 		//alert("hidden");
 		
 	</script>
-	<div class="navbar navbar-fixed-top">
+	<div class="navbar">
 		<div class="dbp-logo">
 			<img src="/css/200px-dbpedia.png"></img>
-			<p> Named Graph: dbpedia.org </p>
-			<p> Data Space: localhost </p>
+			<p> Named Graph: {{localgraph}} </p>
+			<p> Data Space: {{dataspace}} </p>
 		</div>
 		<div id="searchbar" ng-controller="LookupCtrl">
 			<form novalidate class="simple-form form-inline">

@@ -5,17 +5,81 @@
 	</div>
 	<div id="dbpvptext">
 	<div id="dbpvplabel">
-		<span ng-repeat="value in dbpvp.label |languageFilter:primary_lang">
+		<span ng-repeat="value in dbpvp.label |languageFilter:primary_lang:fallback_lang">
 			{{value.value}}
 		</span>
+	</div>
+	<div id="dbpvptypes" ng-show="dbpvp.types.length>0">
+		<span class="dbpvptype" ng-repeat="type in dbpvp.types">
+			<span compile="type"></span><span class="comma">, </span>
+		</span>	
 	</div>
 	<div id="dbpvpdescription">
-		<span ng-repeat="value in dbpvp.description |languageFilter:primary_lang">
+		<span ng-repeat="value in dbpvp.description |languageFilter:primary_lang:fallback_lang">
 			{{value.value}}
 		</span>
 	</div>
+	<div id="dbpvplinks" ng-show="dbpvp.links.length>0">
+		<span ng-repeat="value in dbpvp.links">
+			<span compile="value"></span>
+		</span>
+	</div>
+	<div id="loading" ng-show="entitySemaphore>0">
+		<center><img style="margin-bottom:15px;" src="/css/ajax-loader.gif"></img></center>
+	</div>
+	</div>
+
+</div>
+<div ng-show="preview.show" id="dbpvpreview" style="position:absolute;top:{{preview.top}}px;left:{{preview.left}}px;" ng-mouseenter="previewHover()" ng-mouseleave="previewUnhover()">
+	<div ng-switch on="preview.type">
+		<div ng-switch-when="entity">
+			<div id="dbpvpthumbnail">
+				<img src="{{preview.thumbnail[0].value}}"></img>
+			</div>
+			<div id="dbpvptext">
+			<div id="dbpvplabel">
+				<span ng-repeat="value in preview.label |languageFilter:primary_lang:fallback_lang">
+					{{value.value}}
+				</span>
+			</div>
+			<div id="dbpvpdescription">
+				<span ng-repeat="value in preview.description |languageFilter:primary_lang:fallback_lang">
+					{{value.value}}
+				</span>
+			</div>
+			</div>
+		</div>
+		<div ng-switch-when="property">
+			<div id="dbpvplabel">
+				<span ng-repeat="value in preview.label | languageFilter:primary_lang:fallback_lang">
+					{{value.value}}
+				</span>
+			</div>
+			<div id="dbpvpdescription">
+				<span ng-show="preview.domain.length>0">
+				Domain:
+				<a href="{{preview.domain[0].url}}">
+					{{preview.domain[0].label}}
+				</a>
+				</span>
+			</div>
+			<div id="dbpvpdescription">
+				<span ng-show="preview.range.length>0">
+				Range:
+				<a href="{{preview.range[0].url}}">
+					{{preview.range[0].label}}
+				</a>
+				</span>
+			</div>
+		</div>
+		<div ng-switch-default>
+		</div>
+	</div>
+	<div id="previewSpinner" ng-show="previewSemaphore.count>0">
+		<center><img src="/css/ajax-loader.gif" style="margin-left:15px;margin-bottom:15px;"></img></center>
 	</div>
 </div>
+<div id="dbpvpmapcontainer"><div id="dbpvpmap"></div></div>
 
 <div id="triple-list">
 <div id="triples-top">
@@ -29,7 +93,7 @@
 	<div class="predicate" ng-repeat="(id, predicate) in predicates | predicateFilter:predfilter | predicateValueFilter:valfilter  | orderBy:sortPredicates">
 		<div class="pred-name">
 		<span ng-show="predicate.reverse">is </span>
-		<a href="{{predicate.url}}">
+		<a href="{{predicate.url}}" dbpv-preview="{{predicate.url}}">
 			<span ng-switch on="predicate.prefix">
 				<span ng-switch-when="undefined">{{predicate.label}}</span>
 				<span ng-switch-default>  <span class="rdf-prefix">{{predicate.prefix}}:</span>{{predicate.short}}</span>
@@ -38,17 +102,25 @@
 		<span ng-show="predicate.reverse"> of</span>:
 		</div>
 		<div class="pred-values">
-			<div class="pred-value" ng-repeat="val in predicate.values | filter:valfilter | languageFilter:primary_lang">
-				<span ng-switch on="val.type">
-					<span ng-switch-when="uri"> <a href="{{val.url}}">
-						<span ng-switch on="val.prefix">
-							<span ng-switch-when="undefined">{{val.label}}</span>
-							<span ng-switch-default>  <span class="rdf-prefix">{{val.prefix}}:</span>{{val.short}}</span>
-						</span>
-					</a> </span>
-					<span ng-switch-default>{{val.label}}</span>
-				</span>
+			<div class="pred-value" ng-repeat="val in predicate.values | filter:valfilter | languageFilter:primary_lang:fallback_lang">
 
+
+				<span class="dbpv-taf">
+					<span ng-repeat="action in taf_actions | actionFilter:about:predicate:val">
+						<a href="javascript:void(0);" title="{{action.description}}" ng-click="action.execute(about, predicate, val);"> <span ng-bind-html-unsafe="action.display(about, predicate, val);"></span> </a>
+					</span>
+				</span>
+				<span>
+					<span ng-switch on="val.type">
+						<span ng-switch-when="uri"> <a href="{{val.url}}" dbpv-preview="{{val.url}}" class="entity-preview">
+							<span ng-switch on="val.prefix">
+								<span ng-switch-when="undefined">{{val.label}}</span>
+								<span ng-switch-default>  <span class="rdf-prefix">{{val.prefix}}:</span>{{val.short}}</span>
+							</span>
+						</a> </span>
+						<span ng-switch-default><span compile="val.label"></span></span>
+					</span>
+				</span>
 			</div>
 			<div ng-hide="predicate.complete">
 				<button class="btn btn-block btn-primary btn-small btn-show-more" ng-click="showMore(predicate.predid)">Show More</button>
