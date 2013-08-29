@@ -1,7 +1,19 @@
 <div id="triples">
+<div id="shortcutswrapper" ng-controller="ShortcutCtrl">
+	<div id="shortcuts" smart-scroll="100" ng-show="shortcuts.length>0">
+		<div class="shortcut-home" dbpv-top></div>
+		<div class="shortcutscuts">
+			<div class="shortcut" ng-repeat="cut in shortcuts">
+				<span shortcut="cut.url" shortcut-label="cut.label"></span>
+			</div>
+		</div>
+		<div class="shortcutscuts"></div>
+	</div>
+</div>
 <div id="pretty-box">
+
 	<div id="dbpvpthumbnail">
-		<img src="{{dbpvp.thumbnail[0].value}}"></img>
+		<img ng-src="{{dbpvp.thumbnail[0].value}}"></img>
 	</div>
 	<div id="dbpvptext">
 	<div id="dbpvplabel">
@@ -19,10 +31,18 @@
 			{{value.value}}
 		</span>
 	</div>
-	<div id="dbpvplinks" ng-show="dbpvp.links.length>0">
-		<span ng-repeat="value in dbpvp.links">
-			<span compile="value"></span>
-		</span>
+	<div id="dbpvplinks">
+		<div ng-repeat="(label, list) in dbpvp.links" style="float:left;margin-right: 15px;">
+			<div ng-show="list.length>1" >
+				<a role="button" href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown">{{label}} <span class="glyphicon glyphicon-chevron-down" style="font-size:0.6em;"></span></a>
+				<ul class="dropdown-menu">
+					<li ng-repeat="link in list"><a target="_blank" href="{{link.url}}">{{link.label}}</a></li>				
+				</ul>
+			</div>
+			<div ng-show="list.length==1">
+				<a target="_blank" href="{{list[0].url}}">{{list[0].label}}</a>
+			</div>
+		</div>
 	</div>
 	<div id="loading" ng-show="entitySemaphore>0">
 		<center><img style="margin-bottom:15px;" src="/css/ajax-loader.gif"></img></center>
@@ -34,7 +54,7 @@
 	<div ng-switch on="preview.type">
 		<div ng-switch-when="entity">
 			<div id="dbpvpthumbnail">
-				<img src="{{preview.thumbnail[0].value}}"></img>
+				<img ng-src="{{preview.thumbnail[0].value}}"></img>
 			</div>
 			<div id="dbpvptext">
 			<div id="dbpvplabel">
@@ -49,7 +69,7 @@
 			</div>
 			</div>
 		</div>
-		<div ng-switch-when="property">
+		<div ng-switch-when="ontology">
 			<div id="dbpvplabel">
 				<span ng-repeat="value in preview.label | languageFilter:primary_lang:fallback_lang">
 					{{value.value}}
@@ -71,12 +91,20 @@
 				</a>
 				</span>
 			</div>
+			<div id="dbpvpdescription">
+				<span ng-show="preview.superClass.length>0">
+				Superclasses: 
+					<span ng-repeat="scl in preview.superClass">
+						</br><a href="{{scl.url}}">{{scl.label}}</a>
+					</span>
+				</span>
+			</div>
 		</div>
 		<div ng-switch-default>
 		</div>
 	</div>
 	<div id="previewSpinner" ng-show="previewSemaphore.count>0">
-		<center><img src="/css/ajax-loader.gif" style="margin-left:15px;margin-bottom:15px;"></img></center>
+		<center><img ng-src="/css/ajax-loader.gif" style="margin-left:15px;margin-bottom:15px;"></img></center>
 	</div>
 </div>
 <div id="dbpvpmapcontainer"><div id="dbpvpmap"></div></div>

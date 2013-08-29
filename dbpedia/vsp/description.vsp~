@@ -30,8 +30,11 @@
    }
    i := i + 2;
   }
- if (has_js = '1' AND old_site = '0') {
-  new_site := '1';
+ new_site := '0';
+ if (has_js = '1'){
+   if (old_site = '0') {
+    new_site := '1';
+   }
  }
 
 --
@@ -271,39 +274,42 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <?vsp
 if (new_site = '1') {
-  http('<link rel="stylesheet" href="/css/bootstrap.css"/>');
-  http('<link rel="stylesheet" href="/css/bootstrap-glyphicons.css"/>');
-http('<link rel="stylesheet" href="/css/dbpv.css"/>');
+  http ('<!-- NEW SITE INCLUDES -->');
+  http ('<link rel="stylesheet" href="/css/bootstrap.css"/>');
+  http ('<link rel="stylesheet" href="/css/bootstrap-glyphicons.css"/>');
+  http ('<link rel="stylesheet" href="/css/dbpv.css"/>');
 
-  http('<script type="text/javascript" src="/js/angular.min.js"></script>');
-  http('<script type="text/javascript" src="/js/angular-cookies.js"></script>');
-  http('<script type="text/javascript" src="/js/commons.js"></script>');
-  http('<script type="text/javascript" src="/js/conf.js"></script>');
-  http('<script type="text/javascript" src="/js/app.js"></script>');
-  http('<script type="text/javascript" src="/js/services.js"></script>');
-  http('<script type="text/javascript" src="/js/controllers.js"></script>');
-  http('<script type="text/javascript" src="/js/taf.js"></script>');
-  http('<link rel="stylesheet" href="/css/leaflet.css" />');
-  http('<!--[if lte IE 8]><link rel="stylesheet" href="/css/leaflet.ie.css" /><![endif]-->');
-  http('<script src="/js/leaflet.js"></script>');
+  http ('<script type="text/javascript" src="/js/angular.min.js"></script>');
+  http ('<script type="text/javascript" src="/js/typeahead.js"></script>');
+  http ('<script type="text/javascript" src="/js/commons.js"></script>');
+  http ('<script type="text/javascript" charset="UTF-8" src="/js/app.js"></script>');
+  http ('<script type="text/javascript" src="/js/dbpv.js"></script>');
+  http ('<script type="text/javascript" src="/js/services.js"></script>');
+  http ('<script type="text/javascript" src="/js/controllers.js"></script>');
+  http ('<script type="text/javascript" src="/js/taf.js"></script>');
+  http ('<link rel="stylesheet" href="/css/leaflet.css" />');
+  http ('<!--[if lte IE 8]><link rel="stylesheet" href="/css/leaflet.ie.css" /><![endif]-->');
+  http ('<script src="/js/leaflet.js"></script>');
 }
 ?>
 </head>
 <body onload="init();" about="<?=charset_recode(page_resource_uri, 'UTF-8', '_WIDE_') ?>">
 
 <?vsp
-http(new_site);
+http ('<div>');
+http ('</div>');
 if (new_site = '0') {
 	http ('<div id="useoldsite"></div>');
 }?>
 <script type="text/javascript">
+	$(document).ready(function () {
+		$.cookie("dbpv_has_js","1");
+	});	
 
 	var newsite = false;
-	alert(document.getElementById("useoldsite");
-	if (document.getElementById("useoldsite") === undefined) {
+	if (document.getElementById("useoldsite") == null) {
 		newsite = true;
 	}
-	alert(newsite);
 
 	function useOldSite() {
 		$.cookie("dbpv_old_site", "1");
@@ -319,7 +325,7 @@ if (new_site = '0') {
 <div id="dynamic" style="display:none;" >
 	<script type="text/javascript">
 		try{
-			if(newsite){
+			if (newsite) {
 				document.getElementById("dynamic").style.display = "block";
 			}
 		}catch(err) {
@@ -328,42 +334,50 @@ if (new_site = '0') {
 		//alert("hidden");
 		
 	</script>
-	<div>
-		<a href="javascript:void(0);" onclick="useOldSite();">BACK TO OLD DBPEDIA</a>
+	<div id="useoldsite">
+		<a href="javascript:void(0);" onclick="useOldSite();">Back to old DBpedia</a>
 	</div>
 	<div class="navbar">
 		<div class="dbp-logo">
-			<img src="/css/200px-dbpedia.png"></img>
-			<p> Named Graph: {{localgraph}} </p>
-			<p> Data Space: {{dataspace}} </p>
+			<img ng-src="/css/200px-dbpedia.png"></img>
 		</div>
-		<div id="searchbar" ng-controller="LookupCtrl">
-			<form novalidate class="simple-form form-inline">
-				<div class="form-group">
-					<input type="text" class="form-control entity-search dbpv-input" ng-model="term" onblur="clearResults()"/>
-					<button type="button" class="btn-entity-search btn btn-primary" id="search" ng-click="dolookup()">
-						<span class="glyphicon glyphicon-search"></span>
-					</button>
-					<select class="form-control select-lang" ng-model="primary_language" ng-options="lang.code as lang.label for lang in languages">
-					</select>
+		<div id="searchbar" ng-controller="LookupCtrl">	
+
+			<div class="input-group" id="topstuff">
+				<span class="input-group-addon glyphicon glyphicon-search"></span>
+				<input type="text" typeahead="result as result.l_label for result in lookup()" typeahead-wait-ms="800" placeholder="Search DBpedia..." class="form-control entity-search dbpv-input" ng-model="term"/>
+				<span class="input-group-addon addon-right">@ {{localgraph}}</span>
+				<div class="input-group-btn">
+					<button type="button" class="btn btn-default dropdown-toggle language-button" data-toggle="dropdown"><span style="font-size:0.8em;" class="glyphicon glyphicon-globe"></span> <span ng-bind="getNativeName(primary_language);"></span></button>
+				        <ul class="dropdown-menu">
+					  <li ng-repeat="(code, names) in availableLanguages"><a href="javascript:void(0);" ng-click="selectLanguage(code);">{{names.nativeName}}</a></li>
+					  <li class="divider"></li>
+					  <li ng-repeat="(code, names) in restLanguages()"><a href="javascript:void(0);" ng-click="selectLanguage(code);">{{names.nativeName}}</a></li>
+					</ul>
 				</div>
-				<ul id="lookup-results">
-					<li ng-repeat="result in results">
-						<a href="{{result.url}}" ng-click="clearResults()">{{result.short}}</a>
-					</li>
-				</ul>
-			</form>
+			</div>
+
+
+
+			<div id="notifications" ng-controller="NotificationCtrl">
+				<div class="notification" ng-click="removeNotification(notification);" ng-repeat="notification in notifications">
+					<span class="text">{{notification.text}}</span>
+				</div>
+			</div>
 		</div>
 	</div>
 
 	<div id="page-contents" ng-view></div>
 
 </div>
+
+
+
 <div id="static">
 
 	<script type="text/javascript">
 		try{
-			if (!newsite){
+			if (newsite){
 				document.getElementById("static").style.display = "none";
 			}
 		}catch(err) {
@@ -372,9 +386,13 @@ if (new_site = '0') {
 		//alert("hidden");
 		
 	</script>
-	<div>
-		<a href="javascript:void(0);" onclick="useNewSite();">TRY NEW DBPEDIA</a>
+	<div id="trynewsite">
 	</div>
+    <script type="text/javascript">
+		$(document).ready(function() {
+			$("#trynewsite").html('<a href="javascript:void(0);" onclick="useNewSite();">Try NEW DBpedia</a>');
+		});
+	</script>
   <div id="header">
     <div id="hd_l">
       <h1 id="title">About: <a href="<?= dbp_ldd_get_proxy (page_resource_uri) ?>"><?=charset_recode(label, 'UTF-8', '_WIDE_') ?></a></h1>
@@ -386,7 +404,6 @@ if (new_site = '0') {
           from Named Graph : <a href="<?= project_home_page ?>"><?= project_home_page ?></a>, 
           within Data Space : <a href="http://<?= host ?>"><?V host ?></a>
        </div>
-		<div id="test"><?= concat('test', 'this') ?></div>
      </div> <!-- hd_l -->
      <div id="hd_r">
        <a href="<?=registry_get('dbp_imprint') ?>" title="About DBpedia">

@@ -1,7 +1,93 @@
 body {
 	background-color: #EEEEEE;
-	padding: 0px;
+	padding: 0 0;
 }
+
+body #static {
+	padding: 1.2em 2em;
+}
+
+#useoldsite {
+	position:absolute;
+	top: 10px;
+	right: 10px;
+}
+
+#notifications {
+	position:fixed;
+	left: 10px;
+	bottom: 10px;
+	z-index: 10000;
+}
+
+#notifications .notification {
+	box-shadow: 1px 2px 6px #777;
+	font-size: 1.2em;
+	background-color: #ffaa33;
+	overflow:hidden;
+	line-height:30px;
+	border-left:5px solid grey;
+	max-width: 500px;
+	padding: 5px 10px;
+	margin-bottom: 5px;
+}
+
+#notifications .notification:hover {
+	background-color: #ff9900;
+}
+
+#shortcuts {
+	position:absolute;
+	top:0px;
+	left:10px;
+	width:230px;
+	z-index:1000;
+}
+
+#shortcuts .shortcutscuts {
+	border-top: 5px solid #bbb;
+}
+
+#shortcuts .shortcut {
+	border-top: 2px solid #bbb;
+	text-align:center;
+	padding: 8px;
+}
+
+#shortcuts .shortcut span a {
+	font-size: 1.2em;
+	text-decoration:none;
+}
+
+#shortcuts .shortcut-home {
+	text-align:center;
+	margin-bottom:-15px;
+	font-size:3em;
+	padding: 5px 10px;
+}
+
+#shortcuts .shortcut-home a {
+	text-decoration:none;
+}
+
+.form-control {
+	border-radius: 0px 0px 0px 0px;
+}
+
+.dropdown-menu {
+	top:auto;
+	left:auto;
+	border-radius: 0 0 0 0;
+	padding-top:0;
+	padding-bottom:0;
+}
+
+.navbar #searchbar ul.typeahead {
+	padding-top:0px;
+	padding-bottom:0px;
+	border-radius: 0px 0px 0px 0px;
+}
+
 
 .dbpv-input {
 	box-shadow: none;
@@ -24,27 +110,53 @@ body {
 .navbar #searchbar{
 	margin-top: 15px;
 	margin-left:250px;
+	margin-bottom:15px;
+	width:70%;
 	max-width: 1000px;
 }
 
-.navbar #searchbar .btn-entity-search {
-	width: 17%;
+.navbar #searchbar #topstuff {
+	margin-left:-15px;
+	margin-right:-15px;
+	min-width:500px;
 }
 
-.navbar #searchbar .entity-search {
-	max-width: 50%;
+.navbar #searchbar #topstuff .input-group-addon {
+	border-right: 0px none;
+	border-radius: 0 0 0 0;
 }
 
-.navbar #searchbar .select-lang {
-	max-width: 17%;
-	float: right;
+.navbar #searchbar #topstuff .addon-right {
+	border-left: 0px none;
+	color: grey;
+}
+
+.navbar #searchbar #topstuff .form-control {
+
+}
+
+.navbar #searchbar #topstuff button {
+	background-color: white;
+	color:black;
+	border: 1px solid #CCC;
+	border-radius: 0 0 0 0;
+	width: 150px;
+	overflow:hidden;
+}
+
+.navbar #searchbar #topstuff button span{
+	margin-left: 5px;
+}
+
+.navbar #searchbar #topstuff .input-group-btn > ul {
+	left: auto;
+	top: auto;
+	max-height:400px;
+	overflow:auto;
+	border-radius: 0 0 0 0;
 }
 
 
-.navbar #searchbar .select-lang:focus {
-	box-shadow: none;
-	border-color: #32CD32;
-}
 
 .navbar .dbp-logo {
 	position:absolute;
@@ -71,6 +183,7 @@ body {
 	padding-right:0px;
 	padding-bottom:5px;
 	overflow: hidden;
+	min-width:500px;
 }
 
 .predicate .dbpv-taf {
@@ -168,6 +281,7 @@ label.dbpv-tabletop {
 	border: 1px solid #CCC;
 	padding-right: 15px;
 	margin-bottom: 15px;
+	padding-bottom: 10px;
 	overflow: hidden;
 }
 
@@ -188,9 +302,9 @@ label.dbpv-tabletop {
 
 #pretty-box #dbpvptypes {
 	padding-bottom:5px;
+	padding-left: 15px;
 	font-size: 1.5em;
 	color: #999;
-	padding-left:15px;
 }
 
 #pretty-box #dbpvptypes .dbpvptype:last-child .comma{
@@ -203,9 +317,8 @@ label.dbpv-tabletop {
 }
 
 #pretty-box #dbpvplinks {
-	padding-left: 15px;
 	margin-bottom: 10px;
-	font-size: 1.2em;
+	margin-left: 15px;
 }
 
 #dbpvpmapcontainer {
