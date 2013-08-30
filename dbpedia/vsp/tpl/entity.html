@@ -130,7 +130,7 @@
 		<span ng-show="predicate.reverse"> of</span>:
 		</div>
 		<div class="pred-values">
-			<div class="pred-value" ng-repeat="val in predicate.values | filter:valfilter | languageFilter:primary_lang:fallback_lang">
+			<div class="pred-value" ng-repeat="val in predicate.values | valueFilter:valfilter | languageFilter:primary_lang:fallback_lang">
 
 
 				<span class="dbpv-taf">

@@ -32,7 +32,6 @@
 		</span>
 	</div>
 	<div id="dbpvplinks">
-		External resources: 
 		<div ng-repeat="(label, list) in dbpvp.links" style="float:left;margin-right: 15px;">
 			<div ng-show="list.length>1" >
 				<a role="button" href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown">{{label}} <span class="glyphicon glyphicon-chevron-down" style="font-size:0.6em;"></span></a>
@@ -114,7 +113,7 @@
 <div id="triples-top">
 	<div class="predicate"> <div class="pred-name form-inline"> <label class="dbpv-tabletop"> Property:</label> <input class="form-control dbpv-input dbpv-filter dbpv-filter-pred" ng-model="predfilter" /></div>
 	<div class="pred-values">
-		<div class="pred-value form-inline"> <label class="dbpv-tabletop"> Value: </label> <input class="form-control dbpv-input dbpv-filter dbpv-filter-val" ng-model="valfilter.label" /></div>
+		<div class="pred-value form-inline"> <label class="dbpv-tabletop"> Value: </label> <input class="form-control dbpv-input dbpv-filter dbpv-filter-val" ng-model="valfilter" /></div>
 	</div>
 	</div>
 </div>
@@ -131,7 +130,7 @@
 		<span ng-show="predicate.reverse"> of</span>:
 		</div>
 		<div class="pred-values">
-			<div class="pred-value" ng-repeat="val in predicate.values | filter:valfilter | languageFilter:primary_lang:fallback_lang">
+			<div class="pred-value" ng-repeat="val in predicate.values | valueFilter:valfilter | languageFilter:primary_lang:fallback_lang">
 
 
 				<span class="dbpv-taf">

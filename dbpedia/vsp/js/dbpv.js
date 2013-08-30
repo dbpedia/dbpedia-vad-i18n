@@ -14,14 +14,28 @@ dbpv.config(function($routeProvider, $locationProvider) {
 		.otherwise({redirectTo: '/entity/404'});
 });
 
-
+dbpv.filter("valueFilter", function() {
+	return function(input, query) {
+		if (!query) return input;
+		query = query.label;
+		query = query.toLowerCase();
+		var result = [];
+		angular.forEach(input, function(value) {
+			var label = value.label.toLowerCase();
+			if (label.indexOf(query) != -1) result.push(value);
+		});
+		return result;
+	};
+});
 
 dbpv.filter("predicateFilter", function() {
 	return function(input, query) {
 		if(!query) return input;
+		query = query.toLowerCase();
 		var result = [];
 		angular.forEach(input, function(predicate) {
-			if (predicate.label.indexOf(query) != -1) result.push(predicate);
+			var label = predicate.label.toLowerCase();
+			if (label.indexOf(query) != -1) result.push(predicate);
 		});
 		return result;
 	};
@@ -30,11 +44,14 @@ dbpv.filter("predicateFilter", function() {
 dbpv.filter("predicateValueFilter", function() { //XXX maybe merge with previous filter
 	return function(input, query) {
 		if (!query) return input;
+		query = query.label;
+		query = query.toLowerCase();
 		var result = [];
 		angular.forEach(input, function(predicate) {
 			var hasvalues = false;
 			for (var i = 0; i<predicate.values.length; i++) {	//simulates value filter
-				if (predicate.values[i].label.indexOf(query.label) != -1) {
+				var label = predicate.values[i].label.toLowerCase();
+				if (label.indexOf(query) != -1) {
 					hasvalues = true;
 				}	
 			}
