@@ -280,7 +280,7 @@ if (new_site = '1') {
   http ('<link rel="stylesheet" href="/css/dbpv.css"/>');
 
   http ('<script type="text/javascript" src="/js/angular.min.js"></script>');
-  http ('<script type="text/javascript" src="/js/typeahead.js"></script>');
+  http ('<script type="text/javascript" src="/js/angularbootstrap.js"></script>');
   http ('<script type="text/javascript" src="/js/commons.js"></script>');
   http ('<script type="text/javascript" charset="UTF-8" src="/js/app.js"></script>');
   http ('<script type="text/javascript" src="/js/dbpv.js"></script>');

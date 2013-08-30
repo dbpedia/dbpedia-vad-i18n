@@ -1,9 +1,9 @@
 var dbpv = angular.module('dbpv', ['dbpvServices', 'ui.bootstrap']);
 
 dbpv.run(function($rootScope) {
-	$rootScope.localgraph = "http://dbpedia.org";
+	$rootScope.localgraph = "http://nl.dbpedia.org";
 	$rootScope.dataspace = "localhost";
-	$rootScope.primary_lang = "en";
+	$rootScope.primary_lang = "nl";
 	$rootScope.fallback_lang = "en";
 	$rootScope.endpoint = "/sparql";
 	$rootScope.languages = {

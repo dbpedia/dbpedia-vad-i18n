@@ -281,7 +281,6 @@ label.dbpv-tabletop {
 	border: 1px solid #CCC;
 	padding-right: 15px;
 	margin-bottom: 15px;
-	padding-bottom: 10px;
 	overflow: hidden;
 }
 

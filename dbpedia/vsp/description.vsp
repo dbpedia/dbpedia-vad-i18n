@@ -431,11 +431,11 @@ if (new_site = '0') {
 if (new_site = '0') {
 
   --select predicates for resource
-  for (select distinct P as PRED from DB.DBA.RDF_QUAD where S = _S and G in ( select RGGM_MEMBER_IID FROM DB.DBA.RDF_GRAPH_GROUP_MEMBER where RGGM_GROUP_IID = _G UNION select RGGM_GROUP_IID FROM DB.DBA.RDF_GRAPH_GROUP_MEMBER where RGGM_GROUP_IID = _G ) order by id_to_iri (P)) do  {
+  for (select distinct P as PRED from DB.DBA.RDF_QUAD where S = _S and G in ( select RGGM_MEMBER_IID FROM DB.DBA.RDF_GRAPH_GROUP_MEMBER where RGGM_GROUP_IID = _G UNION select _G ) order by id_to_iri (P)) do  {
     dbp_ldd_http_print_l (id_to_iri (PRED), odd_position);
     printed := 0;
     -- select values for each predicate
-    for (select top 300 O as OBJECT from DB.DBA.RDF_QUAD where S = _S and G in ( select RGGM_MEMBER_IID FROM DB.DBA.RDF_GRAPH_GROUP_MEMBER where RGGM_GROUP_IID = _G UNION select RGGM_GROUP_IID FROM DB.DBA.RDF_GRAPH_GROUP_MEMBER where RGGM_GROUP_IID = _G ) and P = PRED) do {
+    for (select top 300 O as OBJECT from DB.DBA.RDF_QUAD where S = _S and G in ( select RGGM_MEMBER_IID FROM DB.DBA.RDF_GRAPH_GROUP_MEMBER where RGGM_GROUP_IID = _G UNION select _G ) and P = PRED) do {
       if (id_to_iri (PRED) in (registry_get('dbp_domain') || '/property/redirect', registry_get('dbp_domain') || '/ontology/wikiPageRedirects') and isiri_id (OBJECT)) {
         http_rewrite ();
         http_status_set (301);  
@@ -446,7 +446,7 @@ if (new_site = '0') {
       printed := printed + vis;
     }
     if (not printed) {
-      for (select top 100 O as OBJECT from DB.DBA.RDF_QUAD where S = _S and G in ( select RGGM_MEMBER_IID FROM DB.DBA.RDF_GRAPH_GROUP_MEMBER where RGGM_GROUP_IID = _G UNION select RGGM_GROUP_IID FROM DB.DBA.RDF_GRAPH_GROUP_MEMBER where RGGM_GROUP_IID = _G ) and P = PRED) do
+      for (select top 100 O as OBJECT from DB.DBA.RDF_QUAD where S = _S and G in ( select RGGM_MEMBER_IID FROM DB.DBA.RDF_GRAPH_GROUP_MEMBER where RGGM_GROUP_IID = _G UNION select _G ) and P = PRED) do
         dbp_ldd_http_print_r (OBJECT, 0, true_label, PRED, 1, all_lang);
     }
 
@@ -464,15 +464,15 @@ if (new_site = '0') {
     http ('</ul></td></tr>');
   }  
   -- check for reverse triples
-  for (select distinct P as PRED from DB.DBA.RDF_QUAD where O = _O and G in ( select RGGM_MEMBER_IID FROM DB.DBA.RDF_GRAPH_GROUP_MEMBER where RGGM_GROUP_IID = _G UNION select RGGM_GROUP_IID FROM DB.DBA.RDF_GRAPH_GROUP_MEMBER where RGGM_GROUP_IID = _G) order by id_to_iri (P)) do {
+  for (select distinct P as PRED from DB.DBA.RDF_QUAD where O = _O and G in ( select RGGM_MEMBER_IID FROM DB.DBA.RDF_GRAPH_GROUP_MEMBER where RGGM_GROUP_IID = _G UNION select _G) order by id_to_iri (P)) do {
     dbp_ldd_http_print_l (id_to_iri (PRED), odd_position, 1);
     printed := 0;
-    for (select top 300 S as OBJECT from DB.DBA.RDF_QUAD where O = _O and G in ( select RGGM_MEMBER_IID FROM DB.DBA.RDF_GRAPH_GROUP_MEMBER where RGGM_GROUP_IID = _G UNION select RGGM_GROUP_IID FROM DB.DBA.RDF_GRAPH_GROUP_MEMBER where RGGM_GROUP_IID = _G) and P = PRED) do {
+    for (select top 300 S as OBJECT from DB.DBA.RDF_QUAD where O = _O and G in ( select RGGM_MEMBER_IID FROM DB.DBA.RDF_GRAPH_GROUP_MEMBER where RGGM_GROUP_IID = _G UNION select _G) and P = PRED) do {
       vis := dbp_ldd_http_print_r (OBJECT, 0, true_label, PRED, 0, langs);
       printed := printed + vis;
     }
     if (not printed) {
-      for (select top 100 S as OBJECT from DB.DBA.RDF_QUAD where O = _O and G in ( select RGGM_MEMBER_IID FROM DB.DBA.RDF_GRAPH_GROUP_MEMBER where RGGM_GROUP_IID = _G UNION select RGGM_GROUP_IID FROM DB.DBA.RDF_GRAPH_GROUP_MEMBER where RGGM_GROUP_IID = _G) and P = PRED) do
+      for (select top 100 S as OBJECT from DB.DBA.RDF_QUAD where O = _O and G in ( select RGGM_MEMBER_IID FROM DB.DBA.RDF_GRAPH_GROUP_MEMBER where RGGM_GROUP_IID = _G UNION select _G) and P = PRED) do
         dbp_ldd_http_print_r (OBJECT, 0, true_label, PRED, 0, all_lang);
     }
     http ('</ul></td></tr>');
