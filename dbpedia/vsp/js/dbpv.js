@@ -121,7 +121,10 @@ dbpv.directive('dbpvPreview', function($timeout) {
 dbpv.directive('labelList', function(Preview, $filter, $compile) {
 	return {
 		link: function(scope, element, attrs) {
-			scope.labellist = Preview.getProperty(attrs.labelList, "http://www.w3.org/2000/01/rdf-schema#label", {"count":0}, scope.localgraph, scope.endpoint);
+			var rurl = attrs.labelList;
+			if (rurl.substr(0, scope.owlgraph.length) == scope.owlgraph) rurl = rurl.substr(scope.owlgraph.length);
+
+			scope.labellist = Preview.getProperty(rurl, "http://www.w3.org/2000/01/rdf-schema#label", {"count":0}, scope.owlgraph, scope.owlendpoint);
 
 			scope.updateLabellist = function (list) {
 				element.html("<a dbpv-preview='"+attrs.labelList+"' href='"+attrs.labelList+"'>"+$filter("languageFilter")(list, scope.primary_lang, scope.fallback_lang)[0].label+"</a>");

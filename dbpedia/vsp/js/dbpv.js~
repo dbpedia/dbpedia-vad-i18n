@@ -9,7 +9,7 @@ dbpv.config(function($routeProvider, $locationProvider) {
 		.when('/class/:id', {templateUrl: '/tpl/entity.html', controller: ClassCtrl})
 
 		.when('/ontology/:klas/:id', {templateUrl: '/tpl/entity.html', controller: OwlCtrl}) //FIXME Quick fix because Angular doesn't support slashes in routing parameters
-		.when('/property/:klas/:id', {templateUrl: '/tpl/entity.html', controller: PropCtrl}) //FIXME Quick fix because Angular doesn't support slashes in routing parameters
+		.when('/property/:klas/:id', {templateUrl: '/tpl/entity.html', controller: PropCtrl}) //FIXME same
 
 		.otherwise({redirectTo: '/entity/404'});
 });
@@ -121,7 +121,10 @@ dbpv.directive('dbpvPreview', function($timeout) {
 dbpv.directive('labelList', function(Preview, $filter, $compile) {
 	return {
 		link: function(scope, element, attrs) {
-			scope.labellist = Preview.getProperty(attrs.labelList, "http://www.w3.org/2000/01/rdf-schema#label", {"count":0}, scope.localgraph, scope.endpoint);
+			var rurl = attrs.labelList;
+			if (rurl.substr(0, scope.owlgraph.length) == scope.owlgraph) rurl = substr(scope.owlgraph.length);
+
+			scope.labellist = Preview.getProperty(rurl, "http://www.w3.org/2000/01/rdf-schema#label", {"count":0}, scope.owlgraph, scope.owlendpoint);
 
 			scope.updateLabellist = function (list) {
 				element.html("<a dbpv-preview='"+attrs.labelList+"' href='"+attrs.labelList+"'>"+$filter("languageFilter")(list, scope.primary_lang, scope.fallback_lang)[0].label+"</a>");

@@ -426,6 +426,11 @@ dbpv_taf_short.mappings =
 				"reverse":true,
 				"label": "Starred in",
 				"prio": 1
+			},
+			"http://www.w3.org/2002/07/owl#sameAs": {
+				"reverse":false,
+				"label": "Same As",
+				"prio": 8
 			}
 		};
 
@@ -472,68 +477,3 @@ dbpv_taf_lodlive.execute = function (about, predicate, value) {
 	window.open(lodurl+value.uri);
 };
 
-
-// EXAMPLE OF AN ACTION WITH LOCAL STATE
-/*var dbpv_taf_dummy = new TafAction();
-
-dbpv_taf_dummy.id = "dummy";
-
-dbpv_taf_dummy.display_inactive = "<span class='glyphicon glyphicon-play'></span>";
-dbpv_taf_dummy.display_active = "<span class='glyphicon glyphicon-cog'></span>";
-
-
-dbpv_taf_dummy.initialize = function (about, predicate, value) {
-	value.taf.dummy.active = false;
-};
-
-dbpv_taf_dummy.check = function (about, predicate, value) {			 //return Boolean whether applicable or not
-	return value.type!="uri";
-};
-
-dbpv_taf_dummy.display = function (about, predicate, value) {
-	if (value.taf.dummy.active) {
-		return dbpv_taf_dummy.display_active;
-	}else{
-		return dbpv_taf_dummy.display_inactive;
-	}
-};
-
-dbpv_taf_dummy.execute = function (about, predicate, value) {			 // called when user clicks the action button
-	if (value.taf.dummy.active) {
-		value.label += "_tss";
-		value.taf.dummy.active = false;
-	}else{
-		value.label += "_badum";
-		value.taf.dummy.active = true;
-	}
-};
-
-// EXAMPLE OF AN ACTION WITH GLOBAL STATE
-/*var dbpv_taf_global = new TafAction();
-
-dbpv_taf_global.id = "global";
-dbpv_taf_global.clicks = 0;
-
-dbpv_taf_global.display_inactive = "<span class='glyphicon glyphicon-search'></span>";
-dbpv_taf_global.display_active = "<span class='glyphicon glyphicon-qrcode'></span>";
-
-dbpv_taf_global.initialize = function (about, predicate, value) {
-	value.taf.global.active = false;
-};
-
-dbpv_taf_global.check = function (about, predicate, value) {
-	return dbpv_taf_global.clicks < 4 && value.type == "uri";
-};
-
-dbpv_taf_global.display = function (about, predicate, value) {
-	if (dbpv_taf_global.clicks % 2 == 0) {
-		return dbpv_taf_global.display_active;
-	}else{
-		return dbpv_taf_global.display_inactive;
-	}
-};
-
-dbpv_taf_global.execute = function (about, predicate, value) {
-	dbpv_taf_global.clicks += 1;
-};
-*/

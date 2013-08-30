@@ -138,11 +138,11 @@ angular.module('dbpvServices', [])
 			}
 		};
 	}])
-	.factory('Spotlight', ['$http', function($http) {
+	.factory('Spotlight', ['$http', '$rootScope', function($http, $rootScope) {
 		return {
 			annotate: function(text) {
 				delete $http.defaults.headers.common['X-Requested-With'];
-				var endpoint = "http://spotlight.dbpedia.org/rest/annotate";
+				var endpoint = $rootScope.spotlightendpoint;
 				$http.get(endpoint, "text="+text).success(function (data, status, headers, config) {
 
 				})

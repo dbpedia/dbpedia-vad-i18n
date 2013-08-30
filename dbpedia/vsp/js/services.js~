@@ -6,6 +6,8 @@ angular.module('dbpvServices', [])
 				if (typeof(fwd) === 'undefined') fwd = false;
 				var graph = scope.localgraph;
 				var space = location.protocol+"//"+location.host;
+				var encodedid = encodeURIComponent(id);
+				id = encodedid;
 				var entityUrl = graph+"/"+dir+"/"+id;
 				scope.$parent.$root.about = {"uri": entityUrl, "type":"uri", "title":id};
 				var trips = [];
@@ -20,8 +22,8 @@ angular.module('dbpvServices', [])
 				delete $http.defaults.headers.common['X-Requested-With'];
 				var prevdef = $http.defaults.headers.post['Content-Type'];
 				$http.defaults.headers.post['Content-Type'] = "application/x-www-form-urlencoded";
-				var inquery = encodeURIComponent("SELECT ?hasprop ?v where {<" + entityUrl + "> ?hasprop ?v}");
-				var outquery = encodeURIComponent("SELECT ?v ?isprop where { ?v ?isprop <" + entityUrl + ">} LIMIT 1000");
+				var inquery = encodeURIComponent("SELECT DISTINCT ?hasprop ?v where { <" + entityUrl + "> ?hasprop ?v}");
+				var outquery = encodeURIComponent("SELECT DISTINCT ?v ?isprop where { ?v ?isprop <" + entityUrl + "> } LIMIT 1000");
 				var endpoint = scope.endpoint; //XXX to dist
 				//endpoint = "/sparql";
 
@@ -60,6 +62,7 @@ angular.module('dbpvServices', [])
 					}
 					}catch(err){alert("error in loop");}
 					scope.predicates = jQuery.extend({}, scope.predicates, predicates);
+					//alert(JSON.stringify(scope.predicates));
 					scope.entitySemaphore -= 1;
 				}).
 				error(function (data, status, headers, config) {
@@ -135,11 +138,11 @@ angular.module('dbpvServices', [])
 			}
 		};
 	}])
-	.factory('Spotlight', ['$http', function($http) {
+	.factory('Spotlight', ['$http', function($http, $rootScope) {
 		return {
 			annotate: function(text) {
 				delete $http.defaults.headers.common['X-Requested-With'];
-				var endpoint = "http://spotlight.dbpedia.org/rest/annotate";
+				var endpoint = $rootScope.spotlightendpoint;
 				$http.get(endpoint, "text="+text).success(function (data, status, headers, config) {
 
 				})
@@ -167,7 +170,7 @@ angular.module('dbpvServices', [])
 				delete $http.defaults.headers.common['X-Requested-With'];
 				var prevdef = $http.defaults.headers.post['Content-Type'];
 				$http.defaults.headers.post['Content-Type'] = "application/x-www-form-urlencoded";
-				var query = "SELECT ?prop WHERE {<"+uri+"> <"+prop+"> ?prop}";
+				var query = "SELECT DISTINCT ?prop WHERE {<"+uri+"> <"+prop+"> ?prop}";
 				query = encodeURIComponent(query);
 				loadingSemaphore.count += 1;
 				$http.post(endpoint, "query="+query, {timeout:60000}).success(function (data, status, headers, config) {

@@ -42,6 +42,20 @@ function MetaCtrl($scope, $routeParams, $filter, $timeout, Entity, Preview, dir,
 				$scope.preview.domain = Preview.getProperty(rurl, "http://www.w3.org/2000/01/rdf-schema#domain", $scope.previewSemaphore, $scope.localgraph, $scope.endpoint);
 				$scope.preview.superClass = Preview.getProperty(rurl, "http://www.w3.org/2000/01/rdf-schema#subClassOf", $scope.previewSemaphore, $scope.localgraph, $scope.endpoint);
 			}
+		} else if (rurl.substr(0, $scope.owlgraph.length) == $scope.owlgraph) {
+			$scope.preview = {};
+			$scope.preview.top = top;
+			$scope.preview.left = left;
+			$scope.preview.show = true;
+			rurl = rurl.substr($scope.owlgraph.length);
+			if (rurl.substring(0, ontologyPre.length) == ontologyPre || rurl.substring(0, propertyPre.length) == propertyPre) {
+				$scope.preview.type = "ontology";
+				$scope.preview.description = [];
+				$scope.preview.label = Preview.getProperty(rurl, "http://www.w3.org/2000/01/rdf-schema#label", $scope.previewSemaphore, $scope.owlgraph, $scope.owlendpoint);
+				$scope.preview.range = Preview.getProperty(rurl, "http://www.w3.org/2000/01/rdf-schema#range", $scope.previewSemaphore, $scope.owlgraph, $scope.owlendpoint);
+				$scope.preview.domain = Preview.getProperty(rurl, "http://www.w3.org/2000/01/rdf-schema#domain", $scope.previewSemaphore, $scope.owlgraph, $scope.owlendpoint);
+				$scope.preview.superClass = Preview.getProperty(rurl, "http://www.w3.org/2000/01/rdf-schema#subClassOf", $scope.previewSemaphore, $scope.owlgraph, $scope.owlendpoint);
+			}
 		}
 	};
 
@@ -185,6 +199,9 @@ function LookupCtrl($scope, $http, $timeout) {
 			$scope.results = [];
 		}else{
 			if (term.url !== undefined) {
+				if (term.url.substr(0, $scope.lookupgraph.length) == $scope.lookupgraph) {
+					term.url = term.url.substr($scope.lookupgraph.length);
+				}
 				window.location = "/#"+term.url;
 				window.location = term.url;
 			}
@@ -197,7 +214,7 @@ function LookupCtrl($scope, $http, $timeout) {
 		}else{
 			delete $http.defaults.headers.common['X-Requested-With'];
 			//alert("returning promise");
-			return $http.get("http://lookup.dbpedia.org/api/search/PrefixSearch?MaxHits=5&QueryString="+$scope.term).then(function(data) {
+			return $http.get($scope.lookupendpoint+"/PrefixSearch?MaxHits=5&QueryString="+$scope.term).then(function(data) {
 				var results = data.data["results"];
 				var res = [];
 				for (var i = 0; i<results.length ; i++) {

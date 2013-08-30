@@ -209,9 +209,9 @@ dbpv_taf_spotlight.execute = function (about, predicate, value) {
 	if (!value.taf.spotlight.busy) {
 		dbpv_taf_spotlight.service.annotate_async(value.value, dbpv_taf_spotlight.execute_callback, value);
 		value.taf.spotlight.busy = true;
-		if (value["xml:lang"] != "en") {
+		/*if (value["xml:lang"] != "en") {
 			dbpv_taf_spotlight.noti.addNotification("DBpedia Spotlight is made for English.\n Annotations retrieved for this language may be incorrect", 7000);
-		}
+		}*/
 	} else {
 		dbpv_taf_spotlight.noti.addNotification("Annotation request to the DBpedia Spotlight API is already pending", 5000);
 	}
@@ -426,6 +426,11 @@ dbpv_taf_short.mappings =
 				"reverse":true,
 				"label": "Starred in",
 				"prio": 1
+			},
+			"http://www.w3.org/2002/07/owl#sameAs": {
+				"reverse":false,
+				"label": "Same As",
+				"prio": 8
 			}
 		};
 
