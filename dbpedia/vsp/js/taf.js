@@ -56,8 +56,8 @@ dbpv_taf_relfinder.id = "relfinder";
 dbpv_taf_relfinder.description = "View more relations on RelFinder";
 
 dbpv_taf_relfinder.check = function (about, predicate, value) {
-	var dbp = "http://dbpedia.org/resource/";
-	return value.type == "uri" && (value.uri.substring(0, dbp.length) == dbp);
+	var checkregex = new RegExp("^http\:\/\/([a-z]+\.)?dbpedia\.org\/resource\/.+$");
+	return value.type == "uri" && (checkregex.exec(value.uri)[1] == checkregex.exec(about.uri)[1]);
 };
 
 dbpv_taf_relfinder.display = function (about, predicate, value) {
@@ -66,9 +66,10 @@ dbpv_taf_relfinder.display = function (about, predicate, value) {
 
 dbpv_taf_relfinder.execute = function (about, predicate, value) {
 	//generate URL
-	var dbp = "http://dbpedia.org/resource/";
-	var nameA = about.uri.substring(dbp.length, about.uri.length);
-	var nameB = value.uri.substring(dbp.length, value.uri.length);
+	var neregex = new RegExp("^http\:\/\/([a-z]+\.)?dbpedia\.org\/resource\/(.+)$");
+	var nameA = encodeURIComponent(neregex.exec(about.uri)[2]);
+	var lang = neregex.exec(about.uri)[1];
+	var nameB = encodeURIComponent(neregex.exec(value.uri)[2]);
 	var urlA = about.uri;
 	var urlB = value.uri;
 	if (predicate.reverse) {
@@ -88,9 +89,9 @@ dbpv_taf_relfinder.execute = function (about, predicate, value) {
 	pieces.push("&name="+dbpv_taf_relfinder.to64("DBpedia"));
 	pieces.push("&abbreviation="+dbpv_taf_relfinder.to64("dbp"));
 	pieces.push("&description="+dbpv_taf_relfinder.to64("Linked Data version of Wikipedia"));
-	pieces.push("&endpointURI="+dbpv_taf_relfinder.to64("http://dbpedia.org/sparql")) //XXX XXX
+	pieces.push("&endpointURI="+dbpv_taf_relfinder.to64("http://"+lang+"dbpedia.org/sparql")) //XXX XXX
 	pieces.push("&dontAppendSPARQL="+dbpv_taf_relfinder.to64("true"));
-	pieces.push("&defaultGraphURI="+dbpv_taf_relfinder.to64("http://dbpedia.org"));
+	pieces.push("&defaultGraphURI="+dbpv_taf_relfinder.to64("http://"+lang+"dbpedia.org"));
 	pieces.push("&isVirtuoso="+dbpv_taf_relfinder.to64("true"));
 	pieces.push("&useProxy=ZmFsc2U=&method=UE9TVA==&autocompleteLanguage=ZW4=&autocompleteURIs=aHR0cDovL3d3dy53My5vcmcvMjAwMC8wMS9yZGYtc2NoZW1hI2xhYmVs&ignoredProperties=aHR0cDovL3d3dy53My5vcmcvMTk5OS8wMi8yMi1yZGYtc3ludGF4LW5zI3R5cGUsaHR0cDovL3d3dy53My5vcmcvMjAwNC8wMi9za29zL2NvcmUjc3ViamVjdCxodHRwOi8vZGJwZWRpYS5vcmcvcHJvcGVydHkvd2lraVBhZ2VVc2VzVGVtcGxhdGUsaHR0cDovL2RicGVkaWEub3JnL3Byb3BlcnR5L3dvcmRuZXRfdHlwZSxodHRwOi8vZGJwZWRpYS5vcmcvcHJvcGVydHkvd2lraWxpbmssaHR0cDovL3d3dy53My5vcmcvMjAwMi8wNy9vd2wjc2FtZUFzLGh0dHA6Ly9wdXJsLm9yZy9kYy90ZXJtcy9zdWJqZWN0&abstractURIs=aHR0cDovL2RicGVkaWEub3JnL29udG9sb2d5L2Fic3RyYWN0&imageURIs=aHR0cDovL2RicGVkaWEub3JnL29udG9sb2d5L3RodW1ibmFpbCxodHRwOi8veG1sbnMuY29tL2ZvYWYvMC4xL2RlcGljdGlvbg==&linkURIs=aHR0cDovL3B1cmwub3JnL29udG9sb2d5L21vL3dpa2lwZWRpYSxodHRwOi8veG1sbnMuY29tL2ZvYWYvMC4xL2hvbWVwYWdlLGh0dHA6Ly94bWxucy5jb20vZm9hZi8wLjEvcGFnZQ==&maxRelationLegth=Mg==");
 
@@ -458,14 +459,14 @@ dbpv_taf_short.execute = function (about, predicate, value) {
 
 
 // VIEW IN LODLIVE (only for DBpedia entities) (example of a simple action)
-
+/*
 var dbpv_taf_lodlive =  new TafAction();
 
 dbpv_taf_lodlive.id = "lodlive";
 dbpv_taf_lodlive.description = "View in LODLive";
 
 dbpv_taf_lodlive.check = function (about, predicate, value) {
-	return value.type == "uri" && value.prefix == "dbpedia";
+	return value.type == "uri" && (value.prefix.indexOf("dbpedia") == 0);
 };
 
 dbpv_taf_lodlive.display = function (about, predicate, value) {
@@ -476,4 +477,4 @@ dbpv_taf_lodlive.execute = function (about, predicate, value) {
 	var lodurl = "http://en.lodlive.it/?";
 	window.open(lodurl+value.uri);
 };
-
+*/
