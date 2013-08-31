@@ -7,7 +7,7 @@ angular.module('dbpvServices', [])
 				var graph = scope.localgraph;
 				var space = location.protocol+"//"+location.host;
 				var encodedid = encodeURIComponent(id);
-				id = encodedid;
+				if (scope.encodegraph) id = encodedid;
 				var entityUrl = graph+"/"+dir+"/"+id;
 				scope.$parent.$root.about = {"uri": entityUrl, "type":"uri", "title":id};
 				var trips = [];

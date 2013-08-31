@@ -290,6 +290,17 @@ if (new_site = '1') {
   http ('<link rel="stylesheet" href="/css/leaflet.css" />');
   http ('<!--[if lte IE 8]><link rel="stylesheet" href="/css/leaflet.ie.css" /><![endif]-->');
   http ('<script src="/js/leaflet.js"></script>');
+  
+  http ('<script type="text/javascript" charset="UTF-8"> var dbp_prefixes = {');
+  declare arr any;
+  declare i, l int;
+  arr := dbp_ldd_ns_decl ();
+  l := length (arr);
+  for (i := 0; i < l; i := i + 2)
+  {
+     http (sprintf ('"%S": "%S",', arr[i], arr[i+1]));
+  }
+  http ('};</script>');
 }
 ?>
 </head>

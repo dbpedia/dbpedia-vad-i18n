@@ -1,16 +1,26 @@
 var dbpv = angular.module('dbpv', ['dbpvServices', 'ui.bootstrap']);
 
 dbpv.run(function($rootScope) {
-	$rootScope.localgraph = "http://nl.dbpedia.org";
 	$rootScope.dataspace = "localhost";
-	$rootScope.primary_lang = "nl";
-	$rootScope.fallback_lang = "en";
+
+	$rootScope.localgraph = "http://nl.dbpedia.org";
 	$rootScope.endpoint = "/sparql";
+	$rootScope.encodegraph = false;
+
 	$rootScope.owlgraph = "http://dbpedia.org";
 	$rootScope.owlendpoint = "http://live.dbpedia.org/sparql";
+	
 	$rootScope.lookupgraph = "http://dbpedia.org";
 	$rootScope.lookupendpoint = "http://lookup.dbpedia.org/api/search";
+
 	$rootScope.spotlightendpoint = "http://nl.dbpedia.org/spotlight/rest/annotate";
+
+	if (dbp_prefixes !== undefined) {
+		dbpv_prefixes = dbp_prefixes;
+	}
+
+	$rootScope.primary_lang = "nl";
+	$rootScope.fallback_lang = "nl";
 	$rootScope.languages = {
     "ab":{"name":"Abkhaz",
         "nativeName":"аҧсуа"

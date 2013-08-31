@@ -35,12 +35,9 @@ foaf:nick rdfs:subPropertyOf virtrdf:label .', '', 'dbprdf-label');
 
 rdfs_rule_set ('dbprdf-label', 'dbprdf-label');
 
--- For I18n we create all resources for use in interlanguage links 
--- and property/category namespage for English and current language
-create procedure dbp_ldd_set_ns_decl ()
+create procedure dbp_ldd_ns_decl ()
 {
   declare arr any;
-  declare i, l int;
   arr := vector (
     registry_get('dbp_domain') || '/resource/' || registry_get('dbp_category') || ':', 'category-' || registry_get('dbp_lang'),
     registry_get('dbp_domain') || '/resource/' || registry_get('dbp_template') || ':', 'template-' || registry_get('dbp_lang'),
@@ -84,12 +81,24 @@ create procedure dbp_ldd_set_ns_decl ()
     'http://sw.opencyc.org/2008/06/10/concept/', 'opencyc',
     'http://mpii.de/yago/resource/', 'yago-res',
     'http://rdf.freebase.com/ns/', 'freebase');
-   l := length (arr);
-   for (i := 0; i < l; i := i + 2)
-   {
-      XML_REMOVE_NS_BY_PREFIX (arr[i+1], 2);
-      XML_SET_NS_DECL (arr[i+1], arr[i], 2);
-   }
+  return arr;
+}
+;
+
+-- For I18n we create all resources for use in interlanguage links 
+-- and property/category namespage for English and current language
+create procedure dbp_ldd_set_ns_decl ()
+{
+  declare arr any;
+  declare i, l int;
+  arr := dbp_ldd_ns_decl ();
+
+  l := length (arr);
+  for (i := 0; i < l; i := i + 2)
+  {
+     XML_REMOVE_NS_BY_PREFIX (arr[i+1], 2);
+     XML_SET_NS_DECL (arr[i+1], arr[i], 2);
+  }
 }
 ;
 
