@@ -152,7 +152,7 @@ angular.module('dbpvServices', [])
 			},
 			annotate_async: function(text, callback, coming_through) {
 								delete $http.defaults.headers.common['X-Requested-With'];
-				var endpoint = "http://spotlight.dbpedia.org/rest/annotate";
+				var endpoint = $rootScope.spotlightendpoint;
 				$http.get(endpoint+"?text="+encodeURIComponent(text)).success(function (data, status, headers, config) {	
 					callback(data, coming_through);
 				})
