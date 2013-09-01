@@ -244,8 +244,8 @@ dbpv_taf_redirect.display = function (about, predicate, value) {
 };
 
 dbpv_taf_redirect.execute = function (about, predicate, value) {
-	//window.location = value.url;
-	window.location = "/#"+value.url;
+	window.location = value.url;
+	//window.location = "/#"+value.url;
 };
 
 
