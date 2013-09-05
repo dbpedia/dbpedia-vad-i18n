@@ -71,6 +71,10 @@ body #static {
 	text-decoration:none;
 }
 
+#shortcuts .shortcut-home a span {
+	display:block;
+}
+
 .form-control {
 	border-radius: 0px 0px 0px 0px;
 }
@@ -192,6 +196,10 @@ body #static {
 	float:right;
 	padding-left: 10px;
 	padding-bottom: 10px;
+}
+
+.predicate .dbpv-taf a span.glyphicon {
+	display:inline-block;
 }
 
 
@@ -362,4 +370,33 @@ label.dbpv-tabletop {
 #dbpvpreview #dbpvpdescription {
 	margin-bottom: 10px;
 	padding-left: 15px;
+}
+
+
+/* TOUR & INTRO JS */
+
+#dbpvtour {
+	position:absolute;
+	top: 80px;
+	right: 0px;
+	background-color:white;
+	padding: 15px;
+	border: 1px solid #CCC;
+	border-right: 0px none;
+	
+}
+
+.introjs-helperLayer .introjs-helperNumberLayer {
+	visibility:hidden;
+}
+
+.introjs-helperLayer .introjs-tooltip .introjs-arrow {
+	visibility:hidden;
+}
+
+.introjs-helperLayer .introjs-tooltip .introjs-tooltipbuttons .introjs-button {
+	background-image: none;
+	background-color: rgba(0,0,0,0);
+	border: 0px none;
+	border-radius: 0 0 0 0;
 }
