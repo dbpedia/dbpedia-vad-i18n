@@ -15,7 +15,7 @@ dbpv.run(function($rootScope) {
 
 	$rootScope.spotlightendpoint = "http://nl.dbpedia.org/spotlight/rest/annotate";
 
-	if (dbp_prefixes !== undefined) {
+	if (typeof(dbp_prefixes)!='undefined' && dbp_prefixes !== undefined) {
 		dbpv_prefixes = dbp_prefixes;
 	}
 

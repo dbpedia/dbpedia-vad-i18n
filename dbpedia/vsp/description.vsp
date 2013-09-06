@@ -349,7 +349,7 @@ if (new_site = '0') {
 		//alert("hidden");
 		
 	</script>
--	<div id="useoldsite">
+	<div id="useoldsite">
  		<a href="javascript:void(0);" onclick="useOldSite();">Back to old DBpedia</a>
  	</div>
  	<div class="navbar">
