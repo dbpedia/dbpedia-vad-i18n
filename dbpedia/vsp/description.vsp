@@ -279,7 +279,7 @@ if (new_site = '1') {
   http ('<link rel="stylesheet" href="/css/bootstrap-glyphicons.css"/>');
   http ('<link rel="stylesheet" href="/css/dbpv.css"/>');
   
-  http ('<link rel="stylesheet" href="css/introjs.min.css"></link>');
+  http ('<link rel="stylesheet" href="/css/introjs.min.css"></link>');
 
   http ('<script type="text/javascript" src="/js/angular.min.js"></script>');
   http ('<script type="text/javascript" src="/js/angularbootstrap.js"></script>');
@@ -293,7 +293,7 @@ if (new_site = '1') {
   http ('<!--[if lte IE 8]><link rel="stylesheet" href="/css/leaflet.ie.css" /><![endif]-->');
   http ('<script src="/js/leaflet.js"></script>');
   
-  http ('<script type="text/javascript" src="js/intro.min.js"></script>');
+  http ('<script type="text/javascript" src="/js/intro.min.js"></script>');
   
   http ('<script type="text/javascript" charset="UTF-8"> var dbp_prefixes = {');
   declare arr any;
