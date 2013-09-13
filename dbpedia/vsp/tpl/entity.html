@@ -1,6 +1,6 @@
 <div id="triples">
 <div id="shortcutswrapper" ng-controller="ShortcutCtrl">
-	<div id="shortcuts" smart-scroll="100" ng-show="shortcuts.length>0">
+	<div id="shortcuts" smart-scroll="100" ng-show="shortcuts.length>0" style="top:100px;">
 		<div class="shortcut-home" dbpv-top></div>
 		<div class="shortcutscuts" data-intro="These are shortcuts to some basic entity properties." data-step="6">
 			<div class="shortcut" ng-repeat="cut in shortcuts">
@@ -10,6 +10,20 @@
 		<div class="shortcutscuts"></div>
 	</div>
 </div>
+
+<div id="legend" smart-slide=".trigger" smart-slide-content=".container">
+	<div class="trigger" id="legend-title" data-intro="Here, the actions applicable to triples are explained." data-step="7" data-position="left"><a href="javascript:void(0);" ng-click="showLegend();" ><span>LEGEND</span></a></div>
+	<div class="container" id="legends">
+		<div class="legend" ng-repeat="(name, legend) in legends">
+			<div class="name">{{legend.name}}</div>
+			<div class="description">{{legend.description}}</div>
+			<div class="line" ng-repeat="line in legend.lines">
+				<span ng-bind-html-unsafe="line.icon"></span> : {{line.text}}
+			</div>
+		</div>
+	</div>
+</div>
+
 <div id="pretty-box" data-intro="This is the pretty box. It displays a small selection of entity properties in a pretty way." data-step="3">
 
 	<div id="dbpvpthumbnail">
@@ -113,7 +127,7 @@
 <div id="triples-top">
 	<div class="predicate"> <div class="pred-name form-inline"> <label class="dbpv-tabletop"> Property:</label> <input class="form-control dbpv-input dbpv-filter dbpv-filter-pred" ng-model="predfilter" data-intro="Filter predicates using a string." data-step="4"/></div>
 	<div class="pred-values">
-		<div class="pred-value form-inline"> <label class="dbpv-tabletop"> Value: </label> <input class="form-control dbpv-input dbpv-filter dbpv-filter-val" ng-model="valfilter.label" data-intro="Filter values using a string." data-step="5"//></div>
+		<div class="pred-value form-inline"> <label class="dbpv-tabletop"> Value: </label> <input class="form-control dbpv-input dbpv-filter dbpv-filter-val" ng-model="valfilter.label" data-intro="Filter values using a string." data-step="5"/></div>
 	</div>
 	</div>
 </div>
@@ -146,7 +160,7 @@
 								<span ng-switch-default>  <span class="rdf-prefix">{{val.prefix}}:</span>{{val.short}}</span>
 							</span>
 						</a> </span>
-						<span ng-switch-default><span compile="val.label"></span></span>
+						<span ng-switch-default><span compile="val.label"></span> <span class="valuetype">{{val.typelabel}}</span></span>
 					</span>
 				</span>
 			</div>

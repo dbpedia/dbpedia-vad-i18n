@@ -1,3 +1,59 @@
+.valuetype {
+	color: #AAA;
+}
+
+#cookiebar {
+	position:fixed;
+	bottom:5px;
+	padding: 10px;
+	z-index: 10000;
+	background-color: rgba(246, 220, 200, .9);
+	border: 1px solid #ddd;
+	left: 50%;
+}
+
+#legend  #legend-title{
+	position:absolute;
+	right: 0px;
+	top: 140px;
+	padding: 15px;
+	background-color:white;
+	border: 1px solid #ccc;
+	z-index: 10000;
+}
+
+#legend #legends {
+	position:absolute;
+	right: -405px;
+	top:192px;
+	background-color: white;
+	border: 1px solid #ccc;
+	border-bottom: 0px none;
+	box-shadow: 1px 1px 4px #AAA;
+	width: 400px;
+	z-index:10000;
+}
+
+#legend #legends .name {
+	font-size: 1.2em;
+	font-weight: bold;
+}
+
+#legend #legends .legend {
+	padding: 15px;
+	border-bottom: 1px solid #ccc;
+}
+
+#legend #legends .legend .description {
+	border-bottom: 1px solid #ccc;
+}
+
+#legend #legends .legend .line {
+	margin-top: 3px;
+}
+
+/* above: TO ARRANGE */
+
 body {
 	background-color: #EEEEEE;
 	padding: 0 0;

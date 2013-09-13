@@ -316,6 +316,33 @@ http ('</div>');
 if (new_site = '0') {
 	http ('<div id="useoldsite"></div>');
 }?>
+
+<script type="text/javascript">
+	function acceptCookies() {
+		$.cookie("dbpv_cookies", "1", {expires: 365});
+		checkCookies();
+	}
+	
+	function checkCookies() {
+		var cookiecookie = $.cookie("dbpv_cookies");
+		$("#cookiebar").hide();
+		if (cookiecookie === undefined || cookiecookie != "1") {
+			$('#cookiebar').show();
+		}
+	}
+	$(document).ready(function() {
+		checkCookies();
+	});
+</script>
+<div id="cookiebar" style="display:none">
+	This website uses cookies
+	<button class="btn btn-primary btn-small" onclick="acceptCookies();">
+		OK
+	</button>
+</div>
+
+<!-- END COOKIE NOTIFICATION -->
+
 <script type="text/javascript">
 	$(document).ready(function () {
 		$.cookie("dbpv_has_js","1");
