@@ -295,6 +295,7 @@ if (new_site = '1') {
   
   http ('<script type="text/javascript" src="/js/intro.min.js"></script>');
   
+  http ('<!-- PREFIXES loaded from VSP -->');
   http ('<script type="text/javascript" charset="UTF-8"> var dbp_prefixes = {');
   declare arr any;
   declare i, l int;
@@ -304,6 +305,20 @@ if (new_site = '1') {
   {
      http (sprintf ('"%S": "%S",', arr[i], arr[i+1]));
   }
+  http ('};</script>');
+  
+  http ('<!-- SETTINGS loaded from VSP -->');
+  http ('<script type="text/javascript" charset="UTF-8"> var dbp_settings = {');
+  http (sprintf ('"%S": "%S", 'dataspace', registry_get ('dbpv_dataspace')));
+  http (sprintf ('"%S": "%S", 'endpoint', registry_get ('dbpv_endpoint')));
+  http (sprintf ('"%S": "%S", 'encodegraph', registry_get ('dbpv_encodegraph')));
+  http (sprintf ('"%S": "%S", 'owlgraph', registry_get ('dbpv_owlgraph')));
+  http (sprintf ('"%S": "%S", 'owlendpoint', registry_get ('dbpv_owlendpoint')));
+  http (sprintf ('"%S": "%S", 'lookupgraph', registry_get ('dbpv_lookupgraph')));
+  http (sprintf ('"%S": "%S", 'lookupendpoint', registry_get ('dbpv_lookupendpoint')));
+  http (sprintf ('"%S": "%S", 'spotlightendpoint', registry_get ('dbpv_spotlightendpoint')));
+  http (sprintf ('"%S": "%S", 'primary_lang', registry_get ('dbpv_primary_lang')));
+  http (sprintf ('"%S": "%S", 'fallback_lang', registry_get ('dbpv_fallback_lang')));
   http ('};</script>');
 }
 ?>

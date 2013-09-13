@@ -21,6 +21,16 @@ dbpv.run(function($rootScope) {
 
 	$rootScope.primary_lang = "nl";
 	$rootScope.fallback_lang = "nl";
+	
+	if (typeof(dbp_settings) != 'undefined' && dbp_settings !== undefined) {
+		for (var key in dbp_settings) {
+			var val = dbp_settings(key);
+			if (val != 0 && val != "0") {
+				$rootScope[key] = dbp_settings(key);
+			}
+		}
+	}
+	
 	$rootScope.languages = {
     "ab":{"name":"Abkhaz",
         "nativeName":"аҧсуа"
