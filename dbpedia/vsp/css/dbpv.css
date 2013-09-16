@@ -52,6 +52,34 @@
 	margin-top: 3px;
 }
 
+.footer {
+	background-color: rgb(153,153,153);
+	margin-top: 2em;
+	border-top: 0.3em solid black;
+	color:white;
+	text-align:center;
+}
+
+.footer a {
+	color: rgb(205,245,255);
+}
+
+.footer  #ft_t {
+	padding: 0.8em;
+}
+
+.footer #ft_b {
+	background-color: white;
+	border-right: 1px solid rgb(153,153,153);
+	border-left: 1px solid rgb(153,153,153);
+	padding: 1em;
+}
+
+.footer #ft_ccbysa {
+	font-size: 0.9em;
+	padding: 0.8em;
+}
+
 /* above: TO ARRANGE */
 
 body {
@@ -381,7 +409,7 @@ label.dbpv-tabletop {
 }
 
 #pretty-box #dbpvplinks {
-	overflow: auto;
+	overflow:auto;
 	margin-bottom: 10px;
 	margin-left: 15px;
 }
