@@ -413,7 +413,7 @@ if (new_site = '0') {
  			<div class="input-group" id="topstuff">
  				<span class="input-group-addon glyphicon glyphicon-search"></span>
 				<input data-intro="Search for entities. Powered by DBpedia Lookup." data-step='1'type="text" typeahead="result as result.l_label for result in lookup()" typeahead-wait-ms="800" placeholder="Search DBpedia..." class="form-control entity-search dbpv-input" ng-model="term"/>
- 				<span class="input-group-addon addon-right">@ {{localgraph}}</span>
+ 				<span class="input-group-addon addon-right" title="This is the Named Graph">@ {{localgraph}}</span>
 				<div data-intro="Filter by language." data-step='2' class="input-group-btn">
  		
 					<button type="button" class="btn btn-default dropdown-toggle language-button" data-toggle="dropdown"><span style="font-size:0.8em;" class="glyphicon glyphicon-globe"></span> <span ng-bind="getNativeName(primary_language);"></span></button>

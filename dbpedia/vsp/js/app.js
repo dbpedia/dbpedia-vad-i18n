@@ -32,6 +32,7 @@ dbpv.run(function($rootScope) {
 		}
 	}
 	
+	
 	$rootScope.languages = {
     "ab":{"name":"Abkhaz",
         "nativeName":"аҧсуа"

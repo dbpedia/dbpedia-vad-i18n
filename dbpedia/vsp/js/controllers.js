@@ -95,6 +95,14 @@ function MetaCtrl($scope, $routeParams, $filter, $timeout, Entity, Preview, dir,
 	$scope.sortPredicates = function(item) {
 		return item.predid;
 	};
+	
+	$scope.sortValues = function (item) {
+		if (item.prefix !== undefined) {
+			return item.prefix+item.short;
+		}else{
+			return item.label;
+		}
+	};
 
 	$scope.predicates = {};
 	$scope.revpredicates = {};
@@ -208,8 +216,8 @@ function LookupCtrl($scope, $http, $timeout) {
 				if (term.url.substr(0, $scope.lookupgraph.length) == $scope.lookupgraph) {
 					term.url = term.url.substr($scope.lookupgraph.length);
 				}
-				window.location = "/#"+term.url;
-				//window.location = term.url;
+				//window.location = "/#"+term.url;
+				window.location = term.url;
 			}
 		}
 	});
@@ -308,4 +316,8 @@ function ShortcutCtrl ($scope) {
 	$scope.addShortcut ("qsdfqsqsdfdfgsqd", "qsdfqsfd", 1);
 	$scope.addShortcut ("qsdfqsqqsfqssdfqd", "qsdfqsfd", 1);
 	$scope.addShortcut ("qsdfqsqsdfsdfgqd", "qsdfqsfd", 1);*/
+}
+
+function FooterCtrl ($scope) {
+	$scope.about.datalink = "/data/"+($scope.about.title);
 }

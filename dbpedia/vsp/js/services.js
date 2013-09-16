@@ -158,6 +158,7 @@ angular.module('dbpvServices', [])
 				})
 				.error(function (data, status, headers, config) {
 					alert("Annotation error");
+					callback(undefined, coming_through);
 				});
 			}
 		};

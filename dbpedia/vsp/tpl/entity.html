@@ -144,7 +144,7 @@
 		<span ng-show="predicate.reverse"> of</span>:
 		</div>
 		<div class="pred-values">
-			<div class="pred-value" ng-repeat="val in predicate.values | valueFilter:valfilter | languageFilter:primary_lang:fallback_lang">
+			<div class="pred-value" ng-repeat="val in predicate.values | valueFilter:valfilter | languageFilter:primary_lang:fallback_lang | orderBy:sortValues">
 
 
 				<span class="dbpv-taf">
@@ -171,5 +171,46 @@
 	</div>
 
 </div>
+
+
+<div class="footer" ng-controller="FooterCtrl">
+      <div id="ft_t">
+        Browse using:
+	<a href="http://linkeddata.uriburner.com/ode/?uri={{about.uri}}">OpenLink Data Explorer</a> |
+	<a href="/describe/?uri={{about.uri}}">OpenLink Faceted Browser</a>
+        <!--a href="http://dataviewer.zitgist.com/?uri=http%3A%2F%2Fdbpedia.org%2Fresource%2FBoris_Johnson">Zitgist Data Viewer</a> |
+        <a href="http://beckr.org/marbles?uri=http%3A%2F%2Fdbpedia.org%2Fresource%2FBoris_Johnson">Marbles</a> |
+        <a href="http://www4.wiwiss.fu-berlin.de/rdf_browser/?browse_uri=http%3A%2F%2Fdbpedia.org%2Fresource%2FBoris_Johnson">DISCO</a> |
+        <a href="http://dig.csail.mit.edu/2005/ajar/release/tabulator/0.8/tab.html?uri=http%3A%2F%2Fdbpedia.org%2Fresource%2FBoris_Johnson" >Tabulator</a-->
+        &nbsp; &nbsp; Raw Data in:
+	
+        <a href="/sparql?default-graph-uri={{localgraph}}&amp;query=DESCRIBE+<{{about.uri}}>&amp;format=text%2Fcsv">CSV</a> | RDF (
+        <a href="{{about.datalink}}.ntriples">N-Triples</a> 
+        <a href="{{about.datalink}}.n3">N3/Turtle</a> 
+	<a href="{{about.datalink}}.json">JSON</a> 
+        <a href="{{about.datalink}}.rdf">XML</a> ) | OData (
+	<a href="{{about.datalink}}.atom">Atom</a> 
+	<a href="{{about.datalink}}.json">JSON</a> )| Microdata (
+	<a href="/sparql?default-graph-uri={{localgraph}}&amp;query=DESCRIBE+<{{about.uri}}>&amp;output=application%2Fmicrodata%2Bjson">JSON</a>
+        <a href="/sparql?default-graph-uri={{localgraph}}&amp;query=DESCRIBE+<{{about.uri}}>&amp;output=text%2Fhtml">HTML</a>) |  
+        <a href="/sparql?default-graph-uri={{localgraph}}&amp;query=DESCRIBE+<{{about.uri}}>&amp;output=application%2Fld%2Bjson">JSON-LD</a> 
+
+        &nbsp; &nbsp;<a href="http://wiki.dbpedia.org/Imprint">About</a>&nbsp; &nbsp;
+      </div> <!-- #ft_t -->
+      <div id="ft_b">
+        <a href="http://virtuoso.openlinksw.com" title="OpenLink Virtuoso"><img class="powered_by" src="/statics/virt_power_no_border.png" alt="Powered by OpenLink Virtuoso"></a>
+        <a href="http://linkeddata.org/"><img alt="This material is Open Knowledge" src="/statics/LoDLogo.gif"></a> &nbsp;
+        <a href="http://dbpedia.org/sparql"><img alt="W3C Semantic Web Technology" src="/statics/sw-sparql-blue.png"></a> &nbsp;  &nbsp;
+        <a href="http://www.opendefinition.org/"><img alt="This material is Open Knowledge" src="/statics/od_80x15_red_green.png"></a>
+	<span about="" resource="http://www.w3.org/TR/rdfa-syntax" rel="dc:conformsTo" xmlns:dc="http://purl.org/dc/terms/">
+	<a href="http://validator.w3.org/check?uri=referer"><img src="http://www.w3.org/Icons/valid-xhtml-rdfa" alt="Valid XHTML + RDFa" height="27"></a>
+	</span>
+      </div> <!-- #ft_b -->
+      <div id="ft_ccbysa">
+	This content was extracted from <a href="http://en.wikipedia.org/wiki/Boris_Johnson">Wikipedia</a> and is licensed under the <a href="http://creativecommons.org/licenses/by-sa/3.0/">Creative Commons Attribution-ShareAlike 3.0 Unported License</a>
+
+      </div> <!-- #ft_ccbysa -->
+</div>
+
 </div>
 </div>
