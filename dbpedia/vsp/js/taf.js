@@ -93,7 +93,7 @@ dbpv_taf_relfinder.check = function (about, predicate, value) {
 };
 
 dbpv_taf_relfinder.display = function (about, predicate, value) {
-	return "<span class='glyphicon glyphicon-play'></span>";
+	return "<span class='dbpvicon dbpvicon-relfinder'></span>";
 };
 
 dbpv_taf_relfinder.execute = function (about, predicate, value) {
@@ -511,7 +511,7 @@ dbpv_taf_lodlive.check = function (about, predicate, value) {
 };
 
 dbpv_taf_lodlive.display = function (about, predicate, value) {
-	return "<span class='glyphicon glyphicon-globe'></span>";
+	return "<span class='dbpvicon dbpvicon-lodlive'></span>";
 };
 
 dbpv_taf_lodlive.execute = function (about, predicate, value) {
