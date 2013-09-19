@@ -326,16 +326,14 @@ EXTRA_DIST = \
 	vad_version \
 	vsp/*.sql \
 	vsp/*.vsp \
-	vsp/images/*.gif \
-	vsp/images/*.png \
 	vsp/statics/*.css \
 	vsp/statics/*.gif \
 	vsp/statics/*.js \
 	vsp/statics/*.png \
 	vsp/statics/*.svg \
 	vsp/dbpv/js/*.js \
-	vsp/dbpv/css/* \
 	vsp/dbpv/tpl/*.html \
+	vsp/dbpv/css/* \
 	vsp/dbpv/fonts/*
 
 all: all-am

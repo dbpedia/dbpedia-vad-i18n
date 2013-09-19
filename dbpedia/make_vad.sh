@@ -175,8 +175,6 @@ directory_init() {
   mkdir vad/vsp
   mkdir vad/vsp/dbpedia
   mkdir vad/vsp/dbpedia/statics
-  mkdir vad/vsp/dbpedia/statics/test
-  mkdir vad/vsp/dbpedia/images
   mkdir vad/vsp/dbpedia/dbpv
   mkdir vad/vsp/dbpedia/dbpv/js
   mkdir vad/vsp/dbpedia/dbpv/tpl
