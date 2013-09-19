@@ -421,7 +421,7 @@ if (new_site = '0') {
 				        <ul class="dropdown-menu">
 					  <li ng-repeat="(code, names) in availableLanguages"><a href="javascript:void(0);" ng-click="selectLanguage(code);">{{names.nativeName}}</a></li>
 					  <li class="divider"></li>
-					  <li ng-repeat="(code, names) in restLanguages()"><a href="javascript:void(0);" ng-click="selectLanguage(code);">{{names.nativeName}}</a></li>
+					  <li class="unavailable" ng-repeat="(code, names) in restLanguages()"><a href="javascript:void(0);" ng-click="selectLanguage(code);">{{names.nativeName}}</a></li>
 					</ul>
 				</div>
 			</div>

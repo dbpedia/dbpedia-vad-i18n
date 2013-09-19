@@ -19,7 +19,7 @@
 	padding: 15px;
 	background-color:white;
 	border: 1px solid #ccc;
-	z-index: 10000;
+	z-index: 99;
 }
 
 #legend #legends {
@@ -31,7 +31,7 @@
 	border-bottom: 0px none;
 	box-shadow: 1px 1px 4px #AAA;
 	width: 400px;
-	z-index:10000;
+	z-index:99;
 }
 
 #legend #legends .name {
@@ -257,6 +257,10 @@ body #static {
 	max-height:400px;
 	overflow:auto;
 	border-radius: 0 0 0 0;
+}
+
+.navbar #searchbar #topstuff .unavailable {
+	background-color: #f3f3f3;
 }
 
 
