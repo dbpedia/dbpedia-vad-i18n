@@ -60,8 +60,9 @@ EXTRA_DIST = \
 	vsp/statics/*.js \
 	vsp/statics/*.png \
 	vsp/statics/*.svg \
-	vsp/js/*.js \
-	vsp/tpl/*.html \
 	vsp/style/*.css \
-	vsp/css/* \
-	vsp/fonts/*
+	vsp/dbpv/js/*.js \
+	vsp/dbpv/css/* \
+	vsp/dbpv/tpl/*.html \
+	vsp/dbpv/fonts/* 
+

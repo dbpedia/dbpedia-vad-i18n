@@ -376,23 +376,23 @@ DB.DBA.VHOST_DEFINE ( lhost=>registry_get ('dbp_lhost'), vhost=>registry_get ('d
 
 --# angular
 DB.DBA.VHOST_DEFINE ( lhost=>registry_get ('dbp_lhost'), vhost=>registry_get ('dbp_vhost'), lpath=>'/js',
-	 ppath=>'/DAV/VAD/dbpedia/js/',
+	 ppath=>'/DAV/VAD/dbpedia/dbpv/js/',
 	 is_dav=>1
 );
 
 DB.DBA.VHOST_DEFINE ( lhost=>registry_get ('dbp_lhost'), vhost=>registry_get ('dbp_vhost'), lpath=>'/tpl',
-	 ppath=>'/DAV/VAD/dbpedia/tpl/',
+	 ppath=>'/DAV/VAD/dbpedia/dbpv/tpl/',
 	 is_dav=>1
 );
 
 --# Bootstrap
 DB.DBA.VHOST_DEFINE ( lhost=>registry_get ('dbp_lhost'), vhost=>registry_get ('dbp_vhost'), lpath=>'/css',
-	 ppath=>'/DAV/VAD/dbpedia/css/',
+	 ppath=>'/DAV/VAD/dbpedia/dbpv/css/',
 	 is_dav=>1
 );
 
 DB.DBA.VHOST_DEFINE ( lhost=>registry_get ('dbp_lhost'), vhost=>registry_get ('dbp_vhost'), lpath=>'/fonts',
-	 ppath=>'/DAV/VAD/dbpedia/fonts/',
+	 ppath=>'/DAV/VAD/dbpedia/dbpv/fonts/',
 	 is_dav=>1
 );
 

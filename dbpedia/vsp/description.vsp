@@ -6,7 +6,8 @@
     version="XHTML+RDFa 1.0" xml:lang="<?= registry_get('dbp_lang')?>"
     ng-app='dbpv'>
 <?vsp
--- COOKIES !!!!!!!!!!!
+-- COOKIES !!!
+
  declare cookie, has_js, old_site, new_site varchar;
  declare cookie_vec any;
  cookie := http_request_header (http_request_header (), 'Cookie', null, '');
