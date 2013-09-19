@@ -184,6 +184,7 @@ function LookupCtrl($scope, $http, $timeout) {
 
 	$scope.$watch('primary_language', function(lang) {
 		$scope.$parent.$root.primary_lang = lang;
+		$.cookie("dbpv_primary_lang", lang);
 		if (! (lang in $scope.availableLanguages)) {
 			var more = false;
 			for (var k in $scope.availableLanguages) {
@@ -197,8 +198,6 @@ function LookupCtrl($scope, $http, $timeout) {
 	$scope.addNotification = function (text, timeout) {
 		$scope.$broadcast("show notification", {"text":text, "timeout":timeout});
 	};
-
-	$scope.primary_language = $scope.primary_lang;
 
 	$scope.getNativeName = function(code) {
 		return $scope.languages[code].nativeName;
@@ -216,8 +215,8 @@ function LookupCtrl($scope, $http, $timeout) {
 				if (term.url.substr(0, $scope.lookupgraph.length) == $scope.lookupgraph) {
 					term.url = term.url.substr($scope.lookupgraph.length);
 				}
-				//window.location = "/#"+term.url;
-				window.location = term.url;
+				window.location = "/#"+term.url;
+				//window.location = term.url;
 			}
 		}
 	});
