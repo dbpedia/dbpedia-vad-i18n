@@ -4,7 +4,8 @@ function tafAdd(action) {
 	dbpv_taf_actions.push(action);
 }
 
-function TafAction() {
+function TafAction(obj) {
+	$.extend(this, obj);
 	dbpv_taf_actions.push(this);
 }
 

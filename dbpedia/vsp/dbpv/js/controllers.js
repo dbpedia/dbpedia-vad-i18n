@@ -324,13 +324,13 @@ function FooterCtrl ($scope) {
 function LegendCtrl ($scope) {
 	for (var i = 0; i<$scope.taf_actions.length ; i++) {
 		var action = $scope.taf_actions[i];
-		if (action.name !== undefined) {
+		if (action["name"] !== undefined) {
 			var legend = {"name": action.name, "description": action.description};
 			var entries = action.legendize();
 			if (entries.length>0) {
 				legend.lines = entries;
 			}
-			$scope.legends.push(action.name: legend);
+			$scope.legends[action.name] = legend;
 		}
 	}
 }
