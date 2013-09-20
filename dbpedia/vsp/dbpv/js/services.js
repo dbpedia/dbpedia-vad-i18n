@@ -29,7 +29,11 @@ angular.module('dbpvServices', [])
 
 				// START XXX NEW
 				scope.entitySemaphore += 1;
-				$http.post(endpoint, "query="+inquery, {timeout:60000}).success(function(data, status, headers, config) {
+				var defaultgraphs = "";
+				for (var i = 0; i<$scope.endpointgraph.length; i++) {
+					defaultgraphs += "default-graph-uri=" + $scope.endpointgraph[i] + "&";
+				}
+				$http.post(endpoint, defaultgraphs + "query="+inquery, {timeout:60000}).success(function(data, status, headers, config) {
 					var predicates = {};
 					var bindings = data["results"]["bindings"];
 					try{
@@ -72,7 +76,11 @@ angular.module('dbpvServices', [])
 				// MEDIAS RES XXX NEW
 				if (!fwd) {
 					scope.entitySemaphore += 1;
-					$http.post(endpoint, "query="+outquery, {timeout: 60000}).success(function(data, status, headers, config) {
+					var defaultgraphs = "";
+					for (var i = 0; i<$scope.endpointgraph.length; i++) {
+						defaultgraphs += "default-graph-uri=" + $scope.endpointgraph[i] + "&";
+					}
+					$http.post(endpoint, defaultgraphs + "query="+outquery, {timeout: 60000}).success(function(data, status, headers, config) {
 						predicates = {};
 						var bindings = data["results"]["bindings"];
 						try{
@@ -174,7 +182,11 @@ angular.module('dbpvServices', [])
 				var query = "SELECT DISTINCT ?prop WHERE {<"+uri+"> <"+prop+"> ?prop}";
 				query = encodeURIComponent(query);
 				loadingSemaphore.count += 1;
-				$http.post(endpoint, "query="+query, {timeout:60000}).success(function (data, status, headers, config) {
+				var defaultgraphs = "";
+				for (var i = 0; i<$scope.endpointgraph.length; i++) {
+					defaultgraphs += "default-graph-uri=" + $scope.endpointgraph[i] + "&";
+				}
+				$http.post(endpoint, defaultgraphs+"query="+query, {timeout:60000}).success(function (data, status, headers, config) {
 					loadingSemaphore.count -= 1;
 					var values = data["results"]["bindings"];
 					for (var j = 0; j<values.length; j++) {
