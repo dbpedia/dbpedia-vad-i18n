@@ -476,21 +476,19 @@ dbpv_taf_short.execute = function (about, predicate, value) {
 
 // VIEW IN LODLIVE (only for DBpedia entities) (example of a simple action)
 
-var dbpv_taf_lodlive =  new TafAction();
+var dbpv_taf_lodlive =  new TafAction(
+{	id : "lodlive",
+	description : "View in LODLive",
 
-dbpv_taf_lodlive.id = "lodlive";
-dbpv_taf_lodlive.description = "View in LODLive";
-
-dbpv_taf_lodlive.check = function (about, predicate, value) {
-	return value.type == "uri" && (value.prefix.indexOf("dbpedia") == 0);
-};
-
-dbpv_taf_lodlive.display = function (about, predicate, value) {
-	return "<span class='dbpvicon dbpvicon-lodlive'></span>";
-};
-
-dbpv_taf_lodlive.execute = function (about, predicate, value) {
-	var lodurl = "http://en.lodlive.it/?";
-	window.open(lodurl+value.uri);
-};
+	check : function (about, predicate, value) {
+		return value.type == "uri" && (value.prefix.indexOf("dbpedia") == 0);
+	},
+	display : function (about, predicate, value) {
+		return "<span class='dbpvicon dbpvicon-lodlive'></span>";
+	},
+	execute : function (about, predicate, value) {
+		var lodurl = "http://en.lodlive.it/?";
+		window.open(lodurl+value.uri);
+	}
+});
 
