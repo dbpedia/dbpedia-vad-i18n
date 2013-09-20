@@ -11,7 +11,7 @@
 	</div>
 </div>
 
-<div id="legend" smart-slide=".trigger" smart-slide-content=".container">
+<div id="legend" smart-slide=".trigger" smart-slide-content=".container" ng-controller="LegendCtrl">
 	<div class="trigger" id="legend-title" data-intro="Here, the actions applicable to triples are explained." data-step="7" data-position="left"><a href="javascript:void(0);" ng-click="showLegend();" ><span>LEGEND</span></a></div>
 	<div class="container" id="legends">
 		<div class="legend" ng-repeat="(name, legend) in legends">

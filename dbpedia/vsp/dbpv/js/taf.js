@@ -9,9 +9,6 @@ function TafAction() {
 }
 
 TafAction.prototype.autobind = function (about, predicate, value) {
-	if (this.name !== undefined) { //ADDING LEGENDS
-		this.addLegend();
-	}
 	if (value.taf !== undefined) {
 		if (value.taf[this.id] === undefined) {
 			value.taf[this.id] = {"init":false};
@@ -33,24 +30,6 @@ TafAction.prototype.initialize = function (about, predicate, value) {
 
 TafAction.prototype.check = function (about, predicate, value) {
 	return true;
-};
-
-TafAction.prototype.setLegends = function () {
-	if (TafAction.prototype.legends === undefined) {
-		TafAction.prototype.legends = angular.element('#legends').scope().legends;
-	}
-};
-
-TafAction.prototype.addLegend = function () {
-	this.setLegends();
-	if (TafAction.prototype.legends[this.name] === undefined) {
-		TafAction.prototype.legends[this.name] = {"name":this.name, "description":this.description, "lines":[]};
-	}
-};
-
-TafAction.prototype.addLegendLine = function (icon, text) {
-	this.addLegend();
-	TafAction.prototype.legends[this.name].lines.push({"icon":icon, "text": text});
 };
 
 // XXX XXX XXX TAF MkIII ACTIONS XXX XXX XXX
@@ -77,14 +56,8 @@ dbpv_taf_relfinder.id = "relfinder";
 dbpv_taf_relfinder.name = "RelFinder";
 dbpv_taf_relfinder.description = "View more relations on RelFinder";
 
-dbpv_taf_relfinder.initialized = false;
-
-dbpv_taf_relfinder.initialize = function(about, predicate, value) {
-	if (dbpv_taf_relfinder.initialized != true) {
-		this.addLegendLine (this.display, "Explore relations with this entity on RelFinder");
-		dbpv_taf_relfinder.initialized = true;
-	}
-	
+dbpv_taf_relfinder.legendize = function() {
+	return [{"icon": this.display, "text": "Explore relations with this entity on RelFinder"}];
 };
 
 dbpv_taf_relfinder.check = function (about, predicate, value) {
@@ -188,16 +161,17 @@ dbpv_taf_spotlight.id = "spotlight";
 dbpv_taf_spotlight.name = "DBpedia Spotlight";
 dbpv_taf_spotlight.description = "Annotate with DBpedia Spotlight";
 
-dbpv_taf_spotlight.legendized = false;
+dbpv_taf_spotlight.legendize = function () {
+	return [
+			{ "icon": "<span class='glyphicon glyphicon-bullhorn'></span>",
+			  "text": "Annotates the value text using DBpedia Spotlight"},
+			{ "icon": "<span class='glyphicon glyphicon-time'></span>",
+			  "text": "A request to the DBpedia Spotlight endpoint is already pending. Just wait"}
+			];
+};
 
 dbpv_taf_spotlight.initialize = function (about, predicate, value) {
 	value.taf.spotlight.busy = false;
-	
-	if (dbpv_taf_spotlight.legendized != true) {
-		this.addLegendLine ("<span class='glyphicon glyphicon-bullhorn'></span>", "Annotates the value text using DBpedia Spotlight");
-		this.addLegendLine ("<span class='glyphicon glyphicon-time'></span>", "A request to the DBpedia Spotlight endpoint is already pending. Just wait");
-		dbpv_taf_spotlight.legendized = true;
-	}
 
 	if (dbpv_taf_spotlight.service === undefined) {
 		dbpv_taf_spotlight.service = angular.element("body").injector().get('Spotlight');
