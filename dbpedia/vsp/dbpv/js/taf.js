@@ -478,6 +478,7 @@ dbpv_taf_short.execute = function (about, predicate, value) {
 
 var dbpv_taf_lodlive =  new TafAction(
 {	id : "lodlive",
+	name : "LodLive",
 	description : "View in LODLive",
 
 	check : function (about, predicate, value) {

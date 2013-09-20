@@ -326,9 +326,12 @@ function LegendCtrl ($scope) {
 		var action = $scope.taf_actions[i];
 		if (action["name"] !== undefined) {
 			var legend = {"name": action.name, "description": action.description};
-			var entries = action.legendize();
-			if (entries.length>0) {
-				legend.lines = entries;
+			legend.lines = [];
+			if (typeof(action.legendize) != "undefined") {
+				var entries = action.legendize();
+				if (entries.length>0) {
+					legend.lines = entries;
+				}
 			}
 			$scope.legends[action.name] = legend;
 		}
