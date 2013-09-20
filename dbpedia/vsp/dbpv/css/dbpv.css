@@ -260,7 +260,7 @@ body #static {
 }
 
 .navbar #searchbar #topstuff .unavailable {
-	background-color: #f3f3f3;
+	color: grey;
 }
 
 
