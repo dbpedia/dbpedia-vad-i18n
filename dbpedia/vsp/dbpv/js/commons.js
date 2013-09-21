@@ -102,9 +102,9 @@ function removeLocalPrefix(url) {
 function get_localgraph(){
 	var ret = angular.element($('body')).scope().localgraph;
 	return ret;
-	
+}
+
 function get_localprefix() {
 	var ret = angular.element($('body')).scope().localprefix;
 	return ret;
-}
 }
