@@ -51,6 +51,7 @@ function dbpv_preprocess_triple_value(sing, localgraph) {
 		}
 		if (sing.url.slice(0, localgraph.length) == localgraph) {
 			sing.url = sing.url.slice(localgraph.length, sing.url.length);
+			sing.url = addLocalPrefix(sing.url);
 			sing.url.local = true;
 		}
 		if (sing.prefix!==undefined && sing.short !== undefined) {
@@ -81,12 +82,29 @@ function dbpv_preprocess_triple_url(url, localgraph) {
 	if (typeof(localgraph) == "undefined") localgraph = get_localgraph();
 	if (url.slice(0, localgraph.length) == localgraph) {
 		url = url.slice(localgraph.length, url.length);
+		url = addLocalPrefix(url);
 		url.local = true;
 	}
 	return url;
 }
 
+function addLocalPrefix(url) {
+	return get_localprefix() + url;
+}
+
+function removeLocalPrefix(url) {
+	var prefix = get_localprefix();
+	if (url.slice(0, prefix.length) == prefix) {
+		return url.slice(prefix.Length, url.length);
+	}
+}
+
 function get_localgraph(){
 	var ret = angular.element($('body')).scope().localgraph;
 	return ret;
+	
+function get_localprefix() {
+	var ret = angular.element($('body')).scope().localprefix;
+	return ret;
+}
 }

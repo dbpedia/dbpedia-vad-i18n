@@ -125,6 +125,7 @@ dbpv.directive('dbpvPreview', function($timeout) {
 				position.top = position.top + parent.height();
 				to = undefined;
 				var url = attrs.dbpvPreview;
+				url = removeLocalPrefix(url);
 				scope.entityPreview(url, position.top, position.left);
 				scope.previewItemHover();
 			}, 800);
@@ -141,7 +142,8 @@ dbpv.directive('labelList', function(Preview, $filter, $compile) {
 		link: function(scope, element, attrs) {
 			var rurl = attrs.labelList;
 			if (rurl.substr(0, scope.owlgraph.length) == scope.owlgraph) rurl = rurl.substr(scope.owlgraph.length);
-
+			
+			rurl = removeLocalPrefix(rurl);
 			scope.labellist = Preview.getProperty(rurl, "http://www.w3.org/2000/01/rdf-schema#label", {"count":0}, scope.owlgraph, scope.owlendpoint);
 
 			scope.updateLabellist = function (list) {
