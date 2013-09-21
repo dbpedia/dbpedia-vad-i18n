@@ -1,7 +1,7 @@
 var dbpv = angular.module('dbpv', ['dbpvServices', 'ui.bootstrap']);
 
 dbpv.run(function($rootScope) {
-	$rootScope.localprefix = ""; //TODO
+	$rootScope.localprefix = "";
 
 	$rootScope.localgraph = "http://nl.dbpedia.org";
 	$rootScope.endpointgraph = ["http://nl.dbpedia.org"]; //TODO
