@@ -182,12 +182,13 @@ angular.module('dbpvServices', [])
 				var query = "SELECT DISTINCT ?prop WHERE {<"+uri+"> <"+prop+"> ?prop}";
 				query = encodeURIComponent(query);
 				loadingSemaphore.count += 1;
-				var scope = angular.element($('body')).scope();
+				/*var scope = angular.element($('body')).scope();
 				var defaultgraphs = "";
 				for (var i = 0; i<scope.endpointgraph.length; i++) {
 					defaultgraphs += "default-graph-uri=" + scope.endpointgraph[i] + "&";
-				}
-				$http.post(endpoint, defaultgraphs+"query="+query, {timeout:60000}).success(function (data, status, headers, config) {
+				}*/
+				//TODO default graphs disabled for preview because of dataset troubles
+				$http.post(endpoint, "query="+query, {timeout:60000}).success(function (data, status, headers, config) {
 					loadingSemaphore.count -= 1;
 					var values = data["results"]["bindings"];
 					for (var j = 0; j<values.length; j++) {
