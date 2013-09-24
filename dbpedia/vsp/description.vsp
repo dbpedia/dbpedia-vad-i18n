@@ -479,7 +479,7 @@ if (new_site = '0') {
           <!--?vsp if (white_page = 0) http (txt); ?-->
         </div>
         <div class="page-resource-uri">
-          An Entity of Type : <a href="<?= iri_uri ?>"><?= iri_type ?></a>, 
+          An Entity of Type : <a href="<?= iri_uri ?>"><?= charset_recode(iri_type, 'UTF-8', '_WIDE_') ?></a>, 
           from Named Graph : <a href="<?= project_home_page ?>"><?= project_home_page ?></a>, 
           within Data Space : <a href="http://<?= host ?>"><?V host ?></a>
        </div>
