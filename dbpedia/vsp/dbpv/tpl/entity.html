@@ -184,16 +184,16 @@
         <a href="http://dig.csail.mit.edu/2005/ajar/release/tabulator/0.8/tab.html?uri=http%3A%2F%2Fdbpedia.org%2Fresource%2FBoris_Johnson" >Tabulator</a-->
         &nbsp; &nbsp; Raw Data in:
 	
-        <a href="/sparql?default-graph-uri={{localgraph}}&amp;query=DESCRIBE+<{{about.uri}}>&amp;format=text%2Fcsv">CSV</a> | RDF (
-        <a href="{{about.datalink}}.ntriples">N-Triples</a> 
-        <a href="{{about.datalink}}.n3">N3/Turtle</a> 
-	<a href="{{about.datalink}}.json">JSON</a> 
-        <a href="{{about.datalink}}.rdf">XML</a> ) | OData (
-	<a href="{{about.datalink}}.atom">Atom</a> 
-	<a href="{{about.datalink}}.json">JSON</a> )| Microdata (
-	<a href="/sparql?default-graph-uri={{localgraph}}&amp;query=DESCRIBE+<{{about.uri}}>&amp;output=application%2Fmicrodata%2Bjson">JSON</a>
-        <a href="/sparql?default-graph-uri={{localgraph}}&amp;query=DESCRIBE+<{{about.uri}}>&amp;output=text%2Fhtml">HTML</a>) |  
-        <a href="/sparql?default-graph-uri={{localgraph}}&amp;query=DESCRIBE+<{{about.uri}}>&amp;output=application%2Fld%2Bjson">JSON-LD</a> 
+        <a href="/sparql?default-graph-uri={{localgraph}}&amp;query=DESCRIBE+&lt;{{about.uri}}&gt;&amp;format=text/csv" target="_self" >CSV</a> | RDF (
+        <a href="{{about.datalink}}.ntriples" target="_self" >N-Triples</a> 
+        <a href="{{about.datalink}}.n3" target="_self" >N3/Turtle</a> 
+	<a href="{{about.datalink}}.json" target="_self" >JSON</a> 
+        <a href="{{about.datalink}}.rdf" target="_self" >XML</a> ) | OData (
+	<a href="{{about.datalink}}.atom" target="_self" >Atom</a> 
+	<a href="{{about.datalink}}.json" target="_self" >JSON</a> )| Microdata (
+	<a href="/sparql?default-graph-uri={{localgraph}}&amp;query=DESCRIBE+&lt;{{about.uri}}&gt;&amp;output=application/microdata-json" target="_self" > JSON</a>
+        <a href="/sparql?default-graph-uri={{localgraph}}&amp;query=DESCRIBE+&lt;{{about.uri}}&gt;&amp;output=text/html" target="_self" >HTML</a>) |  
+        <a href="/sparql?default-graph-uri={{localgraph}}&amp;query=DESCRIBE+&lt;{{about.uri}}>&gt;&amp;output=application/ld-json" target="_self" >JSON-LD</a> 
 
         &nbsp; &nbsp;<a href="http://wiki.dbpedia.org/Imprint">About</a>&nbsp; &nbsp;
       </div> <!-- #ft_t -->
