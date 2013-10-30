@@ -3,9 +3,10 @@ var dbpv = angular.module('dbpv', ['dbpvServices', 'ui.bootstrap']);
 dbpv.run(function($rootScope) {
 	$rootScope.localprefix = "";
 
-	$rootScope.localgraph = "http://nl.dbpedia.org";
-	$rootScope.endpointgraph = ["http://nl.dbpedia.org"]; //TODO
-	$rootScope.endpoint = "/sparql";
+	
+	$rootScope.localgraph = "http://dbpedia.org";
+	$rootScope.endpointgraph = ["http://dbpedia.org"];
+	$rootScope.endpoint = "http://dbpedia.org/sparql";
 	$rootScope.encodegraph = false;
 
 	$rootScope.owlgraph = "http://dbpedia.org";
@@ -14,14 +15,14 @@ dbpv.run(function($rootScope) {
 	$rootScope.lookupgraph = "http://dbpedia.org";
 	$rootScope.lookupendpoint = "http://lookup.dbpedia.org/api/search";
 
-	$rootScope.spotlightendpoint = "http://nl.dbpedia.org/spotlight/rest/annotate";
+	$rootScope.spotlightendpoint = "http://spotlight.dbpedia.org/rest/annotate";
 
 	if (typeof(dbp_prefixes)!='undefined' && dbp_prefixes !== undefined) {
 		dbpv_prefixes = dbp_prefixes;
 	}
 
-	$rootScope.primary_lang = "nl";
-	$rootScope.fallback_lang = "nl";
+	$rootScope.primary_lang = "en";
+	$rootScope.fallback_lang = "en";
 
 	//LOADING SETTTINGS FROM THE VSP	
 	if (typeof(dbp_settings) != 'undefined' && dbp_settings !== undefined) {
