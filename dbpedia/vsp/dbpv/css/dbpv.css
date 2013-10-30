@@ -285,10 +285,11 @@ body #static {
 .predicate {
 	background-color: #F7F7F7;
 	border: 1pt solid #DDDDDD;
-	margin-bottom: 5px;
+	border-top: 0 none;
 	padding: 10px;
 	padding-right:0px;
-	padding-bottom:5px;
+	padding-bottom:3px;
+	padding-top: 6px;
 	overflow: hidden;
 	min-width:500px;
 }
@@ -297,7 +298,7 @@ body #static {
 	position:relative;
 	float:right;
 	padding-left: 10px;
-	padding-bottom: 10px;
+	padding-bottom: 2px;
 }
 
 .predicate .dbpv-taf a span.glyphicon {
@@ -309,8 +310,8 @@ body #static {
 	background-color: #ffffff;
 	border: 1pt solid #DDDDDD;
 	border-right: 0pt solid white;
-	margin-bottom: 5px;
-	padding: 5px;
+	margin-bottom: 3px;
+	padding: 3px;
 	padding-left: 10px;
 	padding-right: 15px;
 }
@@ -319,8 +320,8 @@ body #static {
 	float:left;
 	display:block;
 	width: 250px;
-	padding-top: 5px;
-	padding-bottom: 5px;
+	padding-top: 3px;
+	padding-bottom: 3px;
 }
 
 .pred-values {

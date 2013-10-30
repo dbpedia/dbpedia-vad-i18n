@@ -11,7 +11,7 @@
  declare cookie, has_js, old_site, new_site varchar;
  declare cookie_vec any;
  cookie := http_request_header (http_request_header (), 'Cookie', null, '');
- has_js := '0';
+ has_js := '1';
  old_site := '0';
 
  cookie_vec := split_and_decode (cookie, 0, '\0\0;=');
