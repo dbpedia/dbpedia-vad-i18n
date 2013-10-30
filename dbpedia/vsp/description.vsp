@@ -11,7 +11,7 @@
  declare cookie, has_js, old_site, new_site varchar;
  declare cookie_vec any;
  cookie := http_request_header (http_request_header (), 'Cookie', null, '');
- has_js := '1';
+ has_js := '0';
  old_site := '0';
 
  cookie_vec := split_and_decode (cookie, 0, '\0\0;=');
@@ -239,7 +239,7 @@
 
   -- set up http
   -- http_header ('Cache-Control: no-cache, must-revalidate\r\nPragma: no-cache\r\n');
-  http_header ( concat (http_header_get (), sprintf ('Expires: %s \r\n', date_rfc1123 (dateadd ('day', 7, now ())))));
+  http_header ( concat (http_header_get (), sprintf ('Expires: %s \r\n', date_rfc1123 (dateadd ('day', 90, now ())))));
   http_header ( concat (http_header_get (), sprintf ('%s \r\n', links)));
   http_header ( concat (http_header_get (), 'Set-Cookie: dbpv_has_js=0\r\n'));
   --http(links);
