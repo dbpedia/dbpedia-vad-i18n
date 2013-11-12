@@ -154,7 +154,7 @@
 				</span>
 				<span>
 					<span ng-switch on="val.type">
-						<span ng-switch-when="uri"> <a href="{{val.url}}" dbpv-preview="{{val.url}}" class="entity-preview">
+						<span ng-switch-when="uri"> <a href="{{val.url}}" dbpv-preview="{{val.url}}" class="entity-preview" rel="{{val.nofollow}}">
 							<span ng-switch on="val.prefix">
 								<span ng-switch-when="undefined">{{val.label}}</span>
 								<span ng-switch-default>  <span class="rdf-prefix">{{val.prefix}}:</span>{{val.short}}</span>

@@ -482,6 +482,10 @@ dbpv_taf_lodlive.id = "lodlive";
 dbpv_taf_lodlive.name = "LODlive";
 dbpv_taf_lodlive.description = "View in LODLive";
 
+dbpv_taf_lodlive.legendize = function (about, predicate, value) {
+	return [{"icon": this.display, "text": "View in LODLive"}];
+};
+
 dbpv_taf_lodlive.check = function (about, predicate, value) {
 	return value.type == "uri" && (value.prefix.indexOf("dbpedia") == 0);
 };
@@ -493,15 +497,6 @@ dbpv_taf_lodlive.display = function (about, predicate, value) {
 dbpv_taf_lodlive.execute = function (about, predicate, value) {
 	var lodurl = "http://en.lodlive.it/?";
 	window.open(lodurl+value.uri);
-};
-
-dbpv_taf_lodlive.initialized = false;
-
-dbpv_taf_lodlive.initialize = function(about, predicate, value) {
-	if (dbpv_taf_lodlive.initialized != true) {
-		this.addLegendLine (this.display, "View in LODlive");
-		dbpv_taf_lodlive.initialized = true;
-	}
 };
 
 // NOFOLLOW SYSTEM ACTION
@@ -532,6 +527,10 @@ dbpv_taf_olfb.id = "olfb";
 dbpv_taf_olfb.name = "OpenLink Faceted Browser";
 dbpv_taf_olfb.description = "View in OpenLink Faceted Browser";
 
+dbpv_taf_olfb.legendize = function (about, predicate, value) {
+	return [{"icon": this.display, "text": "View in OpenLink Faceted Browser"}];
+};
+
 dbpv_taf_olfb.display = function (about, predicate, value) {
 	return "<span class='glyphicon glyphicon-globe' style='font-size:18px'></span>";
 };
@@ -544,16 +543,6 @@ dbpv_taf_olfb.execute = function (about, predicate, value) {
 	var servedby = angular.element("body").scope().localgraph;
 	var olfburl = servedby + "/describe/?uri=";
 	window.open(olfburl+about.uri);
-};
-
-
-dbpv_taf_olfb.initialized = false;
-
-dbpv_taf_olfb.initialize = function(about, predicate, value) {
-	if (dbpv_taf_olfb.initialized != true) {
-		this.addLegendLine (this.display, "View in OpenLink Faceted Browser");
-		dbpv_taf_olfb.initialized = true;
-	}
 };
 
 // DISCLAIMER SYSTEM ACTION
