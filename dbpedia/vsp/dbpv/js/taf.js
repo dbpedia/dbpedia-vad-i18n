@@ -476,20 +476,111 @@ dbpv_taf_short.execute = function (about, predicate, value) {
 
 // VIEW IN LODLIVE (only for DBpedia entities) (example of a simple action)
 
-var dbpv_taf_lodlive =  new TafAction(
-{	id : "lodlive",
-	name : "LodLive",
-	description : "View in LODLive",
+var dbpv_taf_lodlive =  new TafAction();
 
-	check : function (about, predicate, value) {
-		return value.type == "uri" && (value.prefix.indexOf("dbpedia") == 0);
-	},
-	display : function (about, predicate, value) {
-		return "<span class='dbpvicon dbpvicon-lodlive'></span>";
-	},
-	execute : function (about, predicate, value) {
-		var lodurl = "http://en.lodlive.it/?";
-		window.open(lodurl+value.uri);
+dbpv_taf_lodlive.id = "lodlive";
+dbpv_taf_lodlive.name = "LODlive";
+dbpv_taf_lodlive.description = "View in LODLive";
+
+dbpv_taf_lodlive.check = function (about, predicate, value) {
+	return value.type == "uri" && (value.prefix.indexOf("dbpedia") == 0);
+};
+
+dbpv_taf_lodlive.display = function (about, predicate, value) {
+	return "<span class='dbpvicon dbpvicon-lodlive'></span>";
+};
+
+dbpv_taf_lodlive.execute = function (about, predicate, value) {
+	var lodurl = "http://en.lodlive.it/?";
+	window.open(lodurl+value.uri);
+};
+
+dbpv_taf_lodlive.initialized = false;
+
+dbpv_taf_lodlive.initialize = function(about, predicate, value) {
+	if (dbpv_taf_lodlive.initialized != true) {
+		this.addLegendLine (this.display, "View in LODlive");
+		dbpv_taf_lodlive.initialized = true;
 	}
-});
+};
 
+// NOFOLLOW SYSTEM ACTION
+var dbpv_taf_nofollow = new TafAction();
+
+dbpv_taf_nofollow.id = "nofollow";
+dbpv_taf_nofollow.display = function (about, predicate, value) {
+	return "";
+};
+
+dbpv_taf_nofollow.initialize = function (about, predicate, value) {
+	if (dbpv_taf_nofollow.check (about, predicate, value)) dbpv_taf_nofollow.execute (about, predicate, value);
+};
+
+dbpv_taf_nofollow.check = function (about, predicate, value) {
+	return (predicate.url.match("wikiPageExternalLink") || predicate.url.match("xmlns.com/foaf/0.1/homepage"));
+};
+
+dbpv_taf_nofollow.execute = function (about, predicate, value) {
+	value.nofollow = "nofollow";
+};
+
+// VIEW IN OPENLINK FACETED BROWSER
+
+var dbpv_taf_olfb = new TafAction();
+
+dbpv_taf_olfb.id = "olfb";
+dbpv_taf_olfb.name = "OpenLink Faceted Browser";
+dbpv_taf_olfb.description = "View in OpenLink Faceted Browser";
+
+dbpv_taf_olfb.display = function (about, predicate, value) {
+	return "<span class='glyphicon glyphicon-globe' style='font-size:18px'></span>";
+};
+
+dbpv_taf_olfb.check = function (about, predicate, value) {
+	return value.type == "uri" && (value.prefix.indexOf("dbpedia") == 0);
+};
+
+dbpv_taf_olfb.execute = function (about, predicate, value) {
+	var servedby = angular.element("body").scope().localgraph;
+	var olfburl = servedby + "/describe/?uri=";
+	window.open(olfburl+about.uri);
+};
+
+
+dbpv_taf_olfb.initialized = false;
+
+dbpv_taf_olfb.initialize = function(about, predicate, value) {
+	if (dbpv_taf_olfb.initialized != true) {
+		this.addLegendLine (this.display, "View in OpenLink Faceted Browser");
+		dbpv_taf_olfb.initialized = true;
+	}
+};
+
+// DISCLAIMER SYSTEM ACTION
+var dbpv_taf_disclaimer = new TafAction();
+
+dbpv_taf_disclaimer.id = "disclaimer";
+
+dbpv_taf_disclaimer.display = function (about, predicate, value) {
+	return "";
+};
+
+dbpv_taf_disclaimer.initialize = function (about, predicate, value) {
+	if (dbpv_taf_disclaimer.check (about, predicate, value)) dbpv_taf_disclaimer.execute (about, predicate, value);
+};
+
+dbpv_taf_disclaimer.check = function (about, predicate, value) {
+	return (predicate.url.match("http://xmlns.com/foaf/0.1/isPrimaryTopicOf"));
+};
+
+dbpv_taf_disclaimer.execute = function (about, predicate, value) {
+	var scope = angular.element(".footer").scope();
+	scope.wikipage = {};
+	scope.wikipage.url = value.url;
+	var regex = new RegExp("http:\\/\\/(\\w{2,4})\\.wikipedia\\.org\\/wiki\\/(.*)");
+	var match = regex.exec(value.url);
+	var lang = match[1];
+	var title = match[2];
+	scope.wikipage.title = title;
+	scope.wikipage.history = "http://" + lang + ".wikipedia.org/w/index.php?title=" + title + "&action=history";
+};

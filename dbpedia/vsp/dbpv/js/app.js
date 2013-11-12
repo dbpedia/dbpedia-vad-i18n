@@ -5,8 +5,8 @@ dbpv.run(function($rootScope) {
 
 	
 	$rootScope.localgraph = "http://dbpedia.org";
-	$rootScope.endpointgraph = ["http://dbpedia.org"];
-	$rootScope.endpoint = "http://dbpedia.org/sparql";
+	$rootScope.endpointgraph = ["http://live.dbpedia.org"];
+	$rootScope.endpoint = "http://live.dbpedia.org/sparql";
 	$rootScope.encodegraph = false;
 
 	$rootScope.owlgraph = "http://dbpedia.org";
