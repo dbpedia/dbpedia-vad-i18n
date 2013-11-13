@@ -532,7 +532,7 @@ dbpv_taf_olfb.legendize = function (about, predicate, value) {
 };
 
 dbpv_taf_olfb.display = function (about, predicate, value) {
-	return "<span class='glyphicon glyphicon-globe' style='font-size:18px'></span>";
+	return "<span class='dbpvicon dbpvicon-openlink'></span>";
 };
 
 dbpv_taf_olfb.check = function (about, predicate, value) {
@@ -540,8 +540,8 @@ dbpv_taf_olfb.check = function (about, predicate, value) {
 };
 
 dbpv_taf_olfb.execute = function (about, predicate, value) {
-	var servedby = angular.element("body").scope().localgraph;
-	var olfburl = servedby + "/describe/?uri=";
+	//var servedby = angular.element("body").scope().localgraph;
+	var olfburl = /*servedby +*/ "/describe/?uri=";
 	window.open(olfburl+about.uri);
 };
 
