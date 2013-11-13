@@ -169,19 +169,19 @@ DB.DBA.VHOST_DEFINE (lpath=>'/statics', ppath=>registry_get('_dbpedia_path_')||'
     is_dav=>atoi (registry_get('_dbpedia_dav_')));
 
 -- Angular
-DB.DBA.VHOST_REMOVE (lpath=>'/js');
-DB.DBA.VHOST_DEFINE (lpath=>'/js', ppath=>registry_get('_dbpedia_path_')||'dbpv/js/',
+DB.DBA.VHOST_REMOVE (lpath=>'/statics/js');
+DB.DBA.VHOST_DEFINE (lpath=>'/statics/js', ppath=>registry_get('_dbpedia_path_')||'dbpv/js/',
     is_dav=>atoi (registry_get('_dbpedia_dav_')));
-DB.DBA.VHOST_REMOVE (lpath=>'/tpl');
-DB.DBA.VHOST_DEFINE (lpath=>'/tpl', ppath=>registry_get('_dbpedia_path_')||'dbpv/tpl/',
+DB.DBA.VHOST_REMOVE (lpath=>'/statics/tpl');
+DB.DBA.VHOST_DEFINE (lpath=>'/statics/tpl', ppath=>registry_get('_dbpedia_path_')||'dbpv/tpl/',
     is_dav=>atoi (registry_get('_dbpedia_dav_')));
 
 -- Bootstrap
-DB.DBA.VHOST_REMOVE (lpath=>'/css');
-DB.DBA.VHOST_DEFINE (lpath=>'/css', ppath=>registry_get('_dbpedia_path_')||'dbpv/css/',
+DB.DBA.VHOST_REMOVE (lpath=>'/statics/css');
+DB.DBA.VHOST_DEFINE (lpath=>'/statics/css', ppath=>registry_get('_dbpedia_path_')||'dbpv/css/',
     is_dav=>atoi (registry_get('_dbpedia_dav_')));
-DB.DBA.VHOST_REMOVE (lpath=>'/fonts');
-DB.DBA.VHOST_DEFINE (lpath=>'/fonts', ppath=>registry_get('_dbpedia_path_')||'dbpv/fonts/',
+DB.DBA.VHOST_REMOVE (lpath=>'/statics/fonts');
+DB.DBA.VHOST_DEFINE (lpath=>'/statics/fonts', ppath=>registry_get('_dbpedia_path_')||'dbpv/fonts/',
     is_dav=>atoi (registry_get('_dbpedia_dav_')));
 
 

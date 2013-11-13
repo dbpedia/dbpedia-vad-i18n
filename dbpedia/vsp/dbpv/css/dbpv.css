@@ -87,15 +87,15 @@
 }
 
 .dbpvicon-relfinder {
-	background-image:url('/css/relfindericon.png');
+	background-image:url('/statics/css/relfindericon.png');
 }
 
 .dbpvicon-lodlive {
-	background-image:url('/css/lodliveicon.png');
+	background-image:url('/statics/css/lodliveicon.png');
 }
 
 .dbpvicon-openlink {
-	background-image:url('/css/openlinkicon.png');
+	background-image:url('/statics/css/openlinkicon.png');
 }
 
 /* above: TO ARRANGE */

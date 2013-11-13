@@ -269,33 +269,33 @@
   <script type="text/javascript" src="/statics/script.js"></script>
 
 
-  <script type="text/javascript" src="/js/jquery.js"></script>
-  <script type="text/javascript" src="/js/jquery.cookies.js"></script>
+  <script type="text/javascript" src="/statics/js/jquery.js"></script>
+  <script type="text/javascript" src="/statics/js/jquery.cookies.js"></script>
   <script type="text/javascript">$.cookie("dbpv_has_js", "1");</script>
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <?vsp
 if (new_site = '1') {
   http ('<!-- NEW SITE INCLUDES -->');
-  http ('<link rel="stylesheet" href="/css/bootstrap.css"/>');
-  http ('<link rel="stylesheet" href="/css/bootstrap-glyphicons.css"/>');
-  http ('<link rel="stylesheet" href="/css/dbpv.css"/>');
+  http ('<link rel="stylesheet" href="/statics/css/bootstrap.css"/>');
+  http ('<link rel="stylesheet" href="/statics/css/bootstrap-glyphicons.css"/>');
+  http ('<link rel="stylesheet" href="/statics/css/dbpv.css"/>');
   
-  http ('<link rel="stylesheet" href="/css/introjs.min.css"></link>');
+  http ('<link rel="stylesheet" href="/statics/css/introjs.min.css"></link>');
 
-  http ('<script type="text/javascript" src="/js/angular.min.js"></script>');
-  http ('<script type="text/javascript" src="/js/angularbootstrap.js"></script>');
-  http ('<script type="text/javascript" src="/js/commons.js"></script>');
-  http ('<script type="text/javascript" charset="UTF-8" src="/js/app.js"></script>');
-  http ('<script type="text/javascript" src="/js/dbpv.js"></script>');
-  http ('<script type="text/javascript" src="/js/services.js"></script>');
-  http ('<script type="text/javascript" src="/js/controllers.js"></script>');
-  http ('<script type="text/javascript" src="/js/taf.js"></script>');
-  http ('<link rel="stylesheet" href="/css/leaflet.css" />');
-  http ('<!--[if lte IE 8]><link rel="stylesheet" href="/css/leaflet.ie.css" /><![endif]-->');
-  http ('<script src="/js/leaflet.js"></script>');
+  http ('<script type="text/javascript" src="/statics/js/angular.min.js"></script>');
+  http ('<script type="text/javascript" src="/statics/js/angularbootstrap.js"></script>');
+  http ('<script type="text/javascript" src="/statics/js/commons.js"></script>');
+  http ('<script type="text/javascript" charset="UTF-8" src="/statics/js/app.js"></script>');
+  http ('<script type="text/javascript" src="/statics/js/dbpv.js"></script>');
+  http ('<script type="text/javascript" src="/statics/js/services.js"></script>');
+  http ('<script type="text/javascript" src="/statics/js/controllers.js"></script>');
+  http ('<script type="text/javascript" src="/statics/js/taf.js"></script>');
+  http ('<link rel="stylesheet" href="/statics/css/leaflet.css" />');
+  http ('<!--[if lte IE 8]><link rel="stylesheet" href="/statics/css/leaflet.ie.css" /><![endif]-->');
+  http ('<script src="/statics/js/leaflet.js"></script>');
   
-  http ('<script type="text/javascript" src="/js/intro.min.js"></script>');
+  http ('<script type="text/javascript" src="/statics/js/intro.min.js"></script>');
   
   http ('<!-- PREFIXES loaded from VSP -->');
   http ('<script type="text/javascript" charset="UTF-8"> var dbp_prefixes = {');
