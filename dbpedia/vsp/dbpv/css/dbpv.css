@@ -98,6 +98,20 @@
 	background-image:url('/statics/css/openlinkicon.png');
 }
 
+#entityOptions {
+	padding-top: 5px;
+	float:right;
+}
+
+.dbpvicon-rdf {
+	background-image:url('/statics/css/rdficon.png');
+}
+
+.dbpvicon-json {
+	background-image:url('/statics/css/jsonicon.png');
+}
+
+
 /* above: TO ARRANGE */
 
 body {
