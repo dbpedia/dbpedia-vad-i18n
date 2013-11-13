@@ -26,6 +26,35 @@
 
 <div id="pretty-box" data-intro="This is the pretty box. It displays a small selection of entity properties in a pretty way." data-step="3">
 
+	<div id="entityOptions">
+		<span>
+		  <a href="javascript:void(0);" class="dropdown-toggle glyphicon glyphicon-th-large" style="font-size:20px" data-toggle="dropdown"></a>
+		  <ul class="dropdown-menu" role="menu">
+			<li><a href="/describe/?uri={{about.uri}}">OpenLink Faceted Browser</a></li>
+			<li><a href="http://linkeddata.uriburner.com/ode/?uri={{about.uri}}">OpenLink Data Explorer</a></li>
+		  </ul>
+		</span>
+		
+		<span>
+		  <a href="javascript:void(0);" class="dropdown-toggle dbpvicon dbpvicon-rdf" data-toggle="dropdown"></a>
+		  <ul class="dropdown-menu" role="menu">
+			<li><a href="{{about.datalink}}.rdf" target="_self">RDF/XML</a></li>
+			<li><a href="{{about.datalink}}.ntriples" target="_self">RDF/N-triples</a></li>
+			<li><a href="{{about.datalink}}.json" target="_self">RDF/JSON</a></li>
+			<li><a href="{{about.datalink}}.n3" target="_self">RDF/N3-Turtle</a></li>
+		  </ul>
+		</span>
+		
+		<span>
+		  <a href="javascript:void(0);" class="dropdown-toggle dbpvicon dbpvicon-json" data-toggle="dropdown"></a>
+		  <ul class="dropdown-menu" role="menu">
+			<li><a href="/sparql?default-graph-uri={{localgraph}}&amp;query=DESCRIBE+<{{about.uri}}>&amp;output=application%2Fmicrodata%2Bjson" target="_self">Microdata/JSON</a></li>
+			<li><a href="/sparql?default-graph-uri={{localgraph}}&amp;query=DESCRIBE+<{{about.uri}}>&amp;output=application%2Fld%2Bjson" target="_self">JSON-LD</a></li>
+			<li><a href="{{about.datalink}}.json"  target="_self">RDF/JSON</a></li>
+		  </ul>
+		</span>
+	</div>
+
 	<div id="dbpvpthumbnail">
 		<img ng-src="{{dbpvp.thumbnail[0].value}}"></img>
 	</div>
