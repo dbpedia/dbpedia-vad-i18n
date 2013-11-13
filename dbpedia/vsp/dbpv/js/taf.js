@@ -75,6 +75,9 @@ dbpv_taf_relfinder.execute = function (about, predicate, value) {
 	var neregex = new RegExp("^http\:\/\/([a-z]+\.)?dbpedia\.org\/resource\/(.+)$");
 	var nameA = encodeURIComponent(neregex.exec(about.uri)[2]);
 	var lang = neregex.exec(about.uri)[1];
+	if (lang === undefined) {
+		lang = "";
+	}
 	var nameB = encodeURIComponent(neregex.exec(value.uri)[2]);
 	var urlA = about.uri;
 	var urlB = value.uri;
