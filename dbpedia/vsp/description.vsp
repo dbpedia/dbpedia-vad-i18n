@@ -408,7 +408,7 @@ if (new_site = '0') {
  	</div>
  	<div class="navbar">
  		<div class="dbp-logo">
-			<img ng-src="/css/200px-dbpedia.png"></img>
+			<img ng-src="/statics/css/200px-dbpedia.png"></img>
  		</div>
  		<div id="searchbar" ng-controller="LookupCtrl">	
  

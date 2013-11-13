@@ -1,15 +1,15 @@
 dbpv.config(function($routeProvider, $locationProvider) {
 	$locationProvider.html5Mode(true);
 	$routeProvider
-		.when('/page/:id', {templateUrl: '/tpl/entity.html', controller: EntityCtrl})
+		.when('/page/:id', {templateUrl: '/statics/tpl/entity.html', controller: EntityCtrl})
 		.when('/resource/:id', {redirectTo: function(params, a, search) {return '/page/'+params.id;} })
 		.when('/entity/:id', {redirectTo: function(params, a, search) {return '/page/'+params.id;} })
-		.when('/ontology/:id', {templateUrl: '/tpl/entity.html', controller: OwlCtrl})
-		.when('/property/:id', {templateUrl: '/tpl/entity.html', controller: PropCtrl})
-		.when('/class/:id', {templateUrl: '/tpl/entity.html', controller: ClassCtrl})
+		.when('/ontology/:id', {templateUrl: '/statics/tpl/entity.html', controller: OwlCtrl})
+		.when('/property/:id', {templateUrl: '/statics/tpl/entity.html', controller: PropCtrl})
+		.when('/class/:id', {templateUrl: '/statics/tpl/entity.html', controller: ClassCtrl})
 
-		.when('/ontology/:klas/:id', {templateUrl: '/tpl/entity.html', controller: OwlCtrl}) //FIXME Quick fix because Angular doesn't support slashes in routing parameters
-		.when('/property/:klas/:id', {templateUrl: '/tpl/entity.html', controller: PropCtrl}) //FIXME same
+		.when('/ontology/:klas/:id', {templateUrl: '/statics/tpl/entity.html', controller: OwlCtrl}) //FIXME Quick fix because Angular doesn't support slashes in routing parameters
+		.when('/property/:klas/:id', {templateUrl: '/statics/tpl/entity.html', controller: PropCtrl}) //FIXME same
 
 		.otherwise({redirectTo: '/entity/404'});
 });
