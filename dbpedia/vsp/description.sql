@@ -490,13 +490,13 @@ create procedure dbp_ldd_http_print_l (in p_text any, inout odd_position int, in
    http (sprintf ('<tr class="%s"><td class="property">', either(mod (odd_position, 2), 'odd', 'even')));
    if (rev) http ('is ');
    if (short_p is not null)
-      http (sprintf ('<a class="uri" id="short_p_is_not" href="%' || registry_get('dbp_decode_param_U') || '"%s><small>%' || registry_get('dbp_decode_param_U') || ':</small>%' || registry_get('dbp_decode_param_U') || '</a>\n', 
+      http (sprintf ('<a class="uri" id="short_p_is_not" href="%s"%s><small>%s:</small>%s</a>\n', 
          href,
          title,
          p_prefix,
          short_p));
    else
-      http (sprintf ('<a class="uri" id="short_p_is_null" href="%' || registry_get('dbp_decode_param_U') || '"%s>%' || registry_get('dbp_decode_param_U') || '</a>\n', 
+      http (sprintf ('<a class="uri" id="short_p_is_null" href="%s"%s>%s</a>\n', 
          href,
          title, 
          p_prefix));
@@ -640,14 +640,14 @@ again:
 
        if (s_t is null)
 	 {
-	   http (sprintf ('<a class="uri" %s href="%' || registry_get('dbp_decode_param_U') || '">%' || registry_get('dbp_decode_param_U') || '</a>', 
+	   http (sprintf ('<a class="uri" %s href="%s">%s</a>', 
 		 rdfa, 
 		case when org then _url else dbp_ldd_get_proxy(_url) end, 
 		_url));
 	 }
        else
 	 {
-	   http (sprintf ('<a class="uri" %s href="%' || registry_get('dbp_decode_param_U') || '"><small>%' || registry_get('dbp_decode_param_U') || '</small>:%' || registry_get('dbp_decode_param_U') || '</a>',
+	   http (sprintf ('<a class="uri" %s href="%s"><small>%s</small>:%s</a>',
 		 rdfa, 
 		case when org then _url else dbp_ldd_get_proxy(_url) end, 
 		p_t,
