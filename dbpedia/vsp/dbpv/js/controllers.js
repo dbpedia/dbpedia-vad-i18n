@@ -142,15 +142,15 @@ function EntityCtrl($scope, $routeParams, $filter, $timeout, Entity, Preview) {
 }
 
 function OwlCtrl($scope, $routeParams, $filter, $timeout, Entity, Preview) {
-	MetaCtrl($scope, $routeParams, $filter, $timeout, Entity, Preview, "ontology", true);
+	MetaCtrl($scope, $routeParams, $filter, $timeout, Entity, Preview, "ontology", false);
 }
 
 function PropCtrl($scope, $routeParams, $filter, $timeout, Entity, Preview) {
-	MetaCtrl($scope, $routeParams, $filter, $timeout, Entity, Preview, "ontology", true);
+	MetaCtrl($scope, $routeParams, $filter, $timeout, Entity, Preview, "ontology", false);
 }
 
 function ClassCtrl($scope, $routeParams, $filter, $timeout, Entity, Preview) {
-	MetaCtrl($scope, $routeParams, $filter, $timeout, Entity, Preview, "ontology", true);
+	MetaCtrl($scope, $routeParams, $filter, $timeout, Entity, Preview, "ontology", false);
 }
 
 function LookupCtrl($scope, $http, $timeout) {
