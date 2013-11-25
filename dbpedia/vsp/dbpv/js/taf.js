@@ -306,7 +306,10 @@ dbpv_taf_prettymap.execute = function (about, predicate, value) {
 	L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
 		attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a>'
 	}).addTo(map);
-	L.marker(coord).addTo(map);
+	var micon = L.icon({
+		iconUrl: 'statics/css/marker-icon.png'
+	});
+	L.marker(coord, {icon: micon}).addTo(map);
 
 };
 
