@@ -155,9 +155,9 @@ function ClassCtrl($scope, $routeParams, $filter, $timeout, Entity, Preview) {
 
 function LookupCtrl($scope, $http, $timeout) {
 	//COOKIES
-	$.cookie("dbpv_has_js", "1");
+	$.cookie("dbpv_has_js", "1", {expires:90, path: '/'});
 	if ($.cookie("dbpv_primary_lang") === undefined) {
-		$.cookie("dbpv_primary_lang", $scope.primary_lang);
+		$.cookie("dbpv_primary_lang", $scope.primary_lang, {expires:90, path: '/'});
 	}
 	$scope.primary_language = $.cookie("dbpv_primary_lang");
 

@@ -346,7 +346,7 @@ if (new_site = '0') {
 
 <script type="text/javascript">
 	function acceptCookies() {
-		$.cookie("dbpv_cookies", "1", {expires: 365});
+		$.cookie("dbpv_cookies", "1", {expires: 365, path: '/'});
 		checkCookies();
 	}
 	
