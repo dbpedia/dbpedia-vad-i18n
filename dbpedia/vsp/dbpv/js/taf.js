@@ -307,7 +307,13 @@ dbpv_taf_prettymap.execute = function (about, predicate, value) {
 		attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a>'
 	}).addTo(map);
 	var micon = L.icon({
-		iconUrl: '/statics/css/marker-icon.png'
+		iconUrl: '/statics/css/marker-icon.png',
+		shadowUrl:	'/statics/css/marker-shadow.png',
+		iconSize:	[25, 41],
+		shadowSize:	[41, 41],
+		iconAnchor:	[13, 40],
+		shadowAnchor: [13,40],
+		popupAnchor:  [-3, -50]
 	});
 	L.marker(coord, {icon: micon}).addTo(map);
 
