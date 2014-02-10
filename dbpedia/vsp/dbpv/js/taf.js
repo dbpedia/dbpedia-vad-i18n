@@ -511,6 +511,29 @@ dbpv_taf_lodlive.execute = function (about, predicate, value) {
 	window.open(lodurl+value.uri);
 };
 
+// WIKIPEDIA ACTION (only for DBpedia entities)
+var dbpv_taf_wikipedia = new TafAction({
+	id: 			"wikipedia",
+	name:			"Wikipedia",
+	description:	"View on Wikipedia",
+	legendize: 		function(about, predicate, value) {
+						return [{"icon": this.display, "text": this.description}];
+	},
+	check: 			function (about, predicate, value) {
+						return value.type == "uri" && (value.prefix.indexOf("dbpedia") == 0);
+	},
+	display: 		function (about, predicate, value) {
+						return "<span class='dbpvicon dbpvicon-wikipedia'></span>";
+	},
+	execute: 		function (about, predicate, value) {
+						var regex = /http\:\/\/(\w{2,3}.)?dbpedia\.org\/resource\/(.+)/g;
+						var match = regex.exec(value.uri);
+						if (match[1] === undefined) match[1] = "";
+						var wikilink = "http://"+match[1]+"wikipedia.org/wiki/"+match[2];
+						window.open(wikilink);
+	}
+});
+
 // NOFOLLOW SYSTEM ACTION
 var dbpv_taf_nofollow = new TafAction();
 

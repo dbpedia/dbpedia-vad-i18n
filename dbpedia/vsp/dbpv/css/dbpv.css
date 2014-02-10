@@ -98,6 +98,10 @@
 	background-image:url('/statics/css/openlinkicon.png');
 }
 
+.dbpvicon-wikipedia {
+	background-image:url('/statics/css/wikipediaicon.png');
+}
+
 #entityOptions {
 	padding-top: 5px;
 	float:right;

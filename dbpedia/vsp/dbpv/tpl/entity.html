@@ -61,7 +61,7 @@
 	<div id="dbpvptext">
 	<div id="dbpvplabel">
 		<span ng-repeat="value in dbpvp.label |languageFilter:primary_lang:fallback_lang">
-			{{value.value}}
+			<a href="{{about.uri}}">{{value.value}}</a>
 		</span>
 	</div>
 	<div id="dbpvptypes" ng-show="dbpvp.types.length>0">
