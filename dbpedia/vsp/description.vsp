@@ -311,8 +311,10 @@ if (new_site = '1') {
   
   http ('<!-- SETTINGS loaded from VSP -->');
   http ('<script type="text/javascript" charset="UTF-8"> var dbp_settings = {');
-  if ((registry_get ('dbpv_dataspace')) <> 0 ) {
-  http (sprintf ('"%S": "%S",', 'dataspace', registry_get ('dbpv_dataspace'))); }
+  if ((registry_get ('dbpv_localgraph')) <> 0 ) {
+  http (sprintf ('"%S": "%S",', 'localgraph', registry_get ('dbpv_localgraph'))); }
+  if ((registry_get ('dbpv_endpointgraph')) <> 0 ) {
+  http (sprintf ('"%S": "%S",', 'endpointgraph', registry_get ('dbpv_endpointgraph'))); }
   if ((registry_get ('dbpv_endpoint')) <> 0 ) {
   http (sprintf ('"%S": "%S",', 'endpoint', registry_get ('dbpv_endpoint'))); }
   if ((registry_get ('dbpv_encodegraph')) <> 0 ) {
@@ -327,10 +329,12 @@ if (new_site = '1') {
   http (sprintf ('"%S": "%S",', 'lookupendpoint', registry_get ('dbpv_lookupendpoint'))); }
   if ((registry_get ('dbpv_spotlightendpoint')) <> 0 ) {
   http (sprintf ('"%S": "%S",', 'spotlightendpoint', registry_get ('dbpv_spotlightendpoint'))); }
-  if ((registry_get ('dbpv_primary_lang')) <> 0 ) {
-  http (sprintf ('"%S": "%S",', 'primary_lang', registry_get ('dbpv_primary_lang'))); }
-  if ((registry_get ('dbpv_fallback_lang')) <> 0 ) {
-  http (sprintf ('"%S": "%S"', 'fallback_lang', registry_get ('dbpv_fallback_lang')));}
+  if ((registry_get ('dbp_lang')) <> 0 ) {
+  http (sprintf ('"%S": "%S",', 'primary_lang', registry_get ('dbp_lang'))); }
+  if ((registry_get ('dbp_lang')) <> 0 ) {
+  http (sprintf ('"%S": "%S"', 'fallback_lang', registry_get ('dbp_lang')));}
+  if ((registry_get ('dbp_template')) <> 0 ) {
+  http (sprintf ('"%S": "%S"', 'templateStr', registry_get ('dbp_template')));}
   http ('};</script>');
 }
 ?>
