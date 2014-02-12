@@ -332,7 +332,7 @@ if (new_site = '1') {
   if ((registry_get ('dbp_lang')) <> 0 ) {
   http (sprintf ('"%S": "%S",', 'primary_lang', registry_get ('dbp_lang'))); }
   if ((registry_get ('dbp_lang')) <> 0 ) {
-  http (sprintf ('"%S": "%S"', 'fallback_lang', registry_get ('dbp_lang')));}
+  http (sprintf ('"%S": "%S",', 'fallback_lang', registry_get ('dbp_lang')));}
   if ((registry_get ('dbp_template')) <> 0 ) {
   http (sprintf ('"%S": "%S"', 'templateStr', registry_get ('dbp_template')));}
   http ('};</script>');
