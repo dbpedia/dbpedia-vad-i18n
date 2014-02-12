@@ -314,7 +314,7 @@ if (new_site = '1') {
   if ((registry_get ('dbpv_localgraph')) <> 0 ) {
   http (sprintf ('"%S": "%S",', 'localgraph', registry_get ('dbpv_localgraph'))); }
   if ((registry_get ('dbpv_endpointgraph')) <> 0 ) {
-  http (sprintf ('"%S": "%S",', 'endpointgraph', registry_get ('dbpv_endpointgraph'))); }
+  http (sprintf ('"%S": %S,', 'endpointgraph', registry_get ('dbpv_endpointgraph'))); }
   if ((registry_get ('dbpv_endpoint')) <> 0 ) {
   http (sprintf ('"%S": "%S",', 'endpoint', registry_get ('dbpv_endpoint'))); }
   if ((registry_get ('dbpv_encodegraph')) <> 0 ) {
