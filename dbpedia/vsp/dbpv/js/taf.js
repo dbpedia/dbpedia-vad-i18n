@@ -534,6 +534,36 @@ var dbpv_taf_wikipedia = new TafAction({
 	}
 });
 
+
+var dbpv_taf_dbtemplate = new TafAction({
+	id: 			"dbtemplate",
+	name:			"DBpedia Template",
+	description:	"View DBpedia mapping",
+	templatestr:	function() {
+						return angular.element("body").scope().templateStr;
+					},
+	regex:			function() {
+						return "(http\\:\\/\\/)?(\\w{2,3}\\.)?dbpedia\\.org\\/resource\\/"+this.templatestr()+":(.+)";
+					},
+	legendize: 		function(about, predicate, value) {
+						return [{"icon": this.display, "text": this.description}];
+	},
+	check: 			function (about, predicate, value) {
+						var regex = new RegExp(this.regex());
+						return value.uri !== undefined && regex.test(value.uri);
+	},
+	display: 		function (about, predicate, value) {
+						return "<span class='glyphicon glyphicon-forward'></span>";
+	},
+	execute: 		function (about, predicate, value) {
+						var regex = new RegExp(this.regex());
+						var match = regex.exec(value.uri);
+						if (match[2] === undefined) match[2] = "en.";
+						var maplink = "http://mappings.dbpedia.org/index.php/Mapping_"+match[2].substring(0, match[2].length-1)+":"+match[3];
+						window.open(maplink);
+	}
+});
+
 // NOFOLLOW SYSTEM ACTION
 var dbpv_taf_nofollow = new TafAction();
 
