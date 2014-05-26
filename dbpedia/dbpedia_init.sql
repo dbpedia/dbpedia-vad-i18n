@@ -178,7 +178,7 @@ DB.DBA.URLREWRITE_CREATE_REGEX_RULE ( 'dbp_data_rule7', 1, '/data/([a-z_\\-]*/)?
 '/sparql?%s&query=DESCRIBE+%%3C' || registry_get('dbp_resource_decoded') || '%%3E&output=application%%2Fatom%%2Bxml',
 vector ('gr', 'par_1'), 'DB.DBA.DBP_GRAPH_PARAM1', NULL, 2, null, 'Content-Type: application/atom+xml\r\n^{sql:DB.DBA.DBP_LINK_HDR}^');
 
-DB.DBA.URLREWRITE_CREATE_REGEX_RULE ( 'dbp_data_rule7', 1, '/data/([a-z_\\-]*/)?(.*)\\.(jsod)', vector ('gr', 'par_1', 'f'), 1,
+DB.DBA.URLREWRITE_CREATE_REGEX_RULE ( 'dbp_data_rule8', 1, '/data/([a-z_\\-]*/)?(.*)\\.(jsod)', vector ('gr', 'par_1', 'f'), 1,
 '/sparql?%s&query=DESCRIBE+%%3C' || registry_get('dbp_resource_decoded') || '%%3E&output=application%%2Fodata%%2Bjson',
 vector ('gr', 'par_1'), 'DB.DBA.DBP_GRAPH_PARAM1', NULL, 2, null, 'Content-Type: application/odata+json\r\n^{sql:DB.DBA.DBP_LINK_HDR}^');
 
