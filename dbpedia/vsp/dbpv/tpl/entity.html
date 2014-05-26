@@ -1,0 +1,247 @@
+<div id="triples">
+<div id="shortcutswrapper" ng-controller="ShortcutCtrl">
+	<div id="shortcuts" smart-scroll="100" ng-show="shortcuts.length>0" style="top:100px;">
+		<div class="shortcut-home" dbpv-top></div>
+		<div class="shortcutscuts" data-intro="These are shortcuts to some basic entity properties." data-step="6">
+			<div class="shortcut" ng-repeat="cut in shortcuts">
+				<span shortcut="cut.url" shortcut-label="cut.label"></span>
+			</div>
+		</div>
+		<div class="shortcutscuts"></div>
+	</div>
+</div>
+
+<div id="legend" smart-slide=".trigger" smart-slide-content=".container" ng-controller="LegendCtrl">
+	<div class="trigger" id="legend-title" data-intro="Here, the actions applicable to triples are explained." data-step="7" data-position="left"><a href="javascript:void(0);" ng-click="showLegend();" ><span>LEGEND</span></a></div>
+	<div class="container" id="legends">
+		<div class="legend" ng-repeat="(name, legend) in legends">
+			<div class="name">{{legend.name}}</div>
+			<div class="description">{{legend.description}}</div>
+			<div class="line" ng-repeat="line in legend.lines">
+				<span ng-bind-html-unsafe="line.icon"></span> : {{line.text}}
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id="pretty-box" data-intro="This is the pretty box. It displays a small selection of entity properties in a pretty way." data-step="3">
+
+	<div id="entityOptions">
+		<span>
+		  <a href="javascript:void(0);" class="dropdown-toggle glyphicon glyphicon-th-large" style="font-size:20px" data-toggle="dropdown"></a>
+		  <ul class="dropdown-menu" role="menu">
+			<li><a href="/describe/?uri={{about.uri}}" target="_self">OpenLink Faceted Browser</a></li>
+			<li><a href="http://linkeddata.uriburner.com/ode/?uri={{about.uri}}">OpenLink Data Explorer</a></li>
+		  </ul>
+		</span>
+		
+		<span>
+		  <a href="javascript:void(0);" class="dropdown-toggle dbpvicon dbpvicon-rdf" data-toggle="dropdown"></a>
+		  <ul class="dropdown-menu" role="menu">
+			<li><a href="{{about.datalink}}.rdf" target="_self">RDF/XML</a></li>
+			<li><a href="{{about.datalink}}.ntriples" target="_self">RDF/N-triples</a></li>
+			<li><a href="{{about.datalink}}.json" target="_self">RDF/JSON</a></li>
+			<li><a href="{{about.datalink}}.n3" target="_self">RDF/N3-Turtle</a></li>
+		  </ul>
+		</span>
+		
+		<span>
+		  <a href="javascript:void(0);" class="dropdown-toggle dbpvicon dbpvicon-json" data-toggle="dropdown"></a>
+		  <ul class="dropdown-menu" role="menu">
+			<li><a href="/sparql?default-graph-uri={{localgraph}}&amp;query=DESCRIBE+<{{about.uri}}>&amp;output=application%2Fmicrodata%2Bjson" target="_self">Microdata/JSON</a></li>
+			<li><a href="/sparql?default-graph-uri={{localgraph}}&amp;query=DESCRIBE+<{{about.uri}}>&amp;output=application%2Fld%2Bjson" target="_self">JSON-LD</a></li>
+			<li><a href="{{about.datalink}}.json"  target="_self">RDF/JSON</a></li>
+		  </ul>
+		</span>
+	</div>
+
+	<div id="dbpvpthumbnail">
+		<img ng-src="{{dbpvp.thumbnail[0].value}}"></img>
+	</div>
+	<div id="dbpvptext">
+	<div id="dbpvplabel">
+		<span ng-repeat="value in dbpvp.label |languageFilter:primary_lang:fallback_lang">
+			<a href="{{about.uri}}">{{value.value}}</a>
+		</span>
+	</div>
+	<div id="dbpvptypes" ng-show="dbpvp.types.length>0">
+		<span class="dbpvptype" ng-repeat="type in dbpvp.types">
+			<span compile="type"></span><span class="comma">, </span>
+		</span>	
+	</div>
+	<div id="dbpvpdescription">
+		<span ng-repeat="value in dbpvp.description |languageFilter:primary_lang:fallback_lang">
+			{{value.value}}
+		</span>
+	</div>
+	<div id="dbpvplinks">
+		<div ng-repeat="(label, list) in dbpvp.links" style="float:left;margin-right: 15px;">
+			<div ng-show="list.length>1" >
+				<a role="button" href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown">{{label}} <span class="glyphicon glyphicon-chevron-down" style="font-size:0.6em;"></span></a>
+				<ul class="dropdown-menu">
+					<li ng-repeat="link in list"><a target="_blank" href="{{link.url}}">{{link.label}}</a></li>				
+				</ul>
+			</div>
+			<div ng-show="list.length==1">
+				<a target="_blank" href="{{list[0].url}}">{{list[0].label}}</a>
+			</div>
+		</div>
+	</div>
+	<div id="loading" ng-show="entitySemaphore>0">
+		<center><img style="margin-bottom:15px;" src="/statics/css/ajax-loader.gif"></img></center>
+	</div>
+	</div>
+
+</div>
+<div ng-show="preview.show" id="dbpvpreview" style="position:absolute;top:{{preview.top}}px;left:{{preview.left}}px;" ng-mouseenter="previewHover()" ng-mouseleave="previewUnhover()">
+	<div ng-switch on="preview.type">
+		<div ng-switch-when="entity">
+			<div id="dbpvpthumbnail">
+				<img ng-src="{{preview.thumbnail[0].value}}"></img>
+			</div>
+			<div id="dbpvptext">
+			<div id="dbpvplabel">
+				<span ng-repeat="value in preview.label |languageFilter:primary_lang:fallback_lang">
+					{{value.value}}
+				</span>
+			</div>
+			<div id="dbpvpdescription">
+				<span ng-repeat="value in preview.description |languageFilter:primary_lang:fallback_lang">
+					{{value.value}}
+				</span>
+			</div>
+			</div>
+		</div>
+		<div ng-switch-when="ontology">
+			<div id="dbpvplabel">
+				<span ng-repeat="value in preview.label | languageFilter:primary_lang:fallback_lang">
+					{{value.value}}
+				</span>
+			</div>
+			<div id="dbpvpdescription">
+				<span ng-show="preview.domain.length>0">
+				Domain:
+				<a href="{{preview.domain[0].url}}">
+					{{preview.domain[0].label}}
+				</a>
+				</span>
+			</div>
+			<div id="dbpvpdescription">
+				<span ng-show="preview.range.length>0">
+				Range:
+				<a href="{{preview.range[0].url}}">
+					{{preview.range[0].label}}
+				</a>
+				</span>
+			</div>
+			<div id="dbpvpdescription">
+				<span ng-show="preview.superClass.length>0">
+				Superclasses: 
+					<span ng-repeat="scl in preview.superClass">
+						</br><a href="{{scl.url}}">{{scl.label}}</a>
+					</span>
+				</span>
+			</div>
+		</div>
+		<div ng-switch-default>
+		</div>
+	</div>
+	<div id="previewSpinner" ng-show="previewSemaphore.count>0">
+		<center><img ng-src="/statics/css/ajax-loader.gif" style="margin-left:15px;margin-bottom:15px;"></img></center>
+	</div>
+</div>
+<div id="dbpvpmapcontainer"><div id="dbpvpmap"></div></div>
+
+<div id="triple-list">
+<div id="triples-top">
+	<div class="predicate"> <div class="pred-name form-inline"> <label class="dbpv-tabletop"> Property:</label> <input class="form-control dbpv-input dbpv-filter dbpv-filter-pred" ng-model="predfilter" data-intro="Filter predicates using a string." data-step="4"/></div>
+	<div class="pred-values">
+		<div class="pred-value form-inline"> <label class="dbpv-tabletop"> Value: </label> <input class="form-control dbpv-input dbpv-filter dbpv-filter-val" ng-model="valfilter.label" data-intro="Filter values using a string." data-step="5"/></div>
+	</div>
+	</div>
+</div>
+<div id="triples">
+	<div class="predicate" ng-repeat="(id, predicate) in predicates | predicateFilter:predfilter | predicateValueFilter:valfilter  | orderBy:sortPredicates">
+		<div class="pred-name">
+		<span ng-show="predicate.reverse">is </span>
+		<a href="{{predicate.url}}" dbpv-preview="{{predicate.url}}">
+			<span ng-switch on="predicate.prefix">
+				<span ng-switch-when="undefined">{{predicate.label}}</span>
+				<span ng-switch-default>  <span class="rdf-prefix">{{predicate.prefix}}:</span>{{predicate.short}}</span>
+			</span>
+		</a>
+		<span ng-show="predicate.reverse"> of</span>:
+		</div>
+		<div class="pred-values">
+			<div class="pred-value" ng-repeat="val in predicate.values | valueFilter:valfilter | languageFilter:primary_lang:fallback_lang | orderBy:sortValues">
+
+
+				<span class="dbpv-taf">
+					<span ng-repeat="action in taf_actions | actionFilter:about:predicate:val">
+						<a href="javascript:void(0);" title="{{action.description}}" ng-click="action.execute(about, predicate, val);"> <span ng-bind-html-unsafe="action.display(about, predicate, val);"></span> </a>
+					</span>
+				</span>
+				<span>
+					<span ng-switch on="val.type">
+						<span ng-switch-when="uri"> <a href="{{val.url}}" dbpv-preview="{{val.url}}" class="entity-preview" rel="{{val.nofollow}}">
+							<span ng-switch on="val.prefix">
+								<span ng-switch-when="undefined">{{val.label}}</span>
+								<span ng-switch-default>  <span class="rdf-prefix">{{val.prefix}}:</span>{{val.short}}</span>
+							</span>
+						</a> </span>
+						<span ng-switch-default><span compile="val.label"></span> <span class="valuetype">{{val.typelabel}}</span></span>
+					</span>
+				</span>
+			</div>
+			<div ng-hide="predicate.complete">
+				<button class="btn btn-block btn-primary btn-small btn-show-more" ng-click="showMore(predicate.predid)">Show More</button>
+			</div>
+		</div>
+	</div>
+
+</div>
+
+
+<div class="footer" ng-controller="FooterCtrl">
+      <div id="ft_t">
+        Browse using:
+	<a href="http://linkeddata.uriburner.com/ode/?uri={{about.uri}}">OpenLink Data Explorer</a> |
+	<a href="/describe/?uri={{about.uri}}">OpenLink Faceted Browser</a>
+        <!--a href="http://dataviewer.zitgist.com/?uri=http%3A%2F%2Fdbpedia.org%2Fresource%2FBoris_Johnson">Zitgist Data Viewer</a> |
+        <a href="http://beckr.org/marbles?uri=http%3A%2F%2Fdbpedia.org%2Fresource%2FBoris_Johnson">Marbles</a> |
+        <a href="http://www4.wiwiss.fu-berlin.de/rdf_browser/?browse_uri=http%3A%2F%2Fdbpedia.org%2Fresource%2FBoris_Johnson">DISCO</a> |
+        <a href="http://dig.csail.mit.edu/2005/ajar/release/tabulator/0.8/tab.html?uri=http%3A%2F%2Fdbpedia.org%2Fresource%2FBoris_Johnson" >Tabulator</a-->
+        &nbsp; &nbsp; Raw Data in:
+	
+        <a href="/sparql?default-graph-uri={{localgraph}}&amp;query=DESCRIBE+&lt;{{about.uri}}&gt;&amp;format=text/csv" target="_self" >CSV</a> | RDF (
+        <a href="{{about.datalink}}.ntriples" target="_self" >N-Triples</a> 
+        <a href="{{about.datalink}}.n3" target="_self" >N3/Turtle</a> 
+	<a href="{{about.datalink}}.json" target="_self" >JSON</a> 
+        <a href="{{about.datalink}}.rdf" target="_self" >XML</a> ) | OData (
+	<a href="{{about.datalink}}.atom" target="_self" >Atom</a> 
+	<a href="{{about.datalink}}.json" target="_self" >JSON</a> )| Microdata (
+	<a href="/sparql?default-graph-uri={{localgraph}}&amp;query=DESCRIBE+&lt;{{about.uri}}&gt;&amp;output=application/microdata-json" target="_self" > JSON</a>
+        <a href="/sparql?default-graph-uri={{localgraph}}&amp;query=DESCRIBE+&lt;{{about.uri}}&gt;&amp;output=text/html" target="_self" >HTML</a>) |  
+        <a href="/sparql?default-graph-uri={{localgraph}}&amp;query=DESCRIBE+&lt;{{about.uri}}&gt;&amp;output=application/ld-json" target="_self" >JSON-LD</a> 
+
+        &nbsp; &nbsp;<a href="http://wiki.dbpedia.org/Imprint">About</a>&nbsp; &nbsp;
+      </div> <!-- #ft_t -->
+      <div id="ft_b">
+        <a href="http://virtuoso.openlinksw.com" title="OpenLink Virtuoso"><img class="powered_by" src="/statics/virt_power_no_border.png" alt="Powered by OpenLink Virtuoso"></a>
+        <a href="http://linkeddata.org/"><img alt="This material is Open Knowledge" src="/statics/LoDLogo.gif"></a> &nbsp;
+        <a href="http://dbpedia.org/sparql"><img alt="W3C Semantic Web Technology" src="/statics/sw-sparql-blue.png"></a> &nbsp;  &nbsp;
+        <a href="http://www.opendefinition.org/"><img alt="This material is Open Knowledge" src="/statics/od_80x15_red_green.png"></a>
+	<span about="" resource="http://www.w3.org/TR/rdfa-syntax" rel="dc:conformsTo" xmlns:dc="http://purl.org/dc/terms/">
+	<a href="http://validator.w3.org/check?uri=referer"><img src="http://www.w3.org/Icons/valid-xhtml-rdfa" alt="Valid XHTML + RDFa" height="27"></a>
+	</span>
+      </div> <!-- #ft_b -->
+      <div id="ft_ccbysa">
+	This content was extracted from <a href="http://www.wikipedia.org">Wikipedia</a> and is licensed under the <a href="http://creativecommons.org/licenses/by-sa/3.0/">Creative Commons Attribution-ShareAlike 3.0 Unported License</a>
+	</br>
+	The content on this page was created by the <a href="{{wikipage.history}}">editors of the Wikipedia page {{wikipage.title}}</a>.
+
+      </div> <!-- #ft_ccbysa -->
+</div>
+
+</div>
+</div>

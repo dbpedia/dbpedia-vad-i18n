@@ -23,6 +23,9 @@
 
 create procedure dbp_setup ()
 {
+-- TODO HACK !!!
+  --registry_set('dbp_decode_iri', 'on');
+
 --# if utf-8 iri's are used
   if (not isstring(registry_get ('dbp_decode_iri')))
     registry_set ('dbp_decode_iri','off');
@@ -136,9 +139,8 @@ create procedure dbp_gen_describe (in path varchar)
   declare qr varchar;
   qr :=
 	'prefix owl: <http://www.w3.org/2002/07/owl#> CONSTRUCT { <local:/IRI/PH> `sql:dbp_replace (?p1)` `sql:dbp_replace (?o1)` . '||
-      '`sql:dbp_replace (?s2)` `sql:dbp_replace (?p2)` <local:/IRI/PH> . <local:/IRI/PH> owl:sameAs <' || registry_get('dbp_domain') || '/IRI/PH> . } '||
-
-      'WHERE { { <' || registry_get('dbp_domain') || '/IRI/PH> ?p1 ?o1 } UNION { ?s2 ?p2 <' || registry_get('dbp_domain') || '/IRI/PH> } }';
+  	'`sql:dbp_replace (?s2)` `sql:dbp_replace (?p2)` <local:/IRI/PH> . <local:/IRI/PH> owl:sameAs <' || registry_get('dbp_domain') || '/IRI/PH> . } '||
+  	'WHERE { { <' || registry_get('dbp_domain') || '/IRI/PH> ?p1 ?o1 } UNION { ?s2 ?p2 <' || registry_get('dbp_domain') || '/IRI/PH> } }';
   if (registry_get('dbp_DynamicLocal') = 'off')
     {
       qr := replace (qr, 'local:', registry_get('dbp_domain'));
@@ -165,6 +167,26 @@ DB.DBA.VHOST_DEFINE (lpath=>rtrim (registry_get('_dbpedia_path_'), '/'), ppath=>
 DB.DBA.VHOST_REMOVE (lpath=>'/statics');
 DB.DBA.VHOST_DEFINE (lpath=>'/statics', ppath=>registry_get('_dbpedia_path_')||'statics/',
     is_dav=>atoi (registry_get('_dbpedia_dav_')));
+
+-- Angular
+DB.DBA.VHOST_REMOVE (lpath=>'/statics/js');
+DB.DBA.VHOST_DEFINE (lpath=>'/statics/js', ppath=>registry_get('_dbpedia_path_')||'dbpv/js/',
+    is_dav=>atoi (registry_get('_dbpedia_dav_')));
+DB.DBA.VHOST_REMOVE (lpath=>'/statics/tpl');
+DB.DBA.VHOST_DEFINE (lpath=>'/statics/tpl', ppath=>registry_get('_dbpedia_path_')||'dbpv/tpl/',
+    is_dav=>atoi (registry_get('_dbpedia_dav_')));
+
+-- Bootstrap
+DB.DBA.VHOST_REMOVE (lpath=>'/statics/css');
+DB.DBA.VHOST_DEFINE (lpath=>'/statics/css', ppath=>registry_get('_dbpedia_path_')||'dbpv/css/',
+    is_dav=>atoi (registry_get('_dbpedia_dav_')));
+DB.DBA.VHOST_REMOVE (lpath=>'/statics/fonts');
+DB.DBA.VHOST_DEFINE (lpath=>'/statics/fonts', ppath=>registry_get('_dbpedia_path_')||'dbpv/fonts/',
+    is_dav=>atoi (registry_get('_dbpedia_dav_')));
+
+
+
+
 
 -- Classes
 DB.DBA.VHOST_REMOVE (lpath=>'/class');

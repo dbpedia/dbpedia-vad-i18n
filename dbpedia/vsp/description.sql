@@ -35,12 +35,9 @@ foaf:nick rdfs:subPropertyOf virtrdf:label .', '', 'dbprdf-label');
 
 rdfs_rule_set ('dbprdf-label', 'dbprdf-label');
 
--- For I18n we create all resources for use in interlanguage links 
--- and property/category namespage for English and current language
-create procedure dbp_ldd_set_ns_decl ()
+create procedure dbp_ldd_ns_decl ()
 {
   declare arr any;
-  declare i, l int;
   arr := vector (
     registry_get('dbp_domain') || '/resource/' || registry_get('dbp_category') || ':', 'category-' || registry_get('dbp_lang'),
     registry_get('dbp_domain') || '/resource/' || registry_get('dbp_template') || ':', 'template-' || registry_get('dbp_lang'),
@@ -87,12 +84,24 @@ create procedure dbp_ldd_set_ns_decl ()
     'http://sw.opencyc.org/2008/06/10/concept/', 'opencyc',
     'http://mpii.de/yago/resource/', 'yago-res',
     'http://rdf.freebase.com/ns/', 'freebase');
-   l := length (arr);
-   for (i := 0; i < l; i := i + 2)
-   {
-      XML_REMOVE_NS_BY_PREFIX (arr[i+1], 2);
-      XML_SET_NS_DECL (arr[i+1], arr[i], 2);
-   }
+  return arr;
+}
+;
+
+-- For I18n we create all resources for use in interlanguage links 
+-- and property/category namespage for English and current language
+create procedure dbp_ldd_set_ns_decl ()
+{
+  declare arr any;
+  declare i, l int;
+  arr := dbp_ldd_ns_decl ();
+
+  l := length (arr);
+  for (i := 0; i < l; i := i + 2)
+  {
+     XML_REMOVE_NS_BY_PREFIX (arr[i+1], 2);
+     XML_SET_NS_DECL (arr[i+1], arr[i], 2);
+  }
 }
 ;
 
@@ -458,27 +467,39 @@ create procedure dbp_ldd_str_lang_check (in lang any, in acc any)
 
 create procedure dbp_ldd_http_print_l (in p_text any, inout odd_position int, in rev int := 0)
 {
+   --http(p_text);
    declare short_p, p_prefix, int_redirect, href, title any;
 
    odd_position :=  odd_position + 1;
    dbp_ldd_split_url (p_text, p_prefix, short_p);
+
+   --http(p_prefix);
+
+   --http(short_p);
    href := dbp_ldd_get_proxy (p_text);
+
+   --http(href);
+   --http(sprintf(' vs "%'||registry_get('dbp_decode_param_U')||'"', href));
+
    title := p_text;
    if (title = href)
       title := '';
    else   
       title := sprintf (' title="%' || registry_get('dbp_decode_param_U') || '"', title);
 
+   --http(title);
+   --http('!!!!!!!\n');
+
    http (sprintf ('<tr class="%s"><td class="property">', either(mod (odd_position, 2), 'odd', 'even')));
    if (rev) http ('is ');
    if (short_p is not null)
-      http (sprintf ('<a class="uri" href="%' || registry_get('dbp_decode_param_U') || '"%s><small>%' || registry_get('dbp_decode_param_U') || ':</small>%' || registry_get('dbp_decode_param_U') || '</a>\n', 
+      http (sprintf ('<a class="uri" id="short_p_is_not" href="%s"%s><small>%s:</small>%s</a>\n', 
          href,
          title,
          p_prefix,
          short_p));
    else
-      http (sprintf ('<a class="uri" href="%' || registry_get('dbp_decode_param_U') || '"%s>%' || registry_get('dbp_decode_param_U') || '</a>\n', 
+      http (sprintf ('<a class="uri" id="short_p_is_null" href="%s"%s>%s</a>\n', 
          href,
          title, 
          p_prefix));
@@ -622,14 +643,14 @@ again:
 
        if (s_t is null)
 	 {
-	   http (sprintf ('<a class="uri" %s href="%' || registry_get('dbp_decode_param_U') || '">%' || registry_get('dbp_decode_param_U') || '</a>', 
+	   http (sprintf ('<a class="uri" %s href="%s">%s</a>', 
 		 rdfa, 
 		case when org then _url else dbp_ldd_get_proxy(_url) end, 
 		_url));
 	 }
        else
 	 {
-	   http (sprintf ('<a class="uri" %s href="%' || registry_get('dbp_decode_param_U') || '"><small>%' || registry_get('dbp_decode_param_U') || '</small>:%' || registry_get('dbp_decode_param_U') || '</a>',
+	   http (sprintf ('<a class="uri" %s href="%s"><small>%s</small>:%s</a>',
 		 rdfa, 
 		case when org then _url else dbp_ldd_get_proxy(_url) end, 
 		p_t,

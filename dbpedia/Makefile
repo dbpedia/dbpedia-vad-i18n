@@ -105,15 +105,15 @@ am__uninstall_files_from_dir = { \
 am__installdirs = "$(DESTDIR)$(vaddir)"
 DATA = $(nodist_vad_DATA)
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
-ACLOCAL = ${SHELL} /media/data/work/code/vsp/virtuoso-opensource-original/binsrc/config/missing --run aclocal-1.11
-AMTAR = $${TAR-tar}
+ACLOCAL = ${SHELL} /home/denis/virtuoso-opensource-6.1.7/binsrc/config/missing --run aclocal-1.11
+AMTAR = ${SHELL} /home/denis/virtuoso-opensource-6.1.7/binsrc/config/missing --run tar
 AM_LDFLAGS = -s
 AR = ar
-AUTOCONF = ${SHELL} /media/data/work/code/vsp/virtuoso-opensource-original/binsrc/config/missing --run autoconf
-AUTOHEADER = ${SHELL} /media/data/work/code/vsp/virtuoso-opensource-original/binsrc/config/missing --run autoheader
-AUTOMAKE = ${SHELL} /media/data/work/code/vsp/virtuoso-opensource-original/binsrc/config/missing --run automake-1.11
+AUTOCONF = ${SHELL} /home/denis/virtuoso-opensource-6.1.7/binsrc/config/missing --run autoconf
+AUTOHEADER = ${SHELL} /home/denis/virtuoso-opensource-6.1.7/binsrc/config/missing --run autoheader
+AUTOMAKE = ${SHELL} /home/denis/virtuoso-opensource-6.1.7/binsrc/config/missing --run automake-1.11
 AWK = gawk
-BINDIR = /media/data/work/code/vsp/virtuoso-opensource-original/bin
+BINDIR = /home/denis/virtuoso-opensource-6.1.7/bin
 BUILD_GLIB_CFLAGS = 
 BUILD_GLIB_LIBS = 
 BUILD_OPTS =  xml ssl imsg pldebug pthreads
@@ -157,7 +157,7 @@ IM_CONFIG = notfound
 IM_CPPFLAGS = 
 IM_LDFLAGS = 
 IM_LIBS = 
-INCDIR = /media/data/work/code/vsp/virtuoso-opensource-original/include
+INCDIR = /home/denis/virtuoso-opensource-6.1.7/include
 INSTALL = /usr/bin/install -c
 INSTALL_DATA = ${INSTALL} -m 644
 INSTALL_PROGRAM = ${INSTALL}
@@ -168,7 +168,7 @@ LDFLAGS =
 LEX = flex
 LEXLIB = -lfl
 LEX_OUTPUT_ROOT = lex.yy
-LIBDIR = /media/data/work/code/vsp/virtuoso-opensource-original/lib
+LIBDIR = /home/denis/virtuoso-opensource-6.1.7/lib
 LIBDL = -ldl
 LIBOBJS = 
 LIBRDL = 
@@ -179,7 +179,7 @@ LIPO =
 LN_S = ln -s
 LTLIBOBJS = 
 MAINT = #
-MAKEINFO = ${SHELL} /media/data/work/code/vsp/virtuoso-opensource-original/binsrc/config/missing --run makeinfo
+MAKEINFO = ${SHELL} /home/denis/virtuoso-opensource-6.1.7/binsrc/config/missing --run makeinfo
 MANIFEST_TOOL = :
 MKDIR_P = /bin/mkdir -p
 NM = /usr/bin/nm -B
@@ -191,11 +191,11 @@ OTOOL =
 OTOOL64 = 
 PACKAGE = virtuoso-opensource
 PACKAGE_BUGREPORT = vos.admin@openlinksw.com
-PACKAGE_NAME = Virtuoso Open Source Edition
-PACKAGE_STRING = Virtuoso Open Source Edition 6.1.6
+PACKAGE_NAME = Virtuoso Open Source Edition (Row Store)
+PACKAGE_STRING = Virtuoso Open Source Edition (Row Store) 6.1.7
 PACKAGE_TARNAME = virtuoso-opensource
 PACKAGE_URL = 
-PACKAGE_VERSION = 6.1.6
+PACKAGE_VERSION = 6.1.7
 PATH_SEPARATOR = :
 PERL = /usr/bin/perl
 PERL_CFLAGS = 
@@ -215,9 +215,9 @@ SET_MAKE =
 SHELL = /bin/bash
 STRIP = strip
 SYSLIBS = 
-TOP = /media/data/work/code/vsp/virtuoso-opensource-original
-VERSION = 6.1.6
-VIRT_AM_CFLAGS = -fno-strict-aliasing -O2  -Wall  -DNDEBUG -DPOINTER_64   -I/media/data/work/code/vsp/virtuoso-opensource-original/libsrc/Xml.new  -DOPENSSL_NO_KRB5 -Dlinux -D_GNU_SOURCE -DFILE64 -D_LARGEFILE64_SOURCE  
+TOP = /home/denis/virtuoso-opensource-6.1.7
+VERSION = 6.1.7
+VIRT_AM_CFLAGS = -fno-strict-aliasing -O2  -Wall  -DNDEBUG -DPOINTER_64   -I/home/denis/virtuoso-opensource-6.1.7/libsrc/Xml.new  -DOPENSSL_NO_KRB5 -Dlinux -D_GNU_SOURCE -DFILE64 -D_LARGEFILE64_SOURCE  
 WBXML2_CFLAGS = 
 WBXML2_LDFLAGS = -lwbxml2
 WGET = 
@@ -228,10 +228,10 @@ YACC = bison -y
 YFLAGS = 
 ZLIB_INC = -I$(top_srcdir)/libsrc/zlib
 ZLIB_LIB = $(top_builddir)/libsrc/zlib/libz.la
-abs_builddir = /media/data/work/code/vsp/virtuoso-opensource-original/binsrc/dbpedia
-abs_srcdir = /media/data/work/code/vsp/virtuoso-opensource-original/binsrc/dbpedia
-abs_top_builddir = /media/data/work/code/vsp/virtuoso-opensource-original
-abs_top_srcdir = /media/data/work/code/vsp/virtuoso-opensource-original
+abs_builddir = /home/denis/virtuoso-opensource-6.1.7/binsrc/dbpedia
+abs_srcdir = /home/denis/virtuoso-opensource-6.1.7/binsrc/dbpedia
+abs_top_builddir = /home/denis/virtuoso-opensource-6.1.7
+abs_top_srcdir = /home/denis/virtuoso-opensource-6.1.7
 ac_ct_AR = ar
 ac_ct_CC = gcc
 ac_ct_DUMPBIN = 
@@ -250,7 +250,7 @@ build_cpu = x86_64
 build_os = linux-gnu
 build_vendor = unknown
 builddir = .
-ccincl =  -I/media/data/work/code/vsp/virtuoso-opensource-original/libsrc/Xml.new  -DOPENSSL_NO_KRB5
+ccincl =  -I/home/denis/virtuoso-opensource-6.1.7/libsrc/Xml.new  -DOPENSSL_NO_KRB5
 clntlibs =  -lssl -lcrypto
 datadir = ${datarootdir}
 datarootdir = ${prefix}/share
@@ -270,13 +270,13 @@ htmldocdir = ${datarootdir}/virtuoso/doc/html
 httprootdir = ${prefix}/var/lib/virtuoso/vsp
 includedir = ${prefix}/include
 infodir = ${datarootdir}/info
-install_sh = ${SHELL} /media/data/work/code/vsp/virtuoso-opensource-original/binsrc/config/install-sh
+install_sh = ${SHELL} /home/denis/virtuoso-opensource-6.1.7/binsrc/config/install-sh
 iodbc_LDFLAGS = 
 java_CPPFLAGS = 
 java_LDFLAGS = 
 libdir = ${exec_prefix}/lib
 libexecdir = ${exec_prefix}/libexec
-libxml_file = /media/data/work/code/vsp/virtuoso-opensource-original/lib/libxml.la
+libxml_file = /home/denis/virtuoso-opensource-6.1.7/lib/libxml.la
 localedir = ${datarootdir}/locale
 localstatedir = ${prefix}/var
 mandir = ${datarootdir}/man
@@ -326,14 +326,15 @@ EXTRA_DIST = \
 	vad_version \
 	vsp/*.sql \
 	vsp/*.vsp \
-	vsp/images/*.gif \
-	vsp/images/*.png \
 	vsp/statics/*.css \
 	vsp/statics/*.gif \
 	vsp/statics/*.js \
 	vsp/statics/*.png \
 	vsp/statics/*.svg \
-	vsp/style/*.css
+	vsp/dbpv/js/*.js \
+	vsp/dbpv/tpl/*.html \
+	vsp/dbpv/css/* \
+	vsp/dbpv/fonts/*
 
 all: all-am
 
