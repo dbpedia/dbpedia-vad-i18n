@@ -193,7 +193,7 @@
 
   links := sprintf ('%s<%s&output=application/microdata+json>; rel="alternate"; type="application/microdata+json"; title="Structured Descriptor Document (Microdata/JSON format)", ', links, gen_rdf_link); 
   links := sprintf ('%s<%s&output=text/html>; rel="alternate"; type="text/html"; title="Structured Descriptor Document (Microdata/HTML format)", ', links, gen_rdf_link ); 
-  links := sprintf ('%s<%s&output=application/ld+json>; rel="alternate"; type="application/ld+json"; title="Structured Descriptor Document (JSON-LD format)", ', links, gen_rdf_link ); 
+  links := sprintf ('%s<%s&output=application/json-ld>; rel="alternate"; type="application/json-ld"; title="Structured Descriptor Document (JSON-LD format)", ', links, gen_rdf_link ); 
 
   links := sprintf ('%s<%s>; rel="http://xmlns.com/foaf/0.1/primaryTopic", ', links, page_resource_uri); 
   links := sprintf ('%s<%s>; rev="describedby", ', links, page_resource_uri); 
@@ -260,7 +260,7 @@
   <?vsp } ?>
   <link rel="alternate" type="application/microdata+json"   href="<?=charset_recode (gen_rdf_link, 'UTF-8', '_WIDE_')?>&output=application/microdata+json" title="Structured Descriptor Document (Microdata/JSON format)" />
   <link rel="alternate" type="text/html"                      href="<?=charset_recode (gen_rdf_link, 'UTF-8', '_WIDE_')?>&output=text/html"                  title="Structured Descriptor Document (Microdata/HTML format)" />
-  <link rel="alternate" type="application/ld+json"            href="<?=charset_recode (gen_rdf_link, 'UTF-8', '_WIDE_')?>&output=application/ld+json?>"      title="Structured Descriptor Document (JSON-LD format)" />
+  <link rel="alternate" type="application/json-ld"            href="<?=charset_recode (gen_rdf_link, 'UTF-8', '_WIDE_')?>&output=application/json-ld?>"      title="Structured Descriptor Document (JSON-LD format)" />
   <link rel="timegate"  type="text/html" href="http://mementoarchive.lanl.gov/dbpedia/timegate/<?=charset_recode (_resource_, 'UTF-8', '_WIDE_')?>" title="Time Machine" />
   <link rel="stylesheet" type="text/css" href="/statics/<?=either (white_page, 'style_w.css', 'style.css')?>" />
   <link href="/statics/highlighter.css" type="text/css" rel="stylesheet" charset="utf-8" />
@@ -593,7 +593,7 @@ if (new_site = '0') {
        <a href="<?=charset_recode ( jsod, 'UTF-8', '_WIDE_') ?>">JSON</a> )| Microdata (
        <a href="<?=charset_recode ( gen_rdf_link, 'UTF-8', '_WIDE_') ?>&output=application/microdata+json">JSON</a>
        <a href="<?=charset_recode ( gen_rdf_link, 'UTF-8', '_WIDE_') ?>&output=text/html">HTML</a>) |  
-       <a href="<?=charset_recode ( gen_rdf_link, 'UTF-8', '_WIDE_') ?>&output=application/ld+json">JSON-LD</a> 
+       <a href="<?=charset_recode ( gen_rdf_link, 'UTF-8', '_WIDE_') ?>&output=application/json-ld">JSON-LD</a> 
        &nbsp; &nbsp;<a href="<?=registry_get('dbp_imprint') ?>">About</a>&nbsp; &nbsp;
     </div> <!-- #ft_t -->
     <div id="ft_b">
