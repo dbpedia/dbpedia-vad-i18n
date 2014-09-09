@@ -22,8 +22,8 @@ angular.module('dbpvServices', [])
 				delete $http.defaults.headers.common['X-Requested-With'];
 				var prevdef = $http.defaults.headers.post['Content-Type'];
 				$http.defaults.headers.post['Content-Type'] = "application/x-www-form-urlencoded";
-				var inquery = encodeURIComponent("SELECT DISTINCT ?hasprop ?v where { <" + entityUrl + "> ?hasprop ?v}");
-				var outquery = encodeURIComponent("SELECT DISTINCT ?v ?isprop where { ?v ?isprop <" + entityUrl + "> } LIMIT 1000");
+				var inquery = encodeURIComponent("SELECT DISTINCT ?hasprop ?v where { <" + decodeURI(entityUrl) + "> ?hasprop ?v}");
+				var outquery = encodeURIComponent("SELECT DISTINCT ?v ?isprop where { ?v ?isprop <" + decodeURI(entityUrl) + "> } LIMIT 1000");
 				var endpoint = scope.endpoint; //XXX to dist
 				//endpoint = "/sparql";
 
