@@ -2,7 +2,7 @@
 #  This file is part of the OpenLink Software Virtuoso Open-Source (VOS)
 #  project.
 #  
-#  Copyright (C) 1998-2012 OpenLink Software
+#  Copyright (C) 1998-2014 OpenLink Software
 #  
 #  This project is free software; you can redistribute it and/or modify it
 #  under the terms of the GNU General Public License as published by the
@@ -37,7 +37,7 @@ CLEANFILES =  \
 
 
 dbpedia_filesystem.vad dbpedia_dav.vad: $(EXTRA_DIST)
-	PATH="$(TOP)/binsrc/virtuoso:$(TOP)/binsrc/tests:.:$$PATH" PORT=$(PORT) HOME="$(TOP)" HOST=localhost sh ./make_vad.sh
+	PATH="$(TOP)/binsrc/virtuoso:$(TOP)/binsrc/tests:.:$$PATH" PORT=$(PORT) HOME="$(TOP)" HOST=localhost $(SHELL) ./make_vad.sh
 
 clean-local:
 	-rm -rf vad
@@ -53,6 +53,8 @@ EXTRA_DIST = \
 	vad_version \
 	vsp/*.sql \
 	vsp/*.vsp \
+	vsp/images/*.gif \
+	vsp/images/*.png \
 	vsp/statics/*.css \
 	vsp/statics/*.gif \
 	vsp/statics/*.js \
@@ -62,4 +64,3 @@ EXTRA_DIST = \
 	vsp/dbpv/css/* \
 	vsp/dbpv/tpl/*.html \
 	vsp/dbpv/fonts/* 
-
