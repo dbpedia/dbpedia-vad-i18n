@@ -431,38 +431,38 @@ dbpv_taf_short.description = "Add Shortcuts to shortcut box";
 
 dbpv_taf_short.mappings =
 		{
-			"http://www.w3.org/1999/02/22-rdf-syntax-ns#type":{
+			"http://www.w3.org/1999/02/22-rdf-syntax-ns#type": {
 				"reverse": false,
 				"label": "TYPES",
 				"prio": 10
 			},
-			"http://purl.org/dc/terms/subject":{
+			"http://purl.org/dc/terms/subject": {
 				"reverse": false,
 				"label": "CATEGORIES",
 				"prio": 11
 			},
 			"http://dbpedia.org/ontology/galleryItem": {
-				"reverse":false,
+				"reverse": false,
 				"label": "GALLERY",
 				"prio": 9
 			},
-			"http://dbpedia.org/ontology/wikiPageExternalLink":{
-				"reverse":false,
+			"http://dbpedia.org/ontology/wikiPageExternalLink": {
+				"reverse": false,
 				"label": "External Links",
 				"prio": 8
 			},
 			"http://www.w3.org/2002/07/owl#sameAs": {
-				"reverse":false,
+				"reverse": false,
 				"label": "Same As",
 				"prio": 7
 			},
-			"http://dbpedia.org/ontology/birthPlace":{
+			"http://dbpedia.org/ontology/birthPlace": {
 				"reverse": true,
 				"label": "Born Here",
 				"prio": 1
 			},
 			"http://dbpedia.org/ontology/starring": {
-				"reverse":true,
+				"reverse": true,
 				"label": "Starred in",
 				"prio": 1
 			}
