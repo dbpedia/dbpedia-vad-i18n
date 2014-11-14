@@ -62,7 +62,7 @@ dbpv_taf_relfinder.legendize = function() {
 };
 
 dbpv_taf_relfinder.check = function (about, predicate, value) {
-	var checkregex = new RegExp("^http\:\/\/([a-z]+\.)?dbpedia\.org\/resource\/.+$");
+	var checkregex = new RegExp("^http\:\/\/([a-z-]+\.)?dbpedia\.org\/resource\/.+$");
 	return value.type == "uri" && (checkregex.exec(value.uri)[1] == checkregex.exec(about.uri)[1]);
 };
 
@@ -72,7 +72,7 @@ dbpv_taf_relfinder.display = function (about, predicate, value) {
 
 dbpv_taf_relfinder.execute = function (about, predicate, value) {
 	//generate URL
-	var neregex = new RegExp("^http\:\/\/([a-z]+\.)?dbpedia\.org\/resource\/(.+)$");
+	var neregex = new RegExp("^http\:\/\/([a-z-]+\.)?dbpedia\.org\/resource\/(.+)$");
 	var nameA = encodeURIComponent(neregex.exec(about.uri)[2]);
 	var lang = neregex.exec(about.uri)[1];
 	if (lang === undefined) {
@@ -363,13 +363,13 @@ dbpv_taf_pretty_links.mappings = [
 				"predex": new RegExp("^http\:\/\/xmlns.com\/foaf\/0\.1\/isPrimaryTopicOf$"), 
 				"valuex": new RegExp(".*wikipedia.*"), 
 				"label": "wikipedia",
-				"labelx": new RegExp("http\:\/\/([a-z]+\.wikipedia\.org\/.+)")
+				"labelx": new RegExp("http\:\/\/([a-z-]+\.wikipedia\.org\/.+)")
 				},
 				{
 				"predex": new RegExp("^http\:\/\/www\.w3\.org\/2002\/07\/owl\#sameAs$"), 
 				"valuex": new RegExp(".*dbpedia\.org.*"), 
 				"label": "dbpedia",
-				"labelx": new RegExp("http\:\/\/([a-z]+\.dbpedia)\.org\/resource(\/.+)")
+				"labelx": new RegExp("http\:\/\/([a-z-]+\.dbpedia)\.org\/resource(\/.+)")
 				},
 				{
 				"predex": new RegExp("^http\:\/\/www\.w3\.org\/2002\/07\/owl\#sameAs$"), 
@@ -431,35 +431,40 @@ dbpv_taf_short.description = "Add Shortcuts to shortcut box";
 
 dbpv_taf_short.mappings =
 		{
-			"http://www.w3.org/1999/02/22-rdf-syntax-ns#type":{
+			"http://www.w3.org/1999/02/22-rdf-syntax-ns#type": {
 				"reverse": false,
 				"label": "TYPES",
 				"prio": 10
 			},
-			"http://purl.org/dc/terms/subject":{
+			"http://purl.org/dc/terms/subject": {
 				"reverse": false,
 				"label": "CATEGORIES",
 				"prio": 11
 			},
-			"http://dbpedia.org/ontology/birthPlace":{
+			"http://dbpedia.org/ontology/galleryItem": {
+				"reverse": false,
+				"label": "GALLERY",
+				"prio": 9
+			},
+			"http://dbpedia.org/ontology/wikiPageExternalLink": {
+				"reverse": false,
+				"label": "External Links",
+				"prio": 8
+			},
+			"http://www.w3.org/2002/07/owl#sameAs": {
+				"reverse": false,
+				"label": "Same As",
+				"prio": 7
+			},
+			"http://dbpedia.org/ontology/birthPlace": {
 				"reverse": true,
 				"label": "Born Here",
 				"prio": 1
 			},
-			"http://dbpedia.org/ontology/wikiPageExternalLink":{
-				"reverse":false,
-				"label": "External Links",
-				"prio": 9
-			},
 			"http://dbpedia.org/ontology/starring": {
-				"reverse":true,
+				"reverse": true,
 				"label": "Starred in",
 				"prio": 1
-			},
-			"http://www.w3.org/2002/07/owl#sameAs": {
-				"reverse":false,
-				"label": "Same As",
-				"prio": 8
 			}
 		};
 
@@ -526,7 +531,7 @@ var dbpv_taf_wikipedia = new TafAction({
 						return "<span class='dbpvicon dbpvicon-wikipedia'></span>";
 	},
 	execute: 		function (about, predicate, value) {
-						var regex = /http\:\/\/(\w{2,3}.)?dbpedia\.org\/resource\/(.+)/g;
+						var regex = /http\:\/\/([a-z-]+\.)?dbpedia\.org\/resource\/(.+)/g;
 						var match = regex.exec(value.uri);
 						if (match[1] === undefined) match[1] = "";
 						var wikilink = "http://"+match[1]+"wikipedia.org/wiki/"+match[2];
@@ -543,7 +548,7 @@ var dbpv_taf_dbtemplate = new TafAction({
 						return angular.element("body").scope().templateStr;
 					},
 	regex:			function() {
-						return "(http\\:\\/\\/)?(\\w{2,3}\\.)?dbpedia\\.org\\/resource\\/"+this.templatestr()+":(.+)";
+						return "(http\\:\\/\\/)?([a-z-]+\\.)?dbpedia\\.org\\/resource\\/"+this.templatestr()+":(.+)";
 					},
 	legendize: 		function(about, predicate, value) {
 						return [{"icon": this.display, "text": this.description}];
@@ -631,7 +636,7 @@ dbpv_taf_disclaimer.execute = function (about, predicate, value) {
 	var scope = angular.element(".footer").scope();
 	scope.wikipage = {};
 	scope.wikipage.url = value.url;
-	var regex = new RegExp("http:\\/\\/(\\w{2,4})\\.wikipedia\\.org\\/wiki\\/(.*)");
+	var regex = new RegExp("http:\\/\\/([a-z-]+)\\.wikipedia\\.org\\/wiki\\/(.*)");
 	var match = regex.exec(value.url);
 	var lang = match[1];
 	var title = match[2];

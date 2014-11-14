@@ -21,10 +21,11 @@ dbpv.run(function($rootScope) {
 		dbpv_prefixes = dbp_prefixes;
 	}
 
+    //usually overwritten by settings from the vsp
 	$rootScope.primary_lang = "en";
 	$rootScope.fallback_lang = "en";
 
-	//LOADING SETTTINGS FROM THE VSP	
+	//LOADING SETTTINGS FROM THE VSP
 	if (typeof(dbp_settings) != 'undefined' && dbp_settings !== undefined) {
 		for (var key in dbp_settings) {
 			var val = dbp_settings[key];
@@ -166,6 +167,10 @@ dbpv.run(function($rootScope) {
     "co":{
         "name":"Corsican",
         "nativeName":"corsu, lingua corsa"
+    },
+    "commons":{
+        "name":"Commons",
+        "nativeName":"Commons"
     },
     "cr":{
         "name":"Cree",
