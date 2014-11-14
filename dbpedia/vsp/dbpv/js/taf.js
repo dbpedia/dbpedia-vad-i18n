@@ -441,25 +441,30 @@ dbpv_taf_short.mappings =
 				"label": "CATEGORIES",
 				"prio": 11
 			},
+			"http://dbpedia.org/ontology/galleryItem": {
+				"reverse":false,
+				"label": "GALLERY",
+				"prio": 9
+			},
+			"http://dbpedia.org/ontology/wikiPageExternalLink":{
+				"reverse":false,
+				"label": "External Links",
+				"prio": 8
+			},
+			"http://www.w3.org/2002/07/owl#sameAs": {
+				"reverse":false,
+				"label": "Same As",
+				"prio": 7
+			},
 			"http://dbpedia.org/ontology/birthPlace":{
 				"reverse": true,
 				"label": "Born Here",
 				"prio": 1
 			},
-			"http://dbpedia.org/ontology/wikiPageExternalLink":{
-				"reverse":false,
-				"label": "External Links",
-				"prio": 9
-			},
 			"http://dbpedia.org/ontology/starring": {
 				"reverse":true,
 				"label": "Starred in",
 				"prio": 1
-			},
-			"http://www.w3.org/2002/07/owl#sameAs": {
-				"reverse":false,
-				"label": "Same As",
-				"prio": 8
 			}
 		};
 
